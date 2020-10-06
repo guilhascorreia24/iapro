@@ -69,7 +69,7 @@ class BestFirst {
             }else{
                 sucs=sucessores(actual);
                 fechados.add(actual);
-                for(final State suc:sucs){
+                for(State suc:sucs){
                     if(!fechados.contains(suc)){
                         abertos.add(suc);
                     }
