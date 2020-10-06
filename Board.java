@@ -39,36 +39,67 @@ class Board implements Ilayout, Cloneable {
     }
 
     public String toString() {
-        String r="";
+        StringBuilder r = new StringBuilder();
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 if (board[i][j] != 0)
-                    r+=board[i][j];
+                    r.append(board[i][j]);
                 else
-                    r+=" ";
+                    r.append(" ");
                 // System.out.println(board[i][j]);
             }
-            r+="\n";
+            r.append("\n");
         }
-        return r;
+        return r.toString();
     }
 
-    public void exchange(){
-
+    @Override
+    public Object clone(){
+        Board b=new Board();
+        for(int i=0;i<dim;i++){
+            for(int j=0;j<dim;j++){
+                b.board[i][j]=board[i][j];
+            }
+        }
+        return b;
     }
-    
+
     @Override
     public List<Ilayout> children() throws CloneNotSupportedException {
-        Board b = (Board) clone();
-        List<Ilayout> p=new ArrayList<Ilayout>();
+        List<Ilayout> p = new ArrayList<Ilayout>();
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                if(board[i][j]==0){
-                    
+                if (board[i][j] == 0) {
+                    Board b = (Board) clone();
+                    if(j+1<dim){
+                        b.board[i][j]=board[i][j+1];
+                        b.board[i][j+1]=0;
+                        //System.out.println(b);
+                        p.add(b);}
+                    if(j-1>=0){
+                        b=(Board) clone();
+                        b.board[i][j]=board[i][j-1];
+                        b.board[i][j-1]=0;
+                        p.add(b);
+                        //System.out.println(b);
+                    }
+                    if(i+1<dim){
+                        b=(Board) clone();
+                        b.board[i][j]=board[i+1][j];
+                        b.board[i+1][j]=0;
+                        p.add(b);
+                    }
+                    if(i-1>=0){
+                        b=(Board) clone();
+                        b.board[i][j]=board[i-1][j];
+                        b.board[i-1][j]=0;
+                        p.add(b);
+                    }
                 }
             }
         }
-        return null;
+        //System.out.println(p);
+        return p;
     }
 
     @Override
@@ -88,8 +119,8 @@ class Board implements Ilayout, Cloneable {
         return true;
     }
 
-@Override
-public double getG() {
-	return 1;
-}
+    @Override
+    public double getG() {
+        return 1;
+    }
 }
