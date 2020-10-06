@@ -7,11 +7,11 @@ import java.util.Queue;
 
 class BestFirst {
     static class State {
-        private final Ilayout layout;
-        private final State father;
+        private  Ilayout layout;
+        private  State father;
         private double g;
 
-        public State(final Ilayout l, final State n) {
+        public State( Ilayout l,  State n) {
             layout = l;
             father = n;
             if (father != null)
@@ -29,8 +29,8 @@ class BestFirst {
         }
 
         @Override
-        public boolean equals(final Object b){
-            final State b2=(State)b;
+        public boolean equals(Object b){
+             State b2=(State)b;
             return layout.equals(b2.layout);
         }
     }
@@ -42,9 +42,9 @@ class BestFirst {
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
          List<Ilayout> children = n.layout.children();
-        for (final Ilayout e : children) {
+        for (Ilayout e : children) {
             if (n.father == null || !e.equals(n.father.layout)) {
-                final State nn = new State(e, n);
+                State nn = new State(e, n);
                 sucs.add(nn);
             }
         }

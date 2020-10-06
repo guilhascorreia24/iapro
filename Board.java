@@ -1,3 +1,4 @@
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,22 +40,22 @@ class Board implements Ilayout, Cloneable {
     }
 
     public String toString() {
-        StringBuilder r = new StringBuilder();
+        String r = "";
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 if (board[i][j] != 0)
-                    r.append(board[i][j]);
+                    r+=Integer.toString(board[i][j]);
                 else
-                    r.append(" ");
+                    r+=" ";
                 // System.out.println(board[i][j]);
             }
-            r.append("\n");
+            r+="\n";
         }
         return r.toString();
     }
 
     @Override
-    public Object clone(){
+    public Object clone() throws CloneNotSupportedException {
         Board b=new Board();
         for(int i=0;i<dim;i++){
             for(int j=0;j<dim;j++){
@@ -62,6 +63,7 @@ class Board implements Ilayout, Cloneable {
             }
         }
         return b;
+        //return super.clone();
     }
 
     @Override
