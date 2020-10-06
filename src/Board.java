@@ -65,14 +65,14 @@ class Board implements Ilayout, Cloneable {
     }
 
     @Override
-    public List<Ilayout> children() throws CloneNotSupportedException { // criar os filhos 
+    public List<Ilayout> children() throws CloneNotSupportedException {
         List<Ilayout> p = new ArrayList<Ilayout>();
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 if (board[i][j] == 0) {
                     Board b = (Board) clone();
                     if(j+1<dim){
-                        b.board[i][j]=board[i][j+1]; // 
+                        b.board[i][j]=board[i][j+1];
                         b.board[i][j+1]=0;
                         //System.out.println(b);
                         p.add(b);}
@@ -108,7 +108,7 @@ class Board implements Ilayout, Cloneable {
     }
 
     @Override
-    public boolean equals(Object b) { //compara 2 boards
+    public boolean equals(Object b) {
         Board b2 = (Board) b;
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
@@ -120,7 +120,7 @@ class Board implements Ilayout, Cloneable {
     }
 
     @Override
-    public double getG() { // custo
+    public double getG() {
         return 1;
     }
 }

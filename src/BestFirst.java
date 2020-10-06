@@ -39,7 +39,7 @@ class BestFirst {
     private State actual;
     private Ilayout objective;
 
-    final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
+    final private List<State> sucessores( State n) throws CloneNotSupportedException {
          List<State> sucs = new ArrayList<>();
          List<Ilayout> children = n.layout.children();
         for (final Ilayout e : children) {
@@ -51,7 +51,7 @@ class BestFirst {
         return sucs;
     }
 
-    final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo bfs
+    final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException {
         objective = goal;
          Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG()));
          List<State> fechados = new ArrayList<>();
