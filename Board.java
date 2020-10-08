@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import java.io.PrintWriter;
+>>>>>>> 7e9c6e1b4a9ceceaf33283e1e028ff5a589b3091
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +44,7 @@ class Board implements Ilayout, Cloneable {
     }
 
     public String toString() {
+<<<<<<< HEAD
         String r = "";
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
@@ -50,8 +55,23 @@ class Board implements Ilayout, Cloneable {
                 // System.out.println(board[i][j]);
             }
             r+="\n";
+=======
+        StringWriter writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                if (board[i][j] != 0)
+                    pw.print(board[i][j]);
+                else
+                pw.print(" ");
+                // System.out.println(board[i][j]);
+            }
+            //if(i<dim-1)
+            pw.println();
+>>>>>>> 7e9c6e1b4a9ceceaf33283e1e028ff5a589b3091
         }
-        return r.toString();
+        //System.out.println();
+        return writer.toString();
     }
 
     @Override
