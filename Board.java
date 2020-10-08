@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,18 +41,21 @@ class Board implements Ilayout, Cloneable {
     }
 
     public String toString() {
-        StringBuilder r = new StringBuilder();
+        StringWriter writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 if (board[i][j] != 0)
-                    r.append(board[i][j]);
+                    pw.print(board[i][j]);
                 else
-                    r.append(" ");
+                pw.print(" ");
                 // System.out.println(board[i][j]);
             }
-            r.append("\n");
+            //if(i<dim-1)
+            pw.println();
         }
-        return r.toString();
+        //System.out.println();
+        return writer.toString();
     }
 
     @Override
