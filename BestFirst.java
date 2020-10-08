@@ -28,13 +28,8 @@ class BestFirst {
             return g;
         }
 
-<<<<<<< HEAD
-        @Override
-        public boolean equals(Object b){
-=======
         /*@Override
         public boolean equals( Object b){
->>>>>>> 7e9c6e1b4a9ceceaf33283e1e028ff5a589b3091
              State b2=(State)b;
             return layout.equals(b2.layout);
         }*/
