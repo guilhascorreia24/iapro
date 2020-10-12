@@ -19,7 +19,7 @@ public class PuzzleUnitTests {
         pw.println("145");
         pw.println("678");
         assertEquals(b.toString(), writer.toString());
-        pw.close();
+
     }
 
     @Test
@@ -30,6 +30,9 @@ public class PuzzleUnitTests {
         pw.println("123");
         pw.println("485");
         pw.println("67 ");
+        pw.flush();
+        System.out.println(b.toString());
+        System.out.println(writer.toString());
         assertEquals(b.toString(), writer.toString());
         pw.close();
     }
@@ -145,36 +148,23 @@ public class PuzzleUnitTests {
 
     @Test
     public void testequals2(){
-        Board b=new Board("023147685");
-        Board b2=new Board("203147685");
-        assertEquals(b.equals(b2), false);
+        Board b=new Board("283164705");
+        Board b2=new Board("283164705");
+        assertEquals(b.equals(b2),true);
     }
 
     @Test
-    public void testequals3(){
-        Board b=new Board("023147685");
-        Board b2=new Board("123456708");
-        assertEquals(b.equals(b2), false);
+    public void testeclone() throws CloneNotSupportedException {
+        Board b=new Board("283164705");
+        assertEquals(b.clone(),b);
     }
 
     @Test
-    public void testequals4(){
-        Board b=new Board("203147685");
-        Board b2=new Board("203147685");
-        assertEquals(b.equals(b2), true);
+    public void testclone2() throws CloneNotSupportedException {
+        Board b=new Board("283164705");
+        assertEquals(b.clone(),b);
     }
 
-    @Test
-    public void testclone(){
-        Board b=new Board("203147685");
-        assertEquals(b, b.clone());
-    }
-
-    @Test
-    public void testclone2(){
-        Board b=new Board("023147685");
-        assertEquals(b,b.clone());
-    }
 
 
 }
