@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         BestFirst s = new BestFirst();
-        Iterator<BestFirst.State> it = s.solve(new Board(sc.nextLine()), new Board(sc.nextLine()));
+        Iterator<BestFirst.State> it = s.solve(new Board(sc.next()), new Board(sc.next()));
         if (it == null)
             System.out.println("no solution was found");
         else {

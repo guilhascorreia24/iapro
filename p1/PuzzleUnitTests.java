@@ -1,4 +1,4 @@
-/*import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -164,4 +164,4 @@ public class PuzzleUnitTests {
         Board b=new Board("283164705");
         assertEquals(b.clone(),b);
     }
-}*/
+}
