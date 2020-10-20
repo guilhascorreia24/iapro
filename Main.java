@@ -11,7 +11,7 @@ public class Main {
         else {
             while (it.hasNext()) {
                 BestFirst.State i = it.next();
-                System.out.println(i);
+                //System.out.println(i);
                 if (!it.hasNext())
                     System.out.println((int)i.getG());
             }

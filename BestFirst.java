@@ -40,8 +40,8 @@ class BestFirst {
     private Ilayout objective;
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
-         List<State> sucs = new ArrayList<>();
-         List<Ilayout> children = n.layout.children();
+        List<State> sucs = new ArrayList<>();
+        List<Ilayout> children = n.layout.children();
         for (Ilayout e : children) {
             if (n.father == null || !e.equals(n.father.layout)) {
                 State nn = new State(e, n);
@@ -60,6 +60,7 @@ class BestFirst {
         //System.out.println(s.toString());
         List<State> sucs;
         while(!actual.layout.equals(goal)){
+            //System.out.println(actual);
             if(abertos.isEmpty()){
                 throw new IllegalStateException("Fail");
             }

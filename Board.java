@@ -32,7 +32,6 @@ class Board implements Ilayout, Cloneable {
 
     public Board(String str) throws IllegalStateException {
         String[] b2= str.split(" ");
-        dim=board.size();
         for(int i=0;i<b2.length;i++){
             //System.out.println(b2[i].split("").length);
             int j=0;
@@ -43,35 +42,40 @@ class Board implements Ilayout, Cloneable {
             }
             board.add(line);
         }
-        System.out.println(board);
+        dim=board.size();
+        //System.out.println(board);
     }
 
+    @Override
     public String toString() {
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
-        for (int i = 0; i < dim; i++) {
-            pw.print("[");
-            pw.print(board.get(i).pop());
-            int j=0;
-            while(j<board.get(i).size())
-            {
-                pw.print(", "+board.get(i).elementAt(j++));
+        for (int i = 0; i < board.size(); i++) {
+            if(board.get(i).size()>0){   
+                pw.print("[");
+                pw.print(board.get(i).elementAt(0));
+                int j=1;
+                    while(j<board.get(i).size())
+                    {
+                        pw.print(", "+board.get(i).elementAt(j));
+                        j++;
+                    }
+                // if(i<dim-1)
+                pw.println("]");
             }
-            // if(i<dim-1)
-            pw.println("]");
         }
-        // System.out.println();
         return writer.toString();
     }
 
     @Override
     public Object clone() throws CloneNotSupportedException {
         Board nBoard=new Board();
-        for(int i=0;i<dim;i++){
+        for(int i=0;i<board.size();i++){
             int j=0;
             Stack<Character> line=new Stack<Character>();
             while(j<board.get(i).size()){
-                line.add(board.get(i).elementAt(j++));
+                line.add(board.get(i).elementAt(j));
+                j++;
             }
             nBoard.board.add(line);
         }
@@ -82,25 +86,11 @@ class Board implements Ilayout, Cloneable {
     @Override
     public List<Ilayout> children() throws CloneNotSupportedException { // criar os filhos
         List<Ilayout> childs=new ArrayList<Ilayout>();
-        System.out.println(this.toString());
-        for(Stack<Character> x:board){
-            //System.out.println(x);
-            Board child=(Board) clone();
-            //System.out.println(child);
-            Character el=x.pop();
-            if(x.isEmpty()) child.board.remove(x);
+        //System.out.println(this.toString());
+        for(int i=0;i<dim;i++){
             
-            for(int j=0;j<child.dim;j++){
-                Board child2=(Board) child.clone();
-                child2.board.get(j).push(el);
-                childs.add(child2);
-            }
-            Stack<Character> line=new Stack<Character>();
-            line.push(el);
-            child.board.add(line);
-            childs.add(child);
         }
-        System.out.println(childs);
+        //System.out.println(childs);
         return childs;
     }
 
@@ -114,14 +104,16 @@ class Board implements Ilayout, Cloneable {
     public boolean equals(Object b) { // compara 2 boards
         if(this.getClass().equals(b.getClass())){
             Board b1=(Board) b;
+            //System.out.println(this);
             for(Stack<Character> x:board){
+                //System.out.println(b1.board.contains(x));
                 if(!b1.board.contains(x)){
                     return false;
                 }
             }
-
-        }
-        return false;
+            return true;
+        } else {
+        return false;}
     }
 
     @Override
