@@ -1,3 +1,5 @@
+package p1.src;
+
 import java.util.Iterator;
 import java.util.Scanner;
 

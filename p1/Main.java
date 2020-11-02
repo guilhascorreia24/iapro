@@ -1,8 +1,12 @@
+package p1;
+
 import java.util.Iterator;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+        long startTime = System.nanoTime();
         Scanner sc = new Scanner(System.in);
         BestFirst s = new BestFirst();
         Iterator<BestFirst.State> it = s.solve(new Board(sc.next()), new Board(sc.next()));
@@ -17,5 +21,10 @@ public class Main {
             }
         }
         sc.close();
+        long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        long actualMemUsed=afterUsedMem-beforeUsedMem;
+        System.out.println(actualMemUsed+" "+(duration/1000000)+"ms");
     }
 }

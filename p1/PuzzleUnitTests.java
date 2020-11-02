@@ -1,3 +1,5 @@
+/*package p1;
+
 import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
@@ -164,4 +166,4 @@ public class PuzzleUnitTests {
         Board b=new Board("283164705");
         assertEquals(b.clone(),b);
     }
-}
+}*/

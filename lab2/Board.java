@@ -1,6 +1,7 @@
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
@@ -21,28 +22,37 @@ interface Ilayout {
      */
     double getG();
 
+
+    double getH(Ilayout b);
+
 }
 
 class Board implements Ilayout, Cloneable {
-    private int dim;
-    private List<Stack<Character>> board=new ArrayList<Stack<Character>>();;
+    //private int dim;
+    private LinkedList<Stack<Character>> board=new LinkedList<Stack<Character>>();;
 
     public Board() {
     }
 
     public Board(String str) throws IllegalStateException {
         String[] b2= str.split(" ");
+        int blocks=0;
+       // System.out.println(b2.length);
         for(int i=0;i<b2.length;i++){
-            //System.out.println(b2[i].split("").length);
-            int j=0;
-            Stack<Character> line=new Stack<Character>();
-            while(j<b2[i].split("").length){
-                line.add(b2[i].charAt(j));
-                j++;
-            }
-            board.add(line);
+            if(!b2[i].equals("")){
+                int j=0;
+                Stack<Character> line=new Stack<Character>();
+                while(j<b2[i].split("").length){
+                    line.add(b2[i].charAt(j));
+                    j++;
+                }
+                board.add(line);
+            blocks+=j;}
         }
-        dim=board.size();
+        /*if(blocks!=3){
+            throw new IllegalStateException("Invalid arg in Board constructor");
+        }*/
+       // dim=board.size();
         //System.out.println(board);
     }
 
@@ -79,18 +89,32 @@ class Board implements Ilayout, Cloneable {
             }
             nBoard.board.add(line);
         }
-        nBoard.dim=nBoard.board.size();
+        //nBoard.dim=nBoard.board.size();
         return nBoard;
     }
 
     @Override
     public List<Ilayout> children() throws CloneNotSupportedException { // criar os filhos
         List<Ilayout> childs=new ArrayList<Ilayout>();
-        //System.out.println(this.toString());
-        for(int i=0;i<dim;i++){
-            
+        for(int i=0;i<board.size();i++){
+            if(!board.get(i).empty()){            
+                Board child=(Board) clone();
+                Stack<Character> line=new Stack<>();
+                Character c=child.board.get(i).pop();
+                line.push(c);
+                child.board.add(line);
+                childs.add(child);
+                if(child.board.get(i).isEmpty()) child.board.remove(i);
+                    for(int j=0;j<board.size();j++){
+                        child=(Board) clone();
+                        c=child.board.get(i).pop();
+                        child.board.get(j).push(c);
+                        if(!childs.contains(child)) childs.add(child);
+                        if(child.board.get(i).isEmpty()) child.board.remove(i);
+                    } 
+            }
         }
-        //System.out.println(childs);
+        //System.out.println(childs.size());
         return childs;
     }
 
@@ -119,5 +143,24 @@ class Board implements Ilayout, Cloneable {
     @Override
     public double getG() { // custo
         return 1;
+    }
+
+    @Override
+    public double getH(Ilayout b){ //heuristica
+        Board b2=(Board) b;
+        int h=0;
+        for(Stack<Character> line:board){
+            if(!b2.board.contains(line)){
+                int i=0;
+                for(Character block:line){
+                    Stack<Character> line2=new Stack<>();
+                    line2.push(block);
+                    if(b2.board.contains(line2)){
+                        
+                    }
+                    i++;
+                }
+            }
+        }
     }
 }

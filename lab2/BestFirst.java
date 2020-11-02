@@ -1,9 +1,11 @@
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Stack;
 
 class BestFirst {
     static class State {
@@ -28,6 +30,10 @@ class BestFirst {
             return g;
         }
 
+        public boolean isGoal(Ilayout obj){
+            return this.layout.isGoal(obj);
+        }
+
         /*@Override
         public boolean equals( Object b){
              State b2=(State)b;
@@ -35,9 +41,10 @@ class BestFirst {
         }*/
     }
 
-    protected Queue<State> abertos;
+    //protected Queue<State> abertos;
     private State actual;
     private Ilayout objective;
+    private int max_deep;
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
@@ -59,7 +66,7 @@ class BestFirst {
         actual=abertos.element();
         //System.out.println(s.toString());
         List<State> sucs;
-        while(!actual.layout.equals(goal)){
+        while(!actual.isGoal(goal)){
             //System.out.println(actual);
             if(abertos.isEmpty()){
                 throw new IllegalStateException("Fail");
@@ -79,6 +86,8 @@ class BestFirst {
             }
         }
         List<State> sol=new ArrayList<State>();
+        
+        //actual.layout=goal;
         while(actual!=null){
             sol.add(actual);
             actual=actual.father;
