@@ -156,11 +156,12 @@ class Board implements Ilayout, Cloneable {
                     Stack<Character> line2=new Stack<>();
                     line2.push(block);
                     if(b2.board.contains(line2)){
-                        
+                        h+=line.size()-i;
                     }
                     i++;
                 }
             }
         }
+        return 0;
     }
 }

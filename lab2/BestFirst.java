@@ -58,7 +58,7 @@ class BestFirst {
         return sucs;
     }
 
-    final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo bfs
+    /*final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo bfs
         objective = goal;
          Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG()));
          List<State> fechados = new ArrayList<>();
@@ -94,5 +94,66 @@ class BestFirst {
         }
         Collections.reverse(sol);
         return sol.iterator();
+    }*/
+
+    final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo IDS
+        objective = goal;
+       // Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG()));
+        Stack<State> abertos=new Stack<>();
+        List<State> fechados = new ArrayList<>();
+        abertos.add(new State(s, null));
+        actual=abertos.firstElement();
+        List<State> sucs;
+        //System.out.println(max_deep);
+        if(max_deep==0){
+            if(actual.isGoal(goal)){
+                List<State> sol=new ArrayList<State>();
+        
+                //actual.layout=goal;
+                while(actual!=null){
+                    sol.add(actual);
+                    actual=actual.father;
+                }
+                Collections.reverse(sol);
+                return sol.iterator(); 
+            } else {
+                max_deep++;
+                return solve(s, goal);
+            }
+        } else {
+            while(!abertos.isEmpty()){
+                actual=abertos.pop();
+                if(actual.layout.equals(objective)){
+                    break;
+                }
+                sucs=sucessores(actual);
+                fechados.add(actual);
+                for(State suc:sucs){
+                    if(!fechados.contains(suc) && suc.getG()<max_deep){
+                        abertos.push(suc);
+                    }
+                    if(suc.layout.equals(objective)){
+                        actual=suc;
+                        break;
+                    }
+                }
+                if(actual.layout.equals(objective)){
+                    break;
+                }
+            }
+            if(actual.getG()+1==max_deep && !actual.isGoal(objective)){
+                max_deep++;
+                return solve(s, goal);
+            }
+        }
+        List<State> sol=new ArrayList<State>();
+        
+        //actual.layout=goal;
+        while(actual!=null){
+            sol.add(actual);
+            actual=actual.father;
+        }
+        Collections.reverse(sol);
+        return sol.iterator(); 
     }
 }
