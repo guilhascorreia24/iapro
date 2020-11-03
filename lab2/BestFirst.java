@@ -11,15 +11,17 @@ class BestFirst {
     static class State {
         private  Ilayout layout;
         private  State father;
-        private double g;
+        private double g,h,f;
 
-        public State( Ilayout l,  State n) {
+        public State( Ilayout l,  State n,Ilayout obj) throws CloneNotSupportedException {
             layout = l;
             father = n;
+            h=l.getH(obj);
             if (father != null)
                 g = father.g + l.getG();
             else
                 g = 0.0;
+            f=g+h;
         }
 
         public String toString() {
@@ -34,6 +36,13 @@ class BestFirst {
             return this.layout.isGoal(obj);
         }
 
+        public double getF(){
+            return f;
+        }
+
+        public double getH(){
+            return h;
+        }
         /*@Override
         public boolean equals( Object b){
              State b2=(State)b;
@@ -51,23 +60,23 @@ class BestFirst {
         List<Ilayout> children = n.layout.children();
         for (Ilayout e : children) {
             if (n.father == null || !e.equals(n.father.layout)) {
-                State nn = new State(e, n);
+                State nn = new State(e, n,objective);
                 sucs.add(nn);
             }
         }
         return sucs;
     }
 
-    /*final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo bfs
+    final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo bfs
         objective = goal;
-         Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG()));
+         Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getF() - s2.getF()));
          List<State> fechados = new ArrayList<>();
-        abertos.add(new State(s, null));
+        abertos.add(new State(s, null,objective));
         actual=abertos.element();
         //System.out.println(s.toString());
         List<State> sucs;
         while(!actual.isGoal(goal)){
-            //System.out.println(actual);
+            //System.out.println(actual.getH());
             if(abertos.isEmpty()){
                 throw new IllegalStateException("Fail");
             }
@@ -80,6 +89,11 @@ class BestFirst {
                 for(State suc:sucs){
                     if(!fechados.contains(suc)){
                         abertos.add(suc);
+                    }
+                    if(suc.layout.equals(objective)){
+                        actual=suc;
+                        //System.out.println(suc);
+                        break;
                     }
                     //System.out.println(suc);
                 }
@@ -94,9 +108,9 @@ class BestFirst {
         }
         Collections.reverse(sol);
         return sol.iterator();
-    }*/
+    }
 
-    final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo IDS
+    /*final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo IDS
         objective = goal;
        // Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG()));
         Stack<State> abertos=new Stack<>();
@@ -155,5 +169,5 @@ class BestFirst {
         }
         Collections.reverse(sol);
         return sol.iterator(); 
-    }
+    }*/
 }
