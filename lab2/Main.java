@@ -4,8 +4,15 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
+        long startTime = System.nanoTime();
         BestFirst s = new BestFirst();
-        Iterator<BestFirst.State> it = s.solve(new Board(sc.nextLine()), new Board(sc.nextLine()));
+        Board s1=new Board(sc.nextLine());
+        Board s2=new Board(sc.nextLine());
+        if(s1.blocks!=s2.blocks){
+            sc.close();
+            throw new IllegalStateException("Fail: Boards sizes");
+        }
+        Iterator<BestFirst.State> it = s.solve(s1, s2);
         if (it == null)
             System.out.println("no solution was found");
         else {
@@ -17,5 +24,8 @@ public class Main {
             }
         }
         sc.close();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println((duration/1000000)*0.001  +"s");
     }
 }

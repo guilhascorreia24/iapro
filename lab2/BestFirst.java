@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Stack;
 
 class BestFirst {
     static class State {
@@ -43,19 +42,13 @@ class BestFirst {
         public double getH(){
             return h;
         }
-        /*@Override
-        public boolean equals( Object b){
-             State b2=(State)b;
-            return layout.equals(b2.layout);
-        }*/
     }
 
     //protected Queue<State> abertos;
     private State actual;
     private Ilayout objective;
-    private int max_deep;
-
-    final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
+    
+    final private List<State> sucessores(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
         List<Ilayout> children = n.layout.children();
         for (Ilayout e : children) {
@@ -101,7 +94,7 @@ class BestFirst {
         }
         List<State> sol=new ArrayList<State>();
         
-        //actual.layout=goal;
+        //actual.layout=goal; 
         while(actual!=null){
             sol.add(actual);
             actual=actual.father;

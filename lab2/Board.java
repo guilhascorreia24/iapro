@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import javax.sound.sampled.Line;
 
 interface Ilayout {
     /**
@@ -34,13 +33,13 @@ class Board implements Ilayout, Cloneable {
     // private int dim;
     private LinkedList<Stack<Character>> board = new LinkedList<Stack<Character>>();
     private int h = 0;
+    int blocks = 0;
 
     public Board() {
     }
 
     public Board(String str) throws IllegalStateException {
         String[] b2 = str.split(" ");
-        int blocks = 0;
         // System.out.println(b2.length);
         for (int i = 0; i < b2.length; i++) {
             if (!b2[i].equals("")) {
@@ -54,10 +53,8 @@ class Board implements Ilayout, Cloneable {
                 blocks += j;
             }
         }
-        /*
-         * if(blocks!=3){ throw new
-         * IllegalStateException("Invalid arg in Board constructor"); }
-         */
+     //    if(blocks>7)throw new IllegalStateException("Invalid arg in Board constructor"); 
+         
         // dim=board.size();
         // System.out.println(board);
     }
@@ -154,52 +151,45 @@ class Board implements Ilayout, Cloneable {
     }
 
     @Override
-    public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
+    public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica, parecido a distancia manhattan
         Board conf_final = (Board) b;
-        //if (this.equals(new Board("ABD FEC"))) { // GF EDC B A //BAD FEC
-            for (Stack<Character> pilha_final : conf_final.board) {
-                List<Character> under = new ArrayList<>();
-                for (Character c : pilha_final) {
-                    /*
-                     * boolean base2=true,base=true; if(pilha_final.firstElement()!=c){ base2=false;
-                     * }
-                     */
-                    if (!board.contains(pilha_final)) {
-                        for (Stack<Character> pilha_inicial : board) {
-                            if (pilha_inicial.contains(c)) {
-                                Character c2 = pilha_inicial.firstElement();
-                                int same_unders = 0;
-                                boolean base = true;
-                                int i = 1;
-                                while (c2 != c) {
-                                    base = false;
-                                    if (under.contains(c2)) {
-                                        //System.out.println(c2);
-                                        same_unders++;
-                                    }
-                                    c2 = pilha_inicial.elementAt(i);
-                                    i++;
+        for (Stack<Character> pilha_final : conf_final.board) {
+            List<Character> under = new ArrayList<>();
+            for (Character c : pilha_final) {
+                if (!board.contains(pilha_final)) {
+                    for (Stack<Character> pilha_inicial : board) {
+                        if (pilha_inicial.contains(c)) {
+                            Character c2 = pilha_inicial.firstElement();
+                            int same_unders = 0;
+                            boolean base = true;
+                            int i = 1;
+                            while (c2 != c) {
+                                base = false;
+                                if (under.contains(c2)) {
+                                    // System.out.println(c2);
+                                    same_unders++;
                                 }
-                                //System.out.println(same_unders+" "+base);
-                                if (same_unders<under.size() && same_unders>0 && !base)
-                                    h += 2;
-                                else if (pilha_inicial.firstElement() == pilha_final.firstElement())
-                                    h += 0;
-                                else
-                                    h++;
+                                c2 = pilha_inicial.elementAt(i);
+                                i++;
                             }
+                            // System.out.println(same_unders+" "+base);
+                            if (same_unders < under.size() && same_unders > 0 && !base)
+                                h += 2;
+                            else if (pilha_inicial.firstElement() == pilha_final.firstElement())
+                                h += 0;
+                            else
+                                h++;
                         }
-                        ;
-                        under.add(c);
-                        //System.out.println(c + " " + h);
                     }
+                    ;
+                    under.add(c);
                 }
             }
-        //}
+        }
         return h;
     }
 
     public double getF() {
-        return h + 1;
+        return h + getG();
     }
 }
