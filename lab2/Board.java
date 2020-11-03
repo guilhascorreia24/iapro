@@ -154,9 +154,9 @@ class Board implements Ilayout, Cloneable {
     public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica, parecido a distancia manhattan
         Board conf_final = (Board) b;
         for (Stack<Character> pilha_final : conf_final.board) {
+            if (!board.contains(pilha_final)) {
             List<Character> under = new ArrayList<>();
             for (Character c : pilha_final) {
-                if (!board.contains(pilha_final)) {
                     for (Stack<Character> pilha_inicial : board) {
                         if (pilha_inicial.contains(c)) {
                             Character c2 = pilha_inicial.firstElement();
@@ -181,7 +181,6 @@ class Board implements Ilayout, Cloneable {
                                 h++;
                         }
                     }
-                    ;
                     under.add(c);
                 }
             }
@@ -189,7 +188,7 @@ class Board implements Ilayout, Cloneable {
         return h;
     }
 
-    public double getF() {
+    public double getF() { //indice de promessa, estimativa do custo do caminho 
         return h + getG();
     }
 }
