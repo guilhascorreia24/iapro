@@ -97,30 +97,32 @@ class Board implements Ilayout, Cloneable {
 
     @Override
     public List<Ilayout> children() throws CloneNotSupportedException { // criar os filhos
-        List<Ilayout> childs = new ArrayList<Ilayout>();
-        for (int i = 0; i < board.size(); i++) {
-            if (!board.get(i).empty()) {
-                Board child = (Board) clone();
-                Stack<Character> line = new Stack<>();
-                Character c = child.board.get(i).pop();
-                line.push(c);
-                child.board.add(line);
-                childs.add(child);
-                if (child.board.get(i).isEmpty())
-                    child.board.remove(i);
-                for (int j = 0; j < board.size(); j++) {
-                    child = (Board) clone();
-                    c = child.board.get(i).pop();
-                    child.board.get(j).push(c);
-                    if (!childs.contains(child))
-                        childs.add(child);
-                    if (child.board.get(i).isEmpty())
-                        child.board.remove(i);
+        List<Ilayout> children = new ArrayList<Ilayout>();
+        for(int i = 0; i<board.size(); i++)
+        {
+            Board child = (Board) clone();
+            char block = child.board.get(i).pop();
+            if(child.board.get(i).isEmpty())
+                child.board.remove(i);
+
+            for(int j = 0; j<child.board.size(); j++)
+            {
+                Board cloneChild = (Board) child.clone();
+                cloneChild.board.get(j).push(block);
+                if(!children.contains(cloneChild) && !cloneChild.equals(this)){
+                    children.add(cloneChild);
                 }
             }
+
+            Stack<Character> last = new Stack<Character>();
+            last.push(block);
+            child.board.add(last);
+            if(!children.contains(child) && !child.equals(this)){
+                children.add(child);
+            }
         }
-        // System.out.println(childs.size());
-        return childs;
+
+        return children;
     }
 
     @Override

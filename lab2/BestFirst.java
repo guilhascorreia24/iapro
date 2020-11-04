@@ -102,81 +102,16 @@ class BestFirst {
         return sol.iterator();
     }
 
-    final public Iterator<State> IDs(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo IDS
-        objective = goal;
-       // Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getG() - s2.getG()));
-        Stack<State> abertos=new Stack<>();
-        List<State> fechados = new ArrayList<>();
-        abertos.add(new State(s, null,objective));
-        actual=abertos.firstElement();
-        List<State> sucs;
-        //System.out.println(max_deep);
-        if(max_deep==0){
-            if(actual.isGoal(goal)){
-                List<State> sol=new ArrayList<State>();
-        
-                //actual.layout=goal;
-                while(actual!=null){
-                    sol.add(actual);
-                    actual=actual.father;
-                }
-                Collections.reverse(sol);
-                return sol.iterator(); 
-            } else {
-                max_deep++;
-                return solve(s, goal);
-            }
-        } else {
-            while(!abertos.isEmpty()){
-                actual=abertos.pop();
-                if(actual.layout.equals(objective)){
-                    break;
-                }
-                sucs=sucessores(actual);
-                fechados.add(actual);
-                for(State suc:sucs){
-                    if(!fechados.contains(suc) && suc.getG()<max_deep){
-                        abertos.push(suc);
-                    }
-                    if(suc.layout.equals(objective)){
-                        actual=suc;
-                        break;
-                    }
-                }
-                if(actual.layout.equals(objective)){
-                    break;
-                }
-            }
-            if(actual.getG()+1==max_deep && !actual.isGoal(objective)){
-                max_deep++;
-                return solve(s, goal);
-            }
-        }
-        List<State> sol=new ArrayList<State>();
-        
-        //actual.layout=goal;
-        while(actual!=null){
-            sol.add(actual);
-            actual=actual.father;
-        }
-        Collections.reverse(sol);
-        return sol.iterator(); 
-    }
-
-    protected List<State> fechados;
     public Iterator<State> Ida(Ilayout s,Ilayout goal) throws CloneNotSupportedException {
         objective=goal;
         State root=new State(s,null,objective);
-        fechados=new ArrayList<>();
-        double tresh=root.getH();
+        double thres=root.getH();
         Stack<State> abertos=new Stack<>();
+        abertos.add(root);
         while(true){
-            actual=search(abertos,0,tresh);
-            if(actual.isGoal(goal)){
-                break;
-            } else {
-                throw new IllegalAccessError("error");
-            }
+            actual=search(abertos,0.0,thres);
+            if(actual.isGoal(objective)) break;
+            thres=actual.f;
         }
         List<State> sol=new ArrayList<State>();
         while(actual!=null){
@@ -187,24 +122,22 @@ class BestFirst {
         return sol.iterator(); 
     }
 
-    private BestFirst.State search(Stack<BestFirst.State> abertos, double g, double treshhold)
-            throws CloneNotSupportedException {
+    private BestFirst.State search(Stack<BestFirst.State> abertos, double d, double thres) throws CloneNotSupportedException {
         actual=abertos.lastElement();
-        fechados.add(actual);
-        if(actual.getF()>treshhold){
+        if(actual.f>thres){
             return actual;
         }
         if(actual.isGoal(objective)){
             return actual;
         }
         List<State> sucs=sucessores(actual);
-        State min=new State(null,null,objective);
-        for(State suc:sucs){
-            if(!fechados.contains(suc)){
-                abertos.add(suc);
-                actual=search(abertos, actual.g, treshhold);
-                if(actual.isGoal(objective)) return actual;
-                //if(actual.g<min) min=actual;
+        for(State s:sucs){
+            if(!abertos.contains(s)){
+                abertos.push(s);
+                actual=search(abertos, actual.f, thres);
+                if(actual.isGoal(objective)){
+                    return actual;
+                }
                 abertos.pop();
             }
         }
