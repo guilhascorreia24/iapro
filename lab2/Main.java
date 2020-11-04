@@ -2,7 +2,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {   
         Scanner sc = new Scanner(System.in);
         long startTime = System.nanoTime();
         BestFirst s = new BestFirst();
@@ -18,7 +18,7 @@ public class Main {
         else {
             while (it.hasNext()) {
                 BestFirst.State i = it.next();
-                System.out.println(i);
+                //System.out.println(i);
                 if (!it.hasNext())
                     System.out.println((int)i.getG());
             }
@@ -26,6 +26,6 @@ public class Main {
         sc.close();
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println((duration/1000000)*0.001  +"s");
+        System.out.println(duration*0.000001  +"ms");
     }
 }

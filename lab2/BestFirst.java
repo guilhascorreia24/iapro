@@ -48,6 +48,7 @@ class BestFirst {
     //protected Queue<State> abertos;
     private State actual;
     private Ilayout objective;
+    private double max_h;
     private int max_deep;
     
     final private List<State> sucessores(State n) throws CloneNotSupportedException { // listar os filhos que interessam
@@ -64,10 +65,11 @@ class BestFirst {
 
     final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo bfs
         objective = goal;
-         Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getF() - s2.getF()));
-         List<State> fechados = new ArrayList<>();
+        Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getF() - s2.getF()));
+        List<State> fechados = new ArrayList<>();
         abertos.add(new State(s, null,objective));
         actual=abertos.element();
+        max_h=actual.getH();
         //System.out.println(s.toString());
         List<State> sucs;
         while(!actual.isGoal(goal)){
@@ -82,7 +84,7 @@ class BestFirst {
                 sucs=sucessores(actual);
                 fechados.add(actual);
                 for(State suc:sucs){
-                    if(!fechados.contains(suc)){
+                    if(!fechados.contains(suc) && suc.getH()<=max_h){
                         abertos.add(suc);
                     }
                     //System.out.println(suc);
@@ -161,13 +163,15 @@ class BestFirst {
         return sol.iterator(); 
     }
 
+    protected List<State> fechados;
     public Iterator<State> Ida(Ilayout s,Ilayout goal) throws CloneNotSupportedException {
         objective=goal;
         State root=new State(s,null,objective);
-        double h=root.getH();
+        fechados=new ArrayList<>();
+        double tresh=root.getH();
         Stack<State> abertos=new Stack<>();
         while(true){
-            actual=search(abertos,0,h);
+            actual=search(abertos,0,tresh);
             if(actual.isGoal(goal)){
                 break;
             } else {
@@ -183,7 +187,27 @@ class BestFirst {
         return sol.iterator(); 
     }
 
-    private BestFirst.State search(Stack<BestFirst.State> abertos, int i, double h) {
-        
+    private BestFirst.State search(Stack<BestFirst.State> abertos, double g, double treshhold)
+            throws CloneNotSupportedException {
+        actual=abertos.lastElement();
+        fechados.add(actual);
+        if(actual.getF()>treshhold){
+            return actual;
+        }
+        if(actual.isGoal(objective)){
+            return actual;
+        }
+        List<State> sucs=sucessores(actual);
+        State min=new State(null,null,objective);
+        for(State suc:sucs){
+            if(!fechados.contains(suc)){
+                abertos.add(suc);
+                actual=search(abertos, actual.g, treshhold);
+                if(actual.isGoal(objective)) return actual;
+                //if(actual.g<min) min=actual;
+                abertos.pop();
+            }
+        }
+        return actual;
     }
 }
