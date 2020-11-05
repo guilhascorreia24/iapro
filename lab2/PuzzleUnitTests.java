@@ -1,7 +1,9 @@
-/*import static org.junit.Assert.*;
+import static org.junit.Assert.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,6 +12,7 @@ import org.junit.Test;
 
 
 public class PuzzleUnitTests {
+    NumberFormat formatter = new DecimalFormat("#.###");
     @Test
     public void testConstructor() {
         Board b = new Board("A C");
@@ -89,6 +92,149 @@ public class PuzzleUnitTests {
         Board b=new Board("CAB");
         Board b2=new Board("ABC");
         BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.Ida(b,b2);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext())
+                assertEquals(4,(int)i.getG());
+        }
+        //long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+        //long actualMemUsed=afterUsedMem-beforeUsedMem;
+        //System.out.println(actualMemUsed+" "+beforeUsedMem);
+
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t1:"+formatter.format(duration*0.000001)  +"ms");
+    }
+
+    @Test
+    public void test2() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("AC B");
+        Board b2=new Board("A B C");
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.Ida(b,b2);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext())
+                assertEquals(1,(int)i.getG());
+        }
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t2:"+formatter.format(duration*0.000001)   +"ms");
+    }
+
+    @Test
+    public void test3() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("A BC");
+        Board b2=new Board("C AB");
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.Ida(b,b2);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext())
+                assertEquals(2,(int)i.getG());
+        }
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t3:"+formatter.format(duration*0.000001)   +"ms");
+    }
+
+    @Test
+    public void test4() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("ACB");
+        Board b2=new Board("BCA");
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.Ida(b,b2);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext())
+                assertEquals(3,(int)i.getG());
+        }
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t4:"+formatter.format(duration*0.000001)   +"ms");
+    }
+
+    @Test
+    public void test5() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("GF EDC B A");
+        Board b2=new Board("ABCDEFG");
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.Ida(b,b2);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext())
+                assertEquals(6,(int)i.getG());
+        }
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t5:"+formatter.format(duration*0.000001)   +"ms");
+    }
+
+    @Test
+    public void test6() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("ABCDEFG");
+        Board b2=new Board("BCDEFGA");
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.Ida(b,b2);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext())
+                assertEquals(12,(int)i.getG());
+        }
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t6:"+formatter.format(duration*0.000001)   +"ms");
+    }
+
+    @Test
+    public void test7() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("ABCDEFGHIJ");
+        Board b2=new Board("DEAJCHGIFB");
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.Ida(b,b2);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(18,(int)i.getG());
+            }
+        }
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t7:"+formatter.format(duration*0.000001)   +"ms");
+    }
+
+    @Test
+    public void test8() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("ABCDEFG");
+        Board b2=new Board("D E A C G F B");
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.Ida(b,b2);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(6,(int)i.getG());
+            }
+        }
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t8:"+formatter.format(duration*0.000001)   +"ms");
+    }
+
+    @Test
+    public void test0_1() throws CloneNotSupportedException {
+        //long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+        long startTime = System.nanoTime();
+        Board b=new Board("CAB");
+        Board b2=new Board("ABC");
+        BestFirst s = new BestFirst();
         Iterator<BestFirst.State> it = s.solve(b,b2);
         while (it.hasNext()) {
             BestFirst.State i = it.next();
@@ -101,11 +247,11 @@ public class PuzzleUnitTests {
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("t1:"+(duration/1000000)*0.001  +"s");
+        System.out.println("t11:"+formatter.format(duration*0.000001)   +"ms");
     }
 
     @Test
-    public void test2() throws CloneNotSupportedException {
+    public void test2_1() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
         Board b=new Board("AC B");
         Board b2=new Board("A B C");
@@ -118,11 +264,11 @@ public class PuzzleUnitTests {
         }
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("t2:"+(duration/1000000)*0.001  +"s");
+        System.out.println("t21:"+formatter.format(duration*0.000001)   +"ms");
     }
 
     @Test
-    public void test3() throws CloneNotSupportedException {
+    public void test3_1() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
         Board b=new Board("A BC");
         Board b2=new Board("C AB");
@@ -135,11 +281,11 @@ public class PuzzleUnitTests {
         }
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("t3:"+(duration/1000000)*0.001  +"s");
+        System.out.println("t31:"+formatter.format(duration*0.000001)   +"ms");
     }
 
     @Test
-    public void test4() throws CloneNotSupportedException {
+    public void test4_1() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
         Board b=new Board("ACB");
         Board b2=new Board("BCA");
@@ -152,11 +298,11 @@ public class PuzzleUnitTests {
         }
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("t4:"+(duration/1000000)*0.001  +"s");
+        System.out.println("t41:"+formatter.format(duration*0.000001)   +"ms");
     }
 
     @Test
-    public void test5() throws CloneNotSupportedException {
+    public void test5_1() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
         Board b=new Board("GF EDC B A");
         Board b2=new Board("ABCDEFG");
@@ -169,11 +315,11 @@ public class PuzzleUnitTests {
         }
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("t5:"+(duration/1000000)*0.001  +"s");
+        System.out.println("t51:"+formatter.format(duration*0.000001)   +"ms");
     }
 
     @Test
-    public void test6() throws CloneNotSupportedException {
+    public void test6_1() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
         Board b=new Board("ABCDEFG");
         Board b2=new Board("BCDEFGA");
@@ -186,11 +332,11 @@ public class PuzzleUnitTests {
         }
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("t6:"+(duration/1000000)*0.001  +"s");
+        System.out.println("t61:"+formatter.format(duration*0.000001)   +"ms");
     }
 
     @Test
-    public void test7() throws CloneNotSupportedException {
+    public void test7_1() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
         Board b=new Board("ABCDEFGHIJ");
         Board b2=new Board("DEAJCHGIFB");
@@ -204,11 +350,11 @@ public class PuzzleUnitTests {
         }
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("t7:"+(duration/1000000)*0.001  +"s");
+        System.out.println("t71:"+formatter.format(duration*0.000001)   +"ms");
     }
 
     @Test
-    public void test8() throws CloneNotSupportedException {
+    public void test8_1() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
         Board b=new Board("ABCDEFG");
         Board b2=new Board("D E A C G F B");
@@ -222,7 +368,7 @@ public class PuzzleUnitTests {
         }
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("t8:"+(duration/1000000)*0.001  +"s");
+        System.out.println("t81:"+formatter.format(duration*0.000001)   +"ms");
     }
 
     @Test
@@ -316,4 +462,32 @@ public class PuzzleUnitTests {
         assertEquals(3, b.getH(b2Board),0);
     }
 
-}*/
+    @Test
+    public void testgetH3() throws CloneNotSupportedException {
+        Ilayout b=new Board("BAD FEC");
+        Ilayout b2Board=new Board("ABCDEF");
+        assertEquals(7, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH4() throws CloneNotSupportedException {
+        Ilayout b=new Board("GF EDC B A");
+        Ilayout b2Board=new Board("ABCDEFG");
+        assertEquals(6, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH5() throws CloneNotSupportedException {
+        Ilayout b=new Board("FACE BG D");
+        Ilayout b2Board=new Board("E ACB GD F");
+        assertEquals(7, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH6() throws CloneNotSupportedException {
+        Ilayout b=new Board("BAD FEC");
+        Ilayout b2Board=new Board("BADFEC");
+        assertEquals(5, b.getH(b2Board),0);
+    }
+
+}

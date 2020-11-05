@@ -49,7 +49,6 @@ class BestFirst {
     private State actual;
     private Ilayout objective;
     private double max_h;
-    private int max_deep;
     
     final private List<State> sucessores(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
@@ -84,7 +83,7 @@ class BestFirst {
                 sucs=sucessores(actual);
                 fechados.add(actual);
                 for(State suc:sucs){
-                    if(!fechados.contains(suc) && suc.getH()<=max_h){
+                    if(!fechados.contains(suc)){
                         abertos.add(suc);
                     }
                     //System.out.println(suc);

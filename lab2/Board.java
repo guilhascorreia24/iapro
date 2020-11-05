@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-
 interface Ilayout {
     /**
      * @return the children of the receiver.
@@ -53,8 +52,9 @@ class Board implements Ilayout, Cloneable {
                 blocks += j;
             }
         }
-     //    if(blocks>7)throw new IllegalStateException("Invalid arg in Board constructor"); 
-         
+        // if(blocks>7)throw new IllegalStateException("Invalid arg in Board
+        // constructor");
+
         // dim=board.size();
         // System.out.println(board);
     }
@@ -98,18 +98,16 @@ class Board implements Ilayout, Cloneable {
     @Override
     public List<Ilayout> children() throws CloneNotSupportedException { // criar os filhos
         List<Ilayout> children = new ArrayList<Ilayout>();
-        for(int i = 0; i<board.size(); i++)
-        {
+        for (int i = 0; i < board.size(); i++) {
             Board child = (Board) clone();
             char block = child.board.get(i).pop();
-            if(child.board.get(i).isEmpty())
+            if (child.board.get(i).isEmpty())
                 child.board.remove(i);
 
-            for(int j = 0; j<child.board.size(); j++)
-            {
+            for (int j = 0; j < child.board.size(); j++) {
                 Board cloneChild = (Board) child.clone();
                 cloneChild.board.get(j).push(block);
-                if(!children.contains(cloneChild) && !cloneChild.equals(this)){
+                if (!children.contains(cloneChild) && !cloneChild.equals(this)) {
                     children.add(cloneChild);
                 }
             }
@@ -117,7 +115,7 @@ class Board implements Ilayout, Cloneable {
             Stack<Character> last = new Stack<Character>();
             last.push(block);
             child.board.add(last);
-            if(!children.contains(child) && !child.equals(this)){
+            if (!children.contains(child) && !child.equals(this)) {
                 children.add(child);
             }
         }
@@ -155,34 +153,38 @@ class Board implements Ilayout, Cloneable {
     @Override
     public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica, parecido a distancia manhattan
         Board conf_final = (Board) b;
-        for (Stack<Character> pilha_final : conf_final.board) {
-            if (!board.contains(pilha_final)) {
+        for (Stack<Character> pilha_inicial : board) {
+            if (!conf_final.board.contains(pilha_inicial)) {
             List<Character> under = new ArrayList<>();
-            for (Character c : pilha_final) {
-                    for (Stack<Character> pilha_inicial : board) {
-                        if (pilha_inicial.contains(c)) {
-                            Character c2 = pilha_inicial.firstElement();
-                            int same_unders = 0;
-                            boolean base = true;
-                            int i = 1;
-                            while (c2 != c) {
-                                base = false;
-                                if (under.contains(c2)) {
-                                    // System.out.println(c2);
-                                    same_unders++;
+            for (int i=0;i<pilha_inicial.size();i++) {
+                Character c=pilha_inicial.get(i);
+                    for (Stack<Character> pilha_final : conf_final.board) {
+                        if (pilha_final.contains(c)) {
+                            if(pilha_final.indexOf(c)+i==0){
+                                h+=0;
+                            }else{
+                                Character c2=pilha_final.firstElement();
+                                int j=1,unders=0;
+                                while(c2!=c){
+                                    if(under.contains(c2)){
+                                        unders++;
+                                    }
+                                    c2=pilha_final.elementAt(j);
+                                    j++;
                                 }
-                                c2 = pilha_inicial.elementAt(i);
-                                i++;
+                                //System.out.println(under.size()+" "+unders+" "+(j-1));
+                                if(unders==under.size() && j-1==under.size()){
+                                    h+=0;
+                                }
+                                else if(unders==0){
+                                    h++;
+                                }else{
+                                    h+=2;
+                                }
                             }
-                            // System.out.println(same_unders+" "+base);
-                            if (same_unders < under.size() && same_unders > 0 && !base)
-                                h += 2;
-                            else if (pilha_inicial.firstElement() == pilha_final.firstElement())
-                                h += 0;
-                            else
-                                h++;
                         }
                     }
+                    //System.out.println(c+" "+h);
                     under.add(c);
                 }
             }
@@ -190,7 +192,7 @@ class Board implements Ilayout, Cloneable {
         return h;
     }
 
-    public double getF() { //indice de promessa, estimativa do custo do caminho 
+    public double getF() { // indice de promessa, estimativa do custo do caminho
         return h + getG();
     }
 }
