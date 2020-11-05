@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+//import org.graalvm.compiler.phases.common.NodeCounterPhase.Stage;
+
 interface Ilayout {
     /**
      * @return the children of the receiver.
@@ -164,17 +166,24 @@ class Board implements Ilayout, Cloneable {
                                 h+=0;
                             }else{
                                 Character c2=pilha_final.firstElement();
-                                int j=1,unders=0;
+                                int j=1,unders=0,seq=0;
                                 while(c2!=c){
                                     if(under.contains(c2)){
+                                        if(pilha_final.indexOf(c2)==pilha_inicial.indexOf(c2)){
+                                            //System.out.println(pilha_final.indexOf(c2)+" "+pilha_inicial.indexOf(c2)+" "+c2);
+                                            seq++;
+                                        }
                                         unders++;
                                     }
                                     c2=pilha_final.elementAt(j);
                                     j++;
                                 }
-                                //System.out.println(under.size()+" "+unders+" "+(j-1));
+                                //System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq);
                                 if(unders==under.size() && j-1==under.size()){
-                                    h+=0;
+                                    if(seq!=unders)
+                                        h+=2;
+                                    else
+                                        h+=0;
                                 }
                                 else if(unders==0){
                                     h++;
@@ -191,6 +200,26 @@ class Board implements Ilayout, Cloneable {
         }
         return h;
     }
+
+    /*@Override
+    public double getH(Ilayout b){ 2 heuristica nao funciona para + de 7 blocos
+        Board b2=(Board)b;
+        int h=0;
+        for(Stack<Character> s:board){
+            for(int j=0;j<s.size();j++){
+                if(!b2.board.contains(s)){
+                for(Stack<Character> s2:b2.board){
+                    if(s2.contains(s.get(j))){
+                        if(s2.indexOf(s.get(j))!=j){
+                            h++;
+                        }
+                    }
+                }
+            }
+            }
+        }
+        return h;
+    }*/
 
     public double getF() { // indice de promessa, estimativa do custo do caminho
         return h + getG();

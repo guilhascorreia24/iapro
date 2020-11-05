@@ -87,7 +87,6 @@ public class PuzzleUnitTests {
 
     @Test
     public void test() throws CloneNotSupportedException {
-        //long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
         long startTime = System.nanoTime();
         Board b=new Board("CAB");
         Board b2=new Board("ABC");
@@ -98,9 +97,6 @@ public class PuzzleUnitTests {
             if (!it.hasNext())
                 assertEquals(4,(int)i.getG());
         }
-        //long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-        //long actualMemUsed=afterUsedMem-beforeUsedMem;
-        //System.out.println(actualMemUsed+" "+beforeUsedMem);
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
@@ -372,12 +368,67 @@ public class PuzzleUnitTests {
     }
 
     @Test
+    public void testChildren() throws CloneNotSupportedException
+    {
+        Board b = new Board("A CB");
+        List<Ilayout> result = b.children();
+        List<Ilayout> l = new ArrayList<Ilayout>();
+        l.add(new Board("CBA"));
+        //l.add(new Board("CB A"));
+        l.add(new Board("AB C"));
+        l.add(new Board("A C B"));
+        assertEquals(result, l);
+    }
+
+    @Test
+    public void testChildren2() throws CloneNotSupportedException
+    {
+        Board b = new Board("ABC");
+        List<Ilayout> result = b.children();
+        List<Ilayout> l = new ArrayList<Ilayout>();
+        l.add(new Board("AB C"));
+        assertEquals(result, l);
+    }
+
+    @Test
+    public void testChildren3() throws CloneNotSupportedException
+    {
+        Board b = new Board("A B C");
+        List<Ilayout> result = b.children();
+        List<Ilayout> l = new ArrayList<Ilayout>();
+        l.add(new Board("BA C"));
+        l.add(new Board("B CA"));
+        l.add(new Board("AB C"));
+        l.add(new Board("A CB"));
+        l.add(new Board("AC B"));
+        l.add(new Board("A BC"));
+        assertEquals(result, l);
+    }
+
+    @Test
+    public void testChildren4() throws CloneNotSupportedException
+    {
+        Board b = new Board("AB C");
+        List<Ilayout> result = b.children();
+        List<Ilayout> l = new ArrayList<Ilayout>();
+        l.add(new Board("A CB"));
+        l.add(new Board("A C B"));
+        l.add(new Board("ABC"));
+        //l.add(new Board("AB C"));
+        assertEquals(result, l);
+    }
+
+    @Test
     public void testchildren() throws CloneNotSupportedException {
-        Board b=new Board("AB C");
-        List<Ilayout> children = b.children();
-        List<Ilayout> child=new ArrayList<Ilayout>();
-        child.add(new Board("A C B"));child.add(new Board("AB C"));child.add(new Board("A CB"));child.add(new Board("AB C"));child.add(new Board("ABC"));
-        assertEquals(child, children);
+        Board b = new Board("AB CD");
+        List<Ilayout> result = b.children();
+        List<Ilayout> l = new ArrayList<Ilayout>();
+        l.add(new Board("A CDB"));
+        l.add(new Board("A CD B"));
+        l.add(new Board("ABD C"));
+        l.add(new Board("AB D C"));
+        //l.add(new Board("AB C"));
+        assertEquals(result, l);
     }
 
     @Test
@@ -487,6 +538,48 @@ public class PuzzleUnitTests {
     public void testgetH6() throws CloneNotSupportedException {
         Ilayout b=new Board("BAD FEC");
         Ilayout b2Board=new Board("BADFEC");
+        assertEquals(5, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH7() throws CloneNotSupportedException {
+        Ilayout b=new Board("BAD FEC");
+        Ilayout b2Board=new Board("ABDFEC");
+        assertEquals(9, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH8() throws CloneNotSupportedException {
+        Ilayout b=new Board("FA CE BG D");
+        Ilayout b2Board=new Board("CFAE DBG");
+        assertEquals(8, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH9() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCD");
+        Ilayout b2Board=new Board("ABDC");
+        assertEquals(4, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH10() throws CloneNotSupportedException {
+        Ilayout b=new Board("BD A G C FE");
+        Ilayout b2Board=new Board("ABC G F ED");
+        assertEquals(4, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH11() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCDEF");
+        Ilayout b2Board=new Board("ABDCEF");
+        assertEquals(8, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH12() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCDEF");
+        Ilayout b2Board=new Board("A B D C E F");
         assertEquals(5, b.getH(b2Board),0);
     }
 
