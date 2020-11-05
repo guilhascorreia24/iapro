@@ -83,7 +83,7 @@ class BestFirst {
                 sucs=sucessores(actual);
                 fechados.add(actual);
                 for(State suc:sucs){
-                    if(!fechados.contains(suc)){
+                    if(!fechados.contains(suc) && suc.getF()<=max_h){
                         abertos.add(suc);
                     }
                     //System.out.println(suc);
