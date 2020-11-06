@@ -436,16 +436,7 @@ public class PuzzleUnitTests {
         Board b=new Board("ABC");
         List<Ilayout> children = b.children();
         List<Ilayout> child=new ArrayList<Ilayout>();
-        child.add(new Board("AB C"));child.add(new Board("ABC"));
-        assertEquals(child, children);
-    }
-
-    @Test
-    public void testchildren3() throws CloneNotSupportedException {
-        Board b=new Board("A B C");
-        List<Ilayout> children = b.children();
-        List<Ilayout> child=new ArrayList<Ilayout>();
-        child.add(new Board("B C A"));child.add(new Board("BA C"));child.add(new Board("B CA"));child.add(new Board("A C B"));child.add(new Board("AB C"));child.add(new Board("A CB"));child.add(new Board("A B C"));child.add(new Board("AC B"));child.add(new Board("A BC"));
+        child.add(new Board("AB C"));
         assertEquals(child, children);
     }
 
@@ -454,7 +445,7 @@ public class PuzzleUnitTests {
         Board b=new Board("A BC");
         List<Ilayout> children = b.children();
         List<Ilayout> child=new ArrayList<Ilayout>();
-        child.add(new Board("BC A"));child.add(new Board("BCA"));child.add(new Board("A B C"));child.add(new Board("AC B"));
+        child.add(new Board("BCA"));child.add(new Board("AC B"));child.add(new Board("A B C"));
         assertEquals(child, children);
     }
 
@@ -582,5 +573,256 @@ public class PuzzleUnitTests {
         Ilayout b2Board=new Board("A B D C E F");
         assertEquals(5, b.getH(b2Board),0);
     }
+
+    @Test
+    public void testgetH13() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCDEFG");
+        Ilayout b2Board=new Board("BCDEFGA");
+        assertEquals(12, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH14() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCD EFGH IJ");
+        Ilayout b2Board=new Board("DE AJC HGIFB");
+        assertEquals(10, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetG() throws CloneNotSupportedException {
+        Ilayout b=new Board("AB C");
+        Ilayout b2Board=new Board("A B C");
+        double h=b.getH(b2Board);
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible() throws CloneNotSupportedException {
+        Ilayout b=new Board("AB C");
+        Ilayout b2Board=new Board("A B C");
+        double h=b.getH(b2Board);
+
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible1() throws CloneNotSupportedException {
+        Ilayout b=new Board("BAD FEC");
+        Ilayout b2Board=new Board("ABCDEF");
+        double h=b.getH(b2Board);
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible2() throws CloneNotSupportedException {
+        Ilayout b=new Board("GF EDC B A");
+        Ilayout b2Board=new Board("ABCDEFG");
+        double h=b.getH(b2Board);
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible3() throws CloneNotSupportedException {
+        Ilayout b=new Board("FACE BG D");
+        Ilayout b2Board=new Board("E ACB GD F");
+        double h=b.getH(b2Board);
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible4() throws CloneNotSupportedException {
+        Ilayout b=new Board("BAD FEC");
+        Ilayout b2Board=new Board("BADFEC");
+        double h=b.getH(b2Board);
+
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        };
+    }
+
+    @Test
+    public void testAdmissible5() throws CloneNotSupportedException {
+        Ilayout b=new Board("BAD FEC");
+        Ilayout b2Board=new Board("ABDFEC");
+        double h=b.getH(b2Board);
+  
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible6() throws CloneNotSupportedException {
+        Ilayout b=new Board("FA CE BG D");
+        Ilayout b2Board=new Board("CFAE DBG");
+        double h=b.getH(b2Board);
+   
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible7() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCD");
+        Ilayout b2Board=new Board("ABDC");
+        double h=b.getH(b2Board);
+      
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible8() throws CloneNotSupportedException {
+        Ilayout b=new Board("BD A G C FE");
+        Ilayout b2Board=new Board("ABC G F ED");
+        double h=b.getH(b2Board);
+   
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible9() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCDEF");
+        Ilayout b2Board=new Board("ABDCEF");
+        double h=b.getH(b2Board);
+  
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible10() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCDEF");
+        Ilayout b2Board=new Board("A B D C E F");
+        double h=b.getH(b2Board);
+   
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible11() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCDEFG");
+        Ilayout b2Board=new Board("BCDEFGA");
+        double h=b.getH(b2Board);
+  
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void testAdmissible12() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCD EFGH IJ");
+        Ilayout b2Board=new Board("DE AJC HGIFB");
+        double h=b.getH(b2Board);
+
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(true,h<=i.getG());
+            }
+        }
+    }
+
+    @Test
+    public void test10() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCD EFGH IJ");
+        Ilayout b2Board=new Board("DE AJC HGIFB");
+
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b,b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(11,(int)i.getG());
+            }
+        }
+    }
+
+
 
 }

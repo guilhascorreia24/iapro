@@ -121,7 +121,6 @@ class Board implements Ilayout, Cloneable {
                 children.add(child);
             }
         }
-
         return children;
     }
 
@@ -153,7 +152,7 @@ class Board implements Ilayout, Cloneable {
     }
 
     @Override
-    public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica, parecido a distancia manhattan
+    public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
         Board conf_final = (Board) b;
         for (Stack<Character> pilha_inicial : board) {
             if (!conf_final.board.contains(pilha_inicial)) {
@@ -162,6 +161,7 @@ class Board implements Ilayout, Cloneable {
                 Character c=pilha_inicial.get(i);
                     for (Stack<Character> pilha_final : conf_final.board) {
                         if (pilha_final.contains(c)) {
+                            //System.out.println(pilha_final.indexOf(c)+" "+i);
                             if(pilha_final.indexOf(c)+i==0){
                                 h+=0;
                             }else{
@@ -170,7 +170,7 @@ class Board implements Ilayout, Cloneable {
                                 while(c2!=c){
                                     if(under.contains(c2)){
                                         if(pilha_final.indexOf(c2)==pilha_inicial.indexOf(c2)){
-                                            //System.out.println(pilha_final.indexOf(c2)+" "+pilha_inicial.indexOf(c2)+" "+c2);
+                                            System.out.println(pilha_final.indexOf(c2)+" "+pilha_inicial.indexOf(c2)+" "+c2);
                                             seq++;
                                         }
                                         unders++;
@@ -202,15 +202,16 @@ class Board implements Ilayout, Cloneable {
     }
 
     /*@Override
-    public double getH(Ilayout b){ 2 heuristica nao funciona para + de 7 blocos
+    public double getH(Ilayout b){// 2 heuristica nao funciona para + de 7 blocos
         Board b2=(Board)b;
         int h=0;
         for(Stack<Character> s:board){
+            if(!b2.board.contains(s)){
             for(int j=0;j<s.size();j++){
-                if(!b2.board.contains(s)){
                 for(Stack<Character> s2:b2.board){
                     if(s2.contains(s.get(j))){
-                        if(s2.indexOf(s.get(j))!=j){
+                        //System.out.println(s.get(j)+" "+(j==s2.indexOf(s.get(j))));
+                        if(board.indexOf(s)!=b2.board.indexOf(s2) || s2.indexOf(s.get(j))!=j){
                             h++;
                         }
                     }

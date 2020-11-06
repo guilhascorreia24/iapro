@@ -61,7 +61,7 @@ class BestFirst {
         }
         return sucs;
     }
-
+    int nos=0;
     final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo bfs
         objective = goal;
         Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getF() - s2.getF()));
@@ -81,9 +81,10 @@ class BestFirst {
                 break;
             }else{
                 sucs=sucessores(actual);
+                nos+=sucs.size();
                 fechados.add(actual);
                 for(State suc:sucs){
-                    if(!fechados.contains(suc) && suc.getF()<=max_h){
+                    if(!fechados.contains(suc)){
                         abertos.add(suc);
                     }
                     //System.out.println(suc);
@@ -91,7 +92,6 @@ class BestFirst {
             }
         }
         List<State> sol=new ArrayList<State>();
-        
         //actual.layout=goal; 
         while(actual!=null){
             sol.add(actual);
