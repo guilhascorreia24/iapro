@@ -48,8 +48,14 @@ class BestFirst {
     //protected Queue<State> abertos;
     private State actual;
     private Ilayout objective;
-    private double max_h;
+    //private double max_h;
     
+    /***
+     * Gera os filhos do no atual
+     * @param n estado actual
+     * @return retorna a lista de filhos que o estado actual tem, expecto os que sao iguais ao estado atual
+     * @throws CloneNotSupportedException caso nao consiga clonar uma configuracao
+     */
     final private List<State> sucessores(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
         List<Ilayout> children = n.layout.children();
@@ -61,14 +67,23 @@ class BestFirst {
         }
         return sucs;
     }
-    int nos=0;
+    //int nos=0;
+
+    /***
+     * Esta funcao, utiliza o algoritmo A*, que consiste em pesquisar pelo estado com valor menor de F (g+h) que esta na lista 
+     * ordenada abertos, e os casos que sao avaliados vao para lista fechados para nao serem pesquisados outra vez
+     * @param s, configuracao inicial 
+     * @param goal, configuracao final
+     * @return retorna a lista com a sequencia de passos minimos para chegar a configuracao final
+     * @throws CloneNotSupportedException, caso nao consiga clonar uma configuracao
+     */
     final public Iterator<State> solve(Ilayout s, Ilayout goal) throws CloneNotSupportedException { // algoritmo bfs
         objective = goal;
         Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getF() - s2.getF()));
         List<State> fechados = new ArrayList<>();
         abertos.add(new State(s, null,objective));
         actual=abertos.element();
-        max_h=actual.getH();
+        //max_h=actual.getH();
         //System.out.println(s.toString());
         List<State> sucs;
         while(!actual.isGoal(goal)){
@@ -81,7 +96,7 @@ class BestFirst {
                 break;
             }else{
                 sucs=sucessores(actual);
-                nos+=sucs.size();
+                //nos+=sucs.size();
                 fechados.add(actual);
                 for(State suc:sucs){
                     if(!fechados.contains(suc)){
@@ -101,6 +116,13 @@ class BestFirst {
         return sol.iterator();
     }
 
+    /**
+     * 
+     * @param s
+     * @param goal
+     * @return
+     * @throws CloneNotSupportedException
+     */
     public Iterator<State> Ida(Ilayout s,Ilayout goal) throws CloneNotSupportedException {
         objective=goal;
         State root=new State(s,null,objective);
@@ -108,7 +130,7 @@ class BestFirst {
         Stack<State> abertos=new Stack<>();
         abertos.add(root);
         while(true){
-            actual=search(abertos,0.0,thres);
+            actual=search(abertos,thres);
             if(actual.isGoal(objective)) break;
             thres=actual.f;
         }
@@ -121,7 +143,7 @@ class BestFirst {
         return sol.iterator(); 
     }
 
-    private BestFirst.State search(Stack<BestFirst.State> abertos, double d, double thres) throws CloneNotSupportedException {
+    private BestFirst.State search(Stack<BestFirst.State> abertos, double thres) throws CloneNotSupportedException {
         actual=abertos.lastElement();
         if(actual.f>thres){
             return actual;
@@ -129,17 +151,21 @@ class BestFirst {
         if(actual.isGoal(objective)){
             return actual;
         }
+        State min_state=new State(actual.layout,actual.father,objective);
         List<State> sucs=sucessores(actual);
         for(State s:sucs){
             if(!abertos.contains(s)){
                 abertos.push(s);
-                actual=search(abertos, actual.f, thres);
+                actual=search(abertos, thres);
                 if(actual.isGoal(objective)){
                     return actual;
+                }
+                if(actual.f<min_state.f){
+                    min_state=actual;
                 }
                 abertos.pop();
             }
         }
-        return actual;
+        return min_state;
     }
 }

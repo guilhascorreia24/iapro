@@ -35,10 +35,18 @@ class Board implements Ilayout, Cloneable {
     private LinkedList<Stack<Character>> board = new LinkedList<Stack<Character>>();
     private int h = 0;
     int blocks = 0;
-
+    
+    /**
+     * Board vazia 
+     */
     public Board() {
     }
 
+    /**
+     * 
+     * @param str recebe uma string que representa a board
+     * @throws IllegalStateException caso tenha mais que o numero de blocks necessarios
+     */
     public Board(String str) throws IllegalStateException {
         String[] b2 = str.split(" ");
         // System.out.println(b2.length);
@@ -54,13 +62,15 @@ class Board implements Ilayout, Cloneable {
                 blocks += j;
             }
         }
-        // if(blocks>7)throw new IllegalStateException("Invalid arg in Board
-        // constructor");
+        if(blocks>7) throw new IllegalStateException("Invalid arg in Board constructor");
 
         // dim=board.size();
         // System.out.println(board);
     }
 
+    /**
+     * representa a board, imprime
+     */
     @Override
     public String toString() {
         StringWriter writer = new StringWriter();
@@ -81,6 +91,9 @@ class Board implements Ilayout, Cloneable {
         return writer.toString();
     }
 
+    /**
+     * Clona a board actual
+     */
     @Override
     public Object clone() throws CloneNotSupportedException {
         Board nBoard = new Board();
@@ -97,6 +110,9 @@ class Board implements Ilayout, Cloneable {
         return nBoard;
     }
 
+    /**
+     * Criar todos os filhos da board actual
+     */
     @Override
     public List<Ilayout> children() throws CloneNotSupportedException { // criar os filhos
         List<Ilayout> children = new ArrayList<Ilayout>();
@@ -122,13 +138,19 @@ class Board implements Ilayout, Cloneable {
             }
         }
         return children;
-    }
+    }  
 
+    /**
+     * Compara a board actual com a l
+     */
     @Override
     public boolean isGoal(Ilayout l) {
         return this.equals(l);
     }
 
+    /**
+     * Compara a board actual com a l
+     */
     @Override
     public boolean equals(Object b) { // compara 2 boards
         if (this.getClass().equals(b.getClass())) {
@@ -145,12 +167,29 @@ class Board implements Ilayout, Cloneable {
             return false;
         }
     }
-
+    
+    /**
+     * representa o custo do move
+     */
     @Override
     public double getG() { // custo
         return 1;
     }
 
+    /**
+     * representa o custo previsto da board actual ate a board b, usando a seguinte estrategia:
+     * 1)Ve a config incial um bloco
+     * 1)Quando vai verificar se esse bloco existe an conf final ele verifica logo se esxiste um stack igual 
+     * a inicial e ignora logo essa stack
+     * 3)No caso de a satck nao existir na conf final, vamso verificar a stack onde se encontra o bloco que 
+     * encontramos na conf inicial e vemos as seguintes caracteristicas
+     *   3.1)Caso o bloco seja uma base na stack da conf inicial e na final, é somado a heuristica 0
+     *   3.2)Caso esse bloco na stack da config inicial tenha +1 bloco debaixo dele que estejam tambem na stack da
+     *    config final é somado +2, visto que esse bloco tera de ir ao chao e subir para cima da nova stack, caso 
+     *    nessa stack config final tenha o mesmo numero de blocos e esses estejam na mesma seqquencia da conf inicial 
+     *    é somado 0 a heuristica
+     *   3.3)No caso de nenhuma das outras 2 condicoes acontecer é somado +1 a heuristica, 
+     */
     @Override
     public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
         Board conf_final = (Board) b;
@@ -170,7 +209,7 @@ class Board implements Ilayout, Cloneable {
                                 while(c2!=c){
                                     if(under.contains(c2)){
                                         if(pilha_final.indexOf(c2)==pilha_inicial.indexOf(c2)){
-                                            System.out.println(pilha_final.indexOf(c2)+" "+pilha_inicial.indexOf(c2)+" "+c2);
+                                            //System.out.println(pilha_final.indexOf(c2)+" "+pilha_inicial.indexOf(c2)+" "+c2);
                                             seq++;
                                         }
                                         unders++;
@@ -179,16 +218,11 @@ class Board implements Ilayout, Cloneable {
                                     j++;
                                 }
                                 //System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq);
-                                if(unders==under.size() && j-1==under.size()){
-                                    if(seq!=unders)
-                                        h+=2;
-                                    else
-                                        h+=0;
-                                }
-                                else if(unders==0){
+                                 if(unders==0){
                                     h++;
                                 }else{
-                                    h+=2;
+                                    if(under.size()==unders && j-1==under.size() && unders==seq) h+=0; // caso tenha o mesmo nº de blocos debaixo e estejam nna mema seq 
+                                    else h+=2;
                                 }
                             }
                         }
@@ -222,7 +256,10 @@ class Board implements Ilayout, Cloneable {
         return h;
     }*/
 
-    public double getF() { // indice de promessa, estimativa do custo do caminho
+    /**
+     * indice de promessa, estimativa do custo do caminho
+     */
+    public double getF() { 
         return h + getG();
     }
 }

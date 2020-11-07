@@ -13,7 +13,7 @@ public class Main {
             sc.close();
             throw new IllegalStateException("Fail: Boards sizes");
         }
-        Iterator<BestFirst.State> it = s.solve(s1, s2);
+        Iterator<BestFirst.State> it = s.Ida(s1, s2);
         if (it == null)
             System.out.println("no solution was found");
         else {
@@ -24,7 +24,7 @@ public class Main {
                     System.out.println((int)i.getG());
             }
         }
-        System.out.println(s.nos);
+        //System.out.println(s.nos);
         sc.close();
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
