@@ -119,7 +119,8 @@ class BestFirst {
 
     /**
      * Esta funcao e um algoritmo de pesquisa chamado IDA*, identico ao A* mas neste caso pesquisa ate uma 
-     * certa profunfidade que nao é uniforme,
+     * certa profunfidade que muda ao logo conforme cada profundidade (IDS) que nao é uniforme segue a profundidade 
+     * da configuraçao menor, percorre todos os filhos possiveis que tenham um valor indice de promessa menor que do actual.
      * @param s configuracao incial
      * @param goal  configuracao final
      * @return retorna a sequencia de passos minimos da conf inicial ate conf final
