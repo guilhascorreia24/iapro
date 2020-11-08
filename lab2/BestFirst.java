@@ -81,7 +81,8 @@ class BestFirst {
         objective = goal;
         Queue<State> abertos = new PriorityQueue<>(10, (s1, s2) -> (int) Math.signum(s1.getF() - s2.getF()));
         List<State> fechados = new ArrayList<>();
-        abertos.add(new State(s, null,objective));
+        State root=new State(s, null,objective);
+        abertos.add(root);
         actual=abertos.element();
         //max_h=actual.getH();
         //System.out.println(s.toString());
@@ -117,10 +118,11 @@ class BestFirst {
     }
 
     /**
-     * 
-     * @param s
-     * @param goal
-     * @return
+     * Esta funcao e um algoritmo de pesquisa chamado IDA*, identico ao A* mas neste caso pesquisa ate uma 
+     * certa profunfidade que nao é uniforme,
+     * @param s configuracao incial
+     * @param goal  configuracao final
+     * @return retorna a sequencia de passos minimos da conf inicial ate conf final
      * @throws CloneNotSupportedException
      */
     public Iterator<State> Ida(Ilayout s,Ilayout goal) throws CloneNotSupportedException {
@@ -143,6 +145,14 @@ class BestFirst {
         return sol.iterator(); 
     }
 
+
+    /**
+     * 
+     * @param abertos lista de configuracoes nao vista 
+     * @param thres valor maximo da profundidade 
+     * @return retorna a configuracao com profindade maxima a que pode pesquisar
+     * @throws CloneNotSupportedException
+     */
     private BestFirst.State search(Stack<BestFirst.State> abertos, double thres) throws CloneNotSupportedException {
         actual=abertos.lastElement();
         if(actual.f>thres){

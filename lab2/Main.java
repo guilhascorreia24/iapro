@@ -2,7 +2,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 public class Main {
-    /*public static void main(String[] args) throws Exception {   
+    public static void main(String[] args) throws Exception {   
         Scanner sc = new Scanner(System.in);
         long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
         long startTime = System.nanoTime();
@@ -32,9 +32,9 @@ public class Main {
         long actualMemUsed=afterUsedMem-beforeUsedMem;
         System.out.println(duration*0.000001  +"ms");
         System.out.println(actualMemUsed);
-    }*/
+    }
 
-    public static void main (String [] args) throws Exception {
+    /*public static void main (String [] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         
         Board start = new Board(sc.nextLine());
@@ -46,7 +46,7 @@ public class Main {
         }
         BestFirst s = new BestFirst();
         //System.out.println(start.getH(goal));
-        Iterator<BestFirst.State> it = s.Ida(start, goal);
+        Iterator<BestFirst.State> it = s.solve(start, goal);
         if (it==null) System.out.println("no solution was found");
         else{
 
@@ -62,5 +62,5 @@ public class Main {
         }
         
         sc.close();
-        }
+        }*/
 }

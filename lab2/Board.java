@@ -177,6 +177,7 @@ class Board implements Ilayout, Cloneable {
     }
 
     /**
+     * 
      * representa o custo previsto da board actual ate a board b, usando a seguinte estrategia:
      * 1)Ve a config incial um bloco
      * 1)Quando vai verificar se esse bloco existe an conf final ele verifica logo se esxiste um stack igual 
@@ -255,6 +256,71 @@ class Board implements Ilayout, Cloneable {
         }
         return h;
     }*/
+
+
+    @Override
+    public double getH(Ilayout b) throws CloneNotSupportedException { 
+        Board conf_final = (Board) b;
+        int contador = 0;
+        for(int i = 0; i < board.size(); i++)
+        {
+            if(!conf_final.board.contains(board.get(i)))
+            {
+              List<Character> under_initial = new ArrayList<>();
+                for(int j = 0; j < board.get(i).size(); j++)
+                {
+                  under_initial.add(board.get(i).get(j));
+                    Character c = board.get(i).elementAt(j);
+                    for(int k = 0; k < conf_final.board.size(); k++)
+                    {
+                        List<Character> under_final = new ArrayList<>();
+                        for(int l = 0; l < conf_final.board.get(k).size(); l++)
+                        {
+                            under_final.add(conf_final.board.get(k).get(l));
+                            Character c2 = conf_final.board.get(k).elementAt(l);
+                            if(c == c2)
+                            {
+  //              				if(j == 0 && l == 0)
+  //              				{
+  //              					//não faz nada
+  //              				}
+                                if(j != 0 && l == 0)
+                                {
+                                    contador++;
+                                }
+                                else if(j == 0 && l != 0)
+                                {
+                                    contador++;
+                                }
+                                else if(j != 0 && l != 0)
+                                {
+                                    if(!under_initial.equals(under_final))
+                                    {
+                                        int m = 0;
+                                        boolean help = false;
+                                        while(m < under_initial.size()-1)
+                                        {
+                                            if(under_final.contains(under_initial.get(m)))
+                                            {
+                                                help = true;
+                                                break;
+                                            }
+                                            m++;
+                                        }
+                                        if(help == true)
+                                            contador+=2;
+                                        else
+                                            contador+=1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return contador;
+    }
 
     /**
      * indice de promessa, estimativa do custo do caminho
