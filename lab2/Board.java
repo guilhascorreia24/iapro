@@ -61,7 +61,7 @@ class Board implements Ilayout, Cloneable {
                 blocks += j;
             }
         }
-        //if(blocks>7) throw new IllegalStateException("Invalid arg in Board constructor");
+       // if(blocks>7) throw new IllegalStateException("Invalid arg in Board constructor");
     }
 
     /**
@@ -178,7 +178,7 @@ class Board implements Ilayout, Cloneable {
      *    e somado 0 a heuristica
      *   3.3)No caso de nenhuma das outras 2 condicoes acontecer e somado +1 a heuristica, 
      */
-    /*@Override
+    @Override
     public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
         Board conf_final = (Board) b;
         for (Stack<Character> pilha_inicial : board) {
@@ -209,7 +209,7 @@ class Board implements Ilayout, Cloneable {
                                  if(unders==0){
                                     h++;
                                 }else{
-                                    if(under.size()==unders && j-1==under.size() && unders==seq) h+=0; // caso tenha o mesmo nº de blocos debaixo e estejam nna mema seq 
+                                    if(under.size()==unders && j-1==under.size() && unders==seq) h+=0; // caso tenha o mesmo n de blocos debaixo e estejam nna mema seq 
                                     else h+=2;
                                 }
                             }
@@ -221,7 +221,7 @@ class Board implements Ilayout, Cloneable {
             }
         }
         return h;
-    }*/
+    }
 
     /**
      * representa o custo previsto da board actual ate a board b, usando a seguinte estrategia:
@@ -238,8 +238,8 @@ class Board implements Ilayout, Cloneable {
      *    nessa stack da config final tenha o mesmo numero de blocos e esses estejam na mesma seqquencia da conf inicial 
      *    despresamos esse caso porque nao houve nenhuma alteracao nos blocos
      */
-    @Override
-    public double getH(Ilayout b) throws CloneNotSupportedException {  // heuristica 2º versao
+   /* @Override
+    public double getH(Ilayout b) throws CloneNotSupportedException {  // heuristica 2 versao
         Board conf_final = (Board) b;
         int counter = 0;
         for(int i = 0; i < board.size(); i++)
@@ -296,7 +296,7 @@ class Board implements Ilayout, Cloneable {
             }
         }
         return counter;
-    }
+    }*/
 
     /**
      * indice de promessa, estimativa do custo do caminho

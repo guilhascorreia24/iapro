@@ -1,4 +1,4 @@
-/*import static org.junit.Assert.*;
+import static org.junit.Assert.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -188,7 +188,7 @@ public class PuzzleUnitTests {
         System.out.println("t6:"+formatter.format(duration*0.000001)   +"ms");
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test 
     public void test7() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
         Board b=new Board("ABCDEFGHIJ");
@@ -331,7 +331,7 @@ public class PuzzleUnitTests {
         System.out.println("t61:"+formatter.format(duration*0.000001)   +"ms");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void test7_1() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
         Board b=new Board("ABCDEFGHIJ");
@@ -581,7 +581,7 @@ public class PuzzleUnitTests {
         assertEquals(12, b.getH(b2Board),0);
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test 
     public void testgetH14() throws CloneNotSupportedException {
         Ilayout b=new Board("ABCD EFGH IJ");
         Ilayout b2Board=new Board("DE AJC HGIFB");
@@ -832,7 +832,7 @@ public class PuzzleUnitTests {
         }
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testAdmissible12() throws CloneNotSupportedException {
         Ilayout b=new Board("ABCD EFGH IJ");
         Ilayout b2Board=new Board("DE AJC HGIFB");
@@ -851,7 +851,7 @@ public class PuzzleUnitTests {
         }
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test 
     public void test10() throws CloneNotSupportedException {
         Ilayout b=new Board("ABCD EFGH IJ");
         Ilayout b2Board=new Board("DE AJC HGIFB");
@@ -865,4 +865,4 @@ public class PuzzleUnitTests {
             }
         }
     }
-}*/
+}
