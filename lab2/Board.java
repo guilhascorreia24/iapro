@@ -49,7 +49,6 @@ class Board implements Ilayout, Cloneable {
      */
     public Board(String str) throws IllegalStateException {
         String[] b2 = str.split(" ");
-        // System.out.println(b2.length);
         for (int i = 0; i < b2.length; i++) {
             if (!b2[i].equals("")) {
                 int j = 0;
@@ -62,10 +61,7 @@ class Board implements Ilayout, Cloneable {
                 blocks += j;
             }
         }
-        if(blocks>7) throw new IllegalStateException("Invalid arg in Board constructor");
-
-        // dim=board.size();
-        // System.out.println(board);
+        //if(blocks>7) throw new IllegalStateException("Invalid arg in Board constructor");
     }
 
     /**
@@ -130,28 +126,6 @@ class Board implements Ilayout, Cloneable {
         }
         return children;
     }  
-    /*@Override
-    public List<Ilayout> children() throws CloneNotSupportedException 
-    {
-        List<Ilayout> p = new ArrayList<Ilayout>();
-        for(int i = 0; i < board.size(); i++)
-        {
-            if(!board.get(i).isEmpty())
-            {
-                for(int j = 0; j < board.size(); j++)
-                {
-                    if(j != i)
-                    {
-                        Board b = (Board) clone();
-                        b.board.get(j).push(b.board.get(i).pop());
-                        if(!p.contains(b))
-                            p.add(b);
-                    }
-                }
-            }
-        }
-        return p;
-    }*/
 
     /**
      * Compara a board actual com a l
@@ -189,20 +163,20 @@ class Board implements Ilayout, Cloneable {
         return 1;
     }
 
-    /**
+        /**
      * 
      * representa o custo previsto da board actual ate a board b, usando a seguinte estrategia:
      * 1)Ve a config incial um bloco
-     * 1)Quando vai verificar se esse bloco existe an conf final ele verifica logo se esxiste um stack igual 
+     * 2)Quando vai verificar se esse bloco existe na conf final ele verifica logo se existe um stack igual 
      * a inicial e ignora logo essa stack
-     * 3)No caso de a satck nao existir na conf final, vamso verificar a stack onde se encontra o bloco que 
+     * 3)No caso de a stack nao existir na conf final, vamos verificar a stack onde se encontra o bloco que 
      * encontramos na conf inicial e vemos as seguintes caracteristicas
-     *   3.1)Caso o bloco seja uma base na stack da conf inicial e na final, é somado a heuristica 0
+     *   3.1)Caso o bloco seja uma base na stack da conf inicial e na final, e somado a heuristica 0
      *   3.2)Caso esse bloco na stack da config inicial tenha +1 bloco debaixo dele que estejam tambem na stack da
-     *    config final é somado +2, visto que esse bloco tera de ir ao chao e subir para cima da nova stack, caso 
-     *    nessa stack config final tenha o mesmo numero de blocos e esses estejam na mesma seqquencia da conf inicial 
-     *    é somado 0 a heuristica
-     *   3.3)No caso de nenhuma das outras 2 condicoes acontecer é somado +1 a heuristica, 
+     *    config final e somado +2, visto que esse bloco tera de ir ao chao e subir para cima da nova stack, caso 
+     *    nessa stack config final tenha o mesmo numero de blocos e esses estejam na mesma sequencia da conf inicial 
+     *    e somado 0 a heuristica
+     *   3.3)No caso de nenhuma das outras 2 condicoes acontecer e somado +1 a heuristica, 
      */
     /*@Override
     public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
@@ -249,27 +223,6 @@ class Board implements Ilayout, Cloneable {
         return h;
     }*/
 
-    /*@Override
-    public double getH(Ilayout b){// 2 heuristica nao funciona para + de 7 blocos
-        Board b2=(Board)b;
-        int h=0;
-        for(Stack<Character> s:board){
-            if(!b2.board.contains(s)){
-            for(int j=0;j<s.size();j++){
-                for(Stack<Character> s2:b2.board){
-                    if(s2.contains(s.get(j))){
-                        //System.out.println(s.get(j)+" "+(j==s2.indexOf(s.get(j))));
-                        if(board.indexOf(s)!=b2.board.indexOf(s2) || s2.indexOf(s.get(j))!=j){
-                            h++;
-                        }
-                    }
-                }
-            }
-            }
-        }
-        return h;
-    }*/
-
     /**
      * representa o custo previsto da board actual ate a board b, usando a seguinte estrategia:
      * 1)Ve a config incial um bloco
@@ -281,12 +234,12 @@ class Board implements Ilayout, Cloneable {
      *    adicionamos +1, pois esse bloco ira so fazer 1 movimentacao, o mesmo exemplo aplica-se quando na conf inicial o bloco
      *    encontra-se numa posicao sem ser o solo e na conf final ele descola-se para o solo
      *   3.2)Caso esse bloco na stack da config inicial tenha +1 bloco debaixo dele que estejam tambem na stack da
-     *    config final é somado +2, visto que esse bloco tera de ir ao chao e subir para cima da nova stack, caso 
+     *    config final e somado +2, visto que esse bloco tera de ir ao chao e subir para cima da nova stack, caso 
      *    nessa stack da config final tenha o mesmo numero de blocos e esses estejam na mesma seqquencia da conf inicial 
      *    despresamos esse caso porque nao houve nenhuma alteracao nos blocos
      */
     @Override
-    public double getH(Ilayout b) throws CloneNotSupportedException { 
+    public double getH(Ilayout b) throws CloneNotSupportedException {  // heuristica 2º versao
         Board conf_final = (Board) b;
         int counter = 0;
         for(int i = 0; i < board.size(); i++)

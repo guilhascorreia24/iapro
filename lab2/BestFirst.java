@@ -67,7 +67,7 @@ class BestFirst {
         }
         return sucs;
     }
-    //int nos=0;
+   
 
     /***
      * Esta funcao, utiliza o algoritmo A*, que consiste em pesquisar pelo estado com valor menor de F (g+h) que esta na lista 
@@ -84,11 +84,8 @@ class BestFirst {
         State root=new State(s, null,objective);
         abertos.add(root);
         actual=abertos.element();
-        //max_h=actual.getH();
-        //System.out.println(s.toString());
         List<State> sucs;
         while(!actual.isGoal(goal)){
-            //System.out.println(actual.getH());
             if(abertos.isEmpty()){
                 throw new IllegalStateException("Fail");
             }
@@ -97,18 +94,15 @@ class BestFirst {
                 break;
             }else{
                 sucs=sucessores(actual);
-                //nos+=sucs.size();
                 fechados.add(actual);
                 for(State suc:sucs){
                     if(!fechados.contains(suc)){
                         abertos.add(suc);
                     }
-                    //System.out.println(suc);
                 }
             }
         }
         List<State> sol=new ArrayList<State>();
-        //actual.layout=goal; 
         while(actual!=null){
             sol.add(actual);
             actual=actual.father;
@@ -119,7 +113,7 @@ class BestFirst {
 
     /**
      * Esta funcao e um algoritmo de pesquisa chamado IDA*, identico ao A* mas neste caso pesquisa ate uma 
-     * certa profunfidade que muda ao logo conforme cada profundidade (IDS) que nao é uniforme segue a profundidade 
+     * certa profunfidade que muda ao logo conforme cada profundidade (IDS) que nao e uniforme segue a profundidade 
      * da configuraçao menor, percorre todos os filhos possiveis que tenham um valor indice de promessa menor que do actual.
      * @param s configuracao incial
      * @param goal  configuracao final
