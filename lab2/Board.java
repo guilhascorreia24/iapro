@@ -71,23 +71,14 @@ class Board implements Ilayout, Cloneable {
     /**
      * representa a board, imprime
      */
-    @Override
-    public String toString() {
+    public String toString()
+    {
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
-        for (int i = 0; i < board.size(); i++) {
-            if (board.get(i).size() > 0) {
-                pw.print("[");
-                pw.print(board.get(i).elementAt(0));
-                int j = 1;
-                while (j < board.get(i).size()) {
-                    pw.print(", " + board.get(i).elementAt(j));
-                    j++;
-                }
-                // if(i<dim-1)
-                pw.println("]");
-            }
-        }
+        for(int i = 0; i < board.size(); i++)
+            if(!board.get(i).isEmpty())
+                pw.println(board.get(i));
+        pw.close();
         return writer.toString();
     }
 
@@ -139,6 +130,28 @@ class Board implements Ilayout, Cloneable {
         }
         return children;
     }  
+    /*@Override
+    public List<Ilayout> children() throws CloneNotSupportedException 
+    {
+        List<Ilayout> p = new ArrayList<Ilayout>();
+        for(int i = 0; i < board.size(); i++)
+        {
+            if(!board.get(i).isEmpty())
+            {
+                for(int j = 0; j < board.size(); j++)
+                {
+                    if(j != i)
+                    {
+                        Board b = (Board) clone();
+                        b.board.get(j).push(b.board.get(i).pop());
+                        if(!p.contains(b))
+                            p.add(b);
+                    }
+                }
+            }
+        }
+        return p;
+    }*/
 
     /**
      * Compara a board actual com a l
@@ -191,7 +204,7 @@ class Board implements Ilayout, Cloneable {
      *    é somado 0 a heuristica
      *   3.3)No caso de nenhuma das outras 2 condicoes acontecer é somado +1 a heuristica, 
      */
-    @Override
+    /*@Override
     public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
         Board conf_final = (Board) b;
         for (Stack<Character> pilha_inicial : board) {
@@ -234,7 +247,7 @@ class Board implements Ilayout, Cloneable {
             }
         }
         return h;
-    }
+    }*/
 
     /*@Override
     public double getH(Ilayout b){// 2 heuristica nao funciona para + de 7 blocos
@@ -257,11 +270,25 @@ class Board implements Ilayout, Cloneable {
         return h;
     }*/
 
-
+    /**
+     * representa o custo previsto da board actual ate a board b, usando a seguinte estrategia:
+     * 1)Ve a config incial um bloco
+     * 2)Quando vai verificar se esse bloco existe na conf final ele verifica logo se existe um stack igual 
+     * a inicial e ignora logo essa stack
+     * 3)Caso a stack nao exista na conf final, vamos verificar a stack onde se encontra o bloco que 
+     * encontramos na conf inicial e vemos as seguintes caracteristicas
+     *   3.1)Na conf inicial caso esteja um bloco no solo e esse mesmo bloco na conf final esteja noutra  posicao sem ser o solo
+     *    adicionamos +1, pois esse bloco ira so fazer 1 movimentacao, o mesmo exemplo aplica-se quando na conf inicial o bloco
+     *    encontra-se numa posicao sem ser o solo e na conf final ele descola-se para o solo
+     *   3.2)Caso esse bloco na stack da config inicial tenha +1 bloco debaixo dele que estejam tambem na stack da
+     *    config final é somado +2, visto que esse bloco tera de ir ao chao e subir para cima da nova stack, caso 
+     *    nessa stack da config final tenha o mesmo numero de blocos e esses estejam na mesma seqquencia da conf inicial 
+     *    despresamos esse caso porque nao houve nenhuma alteracao nos blocos
+     */
     @Override
     public double getH(Ilayout b) throws CloneNotSupportedException { 
         Board conf_final = (Board) b;
-        int contador = 0;
+        int counter = 0;
         for(int i = 0; i < board.size(); i++)
         {
             if(!conf_final.board.contains(board.get(i)))
@@ -280,17 +307,13 @@ class Board implements Ilayout, Cloneable {
                             Character c2 = conf_final.board.get(k).elementAt(l);
                             if(c == c2)
                             {
-  //              				if(j == 0 && l == 0)
-  //              				{
-  //              					//não faz nada
-  //              				}
                                 if(j != 0 && l == 0)
                                 {
-                                    contador++;
+                                    counter++;
                                 }
                                 else if(j == 0 && l != 0)
                                 {
-                                    contador++;
+                                    counter++;
                                 }
                                 else if(j != 0 && l != 0)
                                 {
@@ -308,9 +331,9 @@ class Board implements Ilayout, Cloneable {
                                             m++;
                                         }
                                         if(help == true)
-                                            contador+=2;
+                                            counter+=2;
                                         else
-                                            contador+=1;
+                                            counter+=1;
                                     }
                                 }
                             }
@@ -319,7 +342,7 @@ class Board implements Ilayout, Cloneable {
                 }
             }
         }
-        return contador;
+        return counter;
     }
 
     /**
