@@ -1,4 +1,4 @@
-/*import static org.junit.Assert.*;
+import static org.junit.Assert.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -511,6 +511,8 @@ public class PuzzleUnitTests {
         assertEquals(7, b.getH(b2Board),0);
     }
 
+
+
     @Test
     public void testgetH4() throws CloneNotSupportedException {
         Ilayout b=new Board("GF EDC B A");
@@ -587,6 +589,37 @@ public class PuzzleUnitTests {
         Ilayout b2Board=new Board("DE AJC HGIFB");
         assertEquals(10, b.getH(b2Board),0);
     }
+
+    @Test 
+    public void testgetH15() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABC DEF");
+        Ilayout b2Board=new Board("ABF DEC");
+        assertEquals(3, b.getH(b2Board),0);
+    }
+
+    @Test 
+    public void testgetH16() throws CloneNotSupportedException {
+        Ilayout b=new Board("ACB DEF");
+        Ilayout b2Board=new Board("AFB DEC");
+        assertEquals(5, b.getH(b2Board),0);
+    }
+
+    @Test
+    public void testgetH17() throws CloneNotSupportedException {
+        Ilayout b=new Board("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        Ilayout b2Board=new Board("BCDE FGHIJK LMNOPQRS TUVWXY ZA");
+        assertEquals(46, b.getH(b2Board),0);
+    }
+
+
+@Test
+public void testgetH18() throws CloneNotSupportedException {
+    Ilayout b=new Board("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456");
+    Ilayout b2Board=new Board("B2CD0E FG1HIJ3K 5LM4NOPQR STUV6WXY ZA");
+    assertEquals(46, b.getH(b2Board),0);
+}
+
+
 
     @Test
     public void testgetG() throws CloneNotSupportedException {
@@ -865,4 +898,5 @@ public class PuzzleUnitTests {
             }
         }
     }
-}*/
+
+}
