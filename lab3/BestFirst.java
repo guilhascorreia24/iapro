@@ -130,7 +130,7 @@ class BestFirst {
             actual=search(abertos,thres);
             if(actual.isGoal(objective)) break;
             thres=actual.f;
-            System.out.println(actual.g);
+            //System.out.println(actual.g);
         }
         List<State> sol=new ArrayList<State>();
         while(actual!=null){
