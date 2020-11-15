@@ -7,7 +7,6 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
 
-import jdk.nashorn.api.tree.Tree;
 
 class BestFirst {
     static class State {
@@ -88,7 +87,7 @@ class BestFirst {
         actual=abertos.element();
         List<State> sucs;
         while(!actual.isGoal(goal)){
-            System.out.println(actual.g);
+            //System.out.println(actual.g);
             if(abertos.isEmpty()){
                 throw new IllegalStateException("Fail");
             }
@@ -125,13 +124,13 @@ class BestFirst {
      */
     public Iterator<State> Ida(Ilayout s,Ilayout goal) throws CloneNotSupportedException {
         objective=goal;
-        State root=new State(s,null,objective);
+        State root=new State(s,null,goal);
         double thres=root.getH();
         abertos=new Stack<>();
         abertos.add(root);
         //System.out.println(thres);
         while(true){
-            actual=search(thres,root);
+            actual=search(thres);
             if(actual.isGoal(objective)) break;
             thres=actual.f;
             //System.out.println(actual.g);
@@ -153,9 +152,10 @@ class BestFirst {
      * @return retorna a configuracao com profindade maxima a que pode pesquisar
      * @throws CloneNotSupportedException
      */
-    private BestFirst.State search(double thres,State root) throws CloneNotSupportedException {
+    private BestFirst.State search(double thres) throws CloneNotSupportedException {
         actual=abertos.lastElement();
-        //System.out.println(actual.f+" "+root.h+"\n" );
+        //System.out.println(actual.f+" "+actual.h+"\n" );
+        //System.out.println(actual+"\n");
         if(actual.f>thres){
             return actual;
         }
@@ -168,7 +168,7 @@ class BestFirst {
         for(State s:sucs){
             if(!abertos.contains(s)){
                 abertos.push(s);
-                actual=search(thres,root);
+                actual=search(thres);
                 if(actual.isGoal(objective)){
                     return actual;
                 }

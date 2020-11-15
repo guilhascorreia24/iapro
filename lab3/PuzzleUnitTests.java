@@ -1,4 +1,4 @@
-/*import static org.junit.Assert.*;
+import static org.junit.Assert.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -229,6 +229,7 @@ public class PuzzleUnitTests {
         long startTime = System.nanoTime();
         Board b=new Board("ABCD3EF GHIJ2KLMNOP QRSTU1VW XY4Z");
         Board b2=new Board("B2CD E1FGHI JKLM3N OPQR STU4VW XYZA");
+        System.out.println(b.getH(b2));
         BestFirst s = new BestFirst();
         Iterator<BestFirst.State> it = s.Ida(b,b2);
         while (it.hasNext()) {
@@ -1019,4 +1020,4 @@ public void testgetH18() throws CloneNotSupportedException {
         }
     }
 
-}*/
+}
