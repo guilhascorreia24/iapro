@@ -225,6 +225,24 @@ public class PuzzleUnitTests {
     }
 
     @Test
+    public void test9() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("ABCD3EF GHIJ2KLMNOP QRSTU1VW XY4Z");
+        Board b2=new Board("B2CD E1FGHI JKLM3N OPQR STU4VW XYZA");
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.Ida(b,b2);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()){
+                assertEquals(38,(int)i.getG());
+            }
+        }
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t9:"+formatter.format(duration*0.000001)   +"ms");
+    }
+
+    @Test
     public void test0_1() throws CloneNotSupportedException {
         //long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
         long startTime = System.nanoTime();
@@ -449,12 +467,25 @@ public class PuzzleUnitTests {
         assertEquals(child, children);
     }
 
+    @Test
+    public void testchildren5() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("ABCDEFGH IJKLMNOPQ RSTUVWXYZ");
+        b.children();
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
+        //System.out.println(b.children());
+
+    }
+
 
     @Test
     public void testequals(){
         Board b=new Board("ABC");
         Board b2=new Board("CBA");
         assertEquals(b.equals(b2), false);
+        
     }
 
     @Test
@@ -492,131 +523,220 @@ public class PuzzleUnitTests {
 
     @Test
     public void testgetH() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("AB C");
         Ilayout b2Board=new Board("A B C");
         assertEquals(1, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH2() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("ABCD");
         Ilayout b2Board=new Board("A B C D");
         assertEquals(3, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH3() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("BAD FEC");
         Ilayout b2Board=new Board("ABCDEF");
         assertEquals(7, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
 
 
     @Test
     public void testgetH4() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("GF EDC B A");
         Ilayout b2Board=new Board("ABCDEFG");
         assertEquals(6, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH5() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
         Ilayout b=new Board("FACE BG D");
         Ilayout b2Board=new Board("E ACB GD F");
         assertEquals(7, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH6() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("BAD FEC");
         Ilayout b2Board=new Board("BADFEC");
         assertEquals(5, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH7() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("BAD FEC");
         Ilayout b2Board=new Board("ABDFEC");
         assertEquals(9, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH8() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("FA CE BG D");
         Ilayout b2Board=new Board("CFAE DBG");
         assertEquals(8, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH9() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("ABCD");
         Ilayout b2Board=new Board("ABDC");
         assertEquals(4, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH10() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("BD A G C FE");
         Ilayout b2Board=new Board("ABC G F ED");
         assertEquals(4, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH11() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("ABCDEF");
         Ilayout b2Board=new Board("ABDCEF");
         assertEquals(8, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH12() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("ABCDEF");
         Ilayout b2Board=new Board("A B D C E F");
         assertEquals(5, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH13() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("ABCDEFG");
         Ilayout b2Board=new Board("BCDEFGA");
         assertEquals(12, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test 
     public void testgetH14() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("ABCD EFGH IJ");
         Ilayout b2Board=new Board("DE AJC HGIFB");
         assertEquals(10, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test 
     public void testgetH15() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("ABC DEF");
         Ilayout b2Board=new Board("ABF DEC");
         assertEquals(3, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test 
     public void testgetH16() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("ACB DEF");
         Ilayout b2Board=new Board("AFB DEC");
         assertEquals(5, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
     @Test
     public void testgetH17() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
         Ilayout b=new Board("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         Ilayout b2Board=new Board("BCDE FGHIJK LMNOPQRS TUVWXY ZA");
         assertEquals(46, b.getH(b2Board),0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
 
 @Test
 public void testgetH18() throws CloneNotSupportedException {
+    long startTime = System.nanoTime();
+
     Ilayout b=new Board("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456");
     Ilayout b2Board=new Board("B2CD0E FG1HIJ3K 5LM4NOPQR STUV6WXY ZA");
     assertEquals(59, b.getH(b2Board),0);
+    long endTime = System.nanoTime();
+    long duration = (endTime - startTime);
+    System.out.println(duration*0.000001  +"ms");
 }
 
 

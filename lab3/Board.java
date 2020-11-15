@@ -179,7 +179,7 @@ class Board implements Ilayout, Cloneable {
      *    e somado 0 a heuristica
      *   3.3)No caso de nenhuma das outras 2 condicoes acontecer e somado +1 a heuristica, 
      */
-    @Override
+    /*@Override
     public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
         Board conf_final = (Board) b;
         HashMap<Character,List<Character>> mp=new HashMap<>();HashMap<List<Character>,Character>mp2=new HashMap<>();;
@@ -217,24 +217,12 @@ class Board implements Ilayout, Cloneable {
                                 //System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq);
                                  if(unders==0){
                                     List<Character> s=mp.get(c);
-                                    //Character c3=mp2.get(s);
-                                    //List<Character> s2=mp.get(c3);
-                                    //Character c4=mp2.get(s2);
-                                   // System.out.println(mp2);
-                                    //System.out.println(mp);
-                                    //System.out.println(c+" "+s);
                                     if(mp2.containsKey(s)){
                                         Character c3=mp2.get(s);
-                                        //System.out.println(c3);
                                         if(mp.containsKey(c3)){
                                             List<Character> s2=mp.get(c3);
-                                            //System.out.println(s2);
-                                            if(mp2.containsKey(s2) && mp2.get(s2)==c){
-                                                //System.out.println(s+" "+mp.get(mp2.get(s2)));
-                                                //System.out.println(s2+" "+mp.get(mp2.get(s)));
-                                                if(s.equals(mp.get(mp2.get(s2))) && s2.equals(mp.get(mp2.get(s)))){
+                                            if(mp2.containsKey(s2) && mp2.get(s2)==c && s.equals(mp.get(mp2.get(s2))) && s2.equals(mp.get(mp2.get(s)))){
                                                     h++;
-                                                }
                                             }
                                         }
                                     }
@@ -258,7 +246,7 @@ class Board implements Ilayout, Cloneable {
             }
         }
         return h;
-    }
+    }*/
 
     /**
      * representa o custo previsto da board actual ate a board b, usando a seguinte estrategia:
@@ -362,6 +350,62 @@ class Board implements Ilayout, Cloneable {
         return h;
     }*/
 
+    @Override
+    public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
+        Board conf_final = (Board) b;
+        for (int s=0;s<board.size();s++) {
+            Stack<Character> pilha_inicial=board.get(s);
+            if (!conf_final.board.contains(pilha_inicial)) {
+            List<Character> under = new ArrayList<>();
+            for (int i=0;i<pilha_inicial.size();i++) {
+                Character c=pilha_inicial.get(i);
+                    for (int k=0;k<conf_final.board.size();k++) {
+                        Stack<Character> pilha_final=conf_final.board.get(k);
+                        if (pilha_final.contains(c)) {
+                            //System.out.println(pilha_final.indexOf(c)+" "+i);
+                            if(pilha_final.indexOf(c)+i==0){
+                                h+=0;
+                            }
+                            else{
+                                Character c2=pilha_final.firstElement();
+                                int j=0,unders=0,seq=0;
+                                while(c2!=c){
+                                    if(under.contains(c2)){
+                                        if(pilha_final.indexOf(c2)==pilha_inicial.indexOf(c2)){
+                                            //System.out.println(pilha_final.indexOf(c2)+" "+pilha_inicial.indexOf(c2)+" "+c2);
+                                            seq++;
+                                        }
+                                        unders++;
+                                    }
+                                    j++;
+                                    c2=pilha_final.elementAt(j);
+                                }
+                                //System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq);
+                                 if(unders==0){
+                                     if(k<board.size() && s<conf_final.board.size()){
+                                        if(j<board.get(k).size() && i<conf_final.board.get(s).size()){
+                                            Character c4=board.get(k).get(j);
+                                            Character c3=conf_final.board.get(s).get(i);
+                                            //System.out.println(c4+" "+c3+" "+c+" "+c2+" "+seq+" "+unders+" "+k+" "+board.indexOf(pilha_inicial));
+                                            if(c4==c3 && seq==0 && unders==0 && k!=board.indexOf(pilha_inicial))
+                                                h+=0.5;
+                                        }
+                                     }
+                                    h++;
+                                }else{
+                                    if(j==unders && j==under.size() && unders==seq) h+=0; // caso tenha o mesmo n de blocos debaixo e estejam nna mema seq 
+                                    else h+=2;
+                                }
+                            }
+                        }
+                    }
+                    //System.out.println(c+" "+h);
+                    under.add(c);
+                }
+            }
+        }
+        return h;
+    }
 
     /**
      * indice de promessa, estimativa do custo do caminho

@@ -7,6 +7,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
 
+import jdk.nashorn.api.tree.Tree;
+
 class BestFirst {
     static class State {
         private  Ilayout layout;
@@ -45,7 +47,7 @@ class BestFirst {
         }
     }
 
-    //protected Queue<State> abertos;
+    protected Stack<State> abertos;
     private State actual;
     private Ilayout objective;
     //private double max_h;
@@ -86,6 +88,7 @@ class BestFirst {
         actual=abertos.element();
         List<State> sucs;
         while(!actual.isGoal(goal)){
+            System.out.println(actual.g);
             if(abertos.isEmpty()){
                 throw new IllegalStateException("Fail");
             }
@@ -124,10 +127,11 @@ class BestFirst {
         objective=goal;
         State root=new State(s,null,objective);
         double thres=root.getH();
-        Stack<State> abertos=new Stack<>();
+        abertos=new Stack<>();
         abertos.add(root);
+        System.out.println(thres);
         while(true){
-            actual=search(abertos,thres);
+            actual=search(thres,root);
             if(actual.isGoal(objective)) break;
             thres=actual.f;
             //System.out.println(actual.g);
@@ -149,8 +153,9 @@ class BestFirst {
      * @return retorna a configuracao com profindade maxima a que pode pesquisar
      * @throws CloneNotSupportedException
      */
-    private BestFirst.State search(Stack<BestFirst.State> abertos, double thres) throws CloneNotSupportedException {
+    private BestFirst.State search(double thres,State root) throws CloneNotSupportedException {
         actual=abertos.lastElement();
+        //System.out.println(actual.f+" "+root.h+"\n" );
         if(actual.f>thres){
             return actual;
         }
@@ -158,16 +163,18 @@ class BestFirst {
             return actual;
         }
         State min_state=new State(actual.layout,actual.father,objective);
+        double min=Double.MAX_VALUE;
         List<State> sucs=sucessores(actual);
         for(State s:sucs){
             if(!abertos.contains(s)){
                 abertos.push(s);
-                actual=search(abertos, thres);
+                actual=search(thres,root);
                 if(actual.isGoal(objective)){
                     return actual;
                 }
-                if(actual.f<min_state.f){
+                if(actual.f<min){
                     min_state=actual;
+                    min=min_state.f;
                 }
                 abertos.pop();
             }
