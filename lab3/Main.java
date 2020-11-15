@@ -9,10 +9,10 @@ public class Main {
         BestFirst s = new BestFirst();
         Board s1=new Board(sc.nextLine());
         Board s2=new Board(sc.nextLine());
-        if(s1.blocks!=s2.blocks){
+        /*if(s1.blocks!=s2.blocks){
             sc.close();
             throw new IllegalStateException("Fail: Boards sizes");
-        }
+        }*/
         Iterator<BestFirst.State> it = s.Ida(s1, s2);
         if (it == null)
             System.out.println("no solution was found");

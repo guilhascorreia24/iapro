@@ -129,7 +129,7 @@ class BestFirst {
         double thres=root.getH();
         abertos=new Stack<>();
         abertos.add(root);
-        System.out.println(thres);
+        //System.out.println(thres);
         while(true){
             actual=search(thres,root);
             if(actual.isGoal(objective)) break;

@@ -111,9 +111,9 @@ class Board implements Ilayout, Cloneable {
                 child.board.remove(i);
 
             for (int j = 0; j < child.board.size(); j++) {
-                Board cloneChild = (Board) child.clone();
-                cloneChild.board.get(j).push(block);
-                if (!children.contains(cloneChild) && !cloneChild.equals(this)) {
+                if(j!=i){
+                    Board cloneChild = (Board) child.clone();
+                    cloneChild.board.get(j).push(block);
                     children.add(cloneChild);
                 }
             }
@@ -121,7 +121,7 @@ class Board implements Ilayout, Cloneable {
             Stack<Character> last = new Stack<Character>();
             last.push(block);
             child.board.add(last);
-            if (!children.contains(child) && !child.equals(this)) {
+            if (!child.equals(this)) {
                 children.add(child);
             }
         }
