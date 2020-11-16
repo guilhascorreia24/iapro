@@ -104,6 +104,7 @@ class BestFirst {
                 }
             }
         }
+        System.out.println(abertos.size()+fechados.size());
         List<State> sol=new ArrayList<State>();
         while(actual!=null){
             sol.add(actual);

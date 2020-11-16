@@ -65,6 +65,7 @@ class BestFirst {
         actual=abertos.element();
         //System.out.println(s.toString());
         List<State> sucs;
+        int nos=1;
         while(!actual.isGoal(goal)){
             //System.out.println(actual);
             if(abertos.isEmpty()){
@@ -75,6 +76,7 @@ class BestFirst {
                 break;
             }else{
                 sucs=sucessores(actual);
+                nos+=sucs.size();
                 fechados.add(actual);
                 for(State suc:sucs){
                     if(!fechados.contains(suc)){
@@ -85,7 +87,7 @@ class BestFirst {
             }
         }
         List<State> sol=new ArrayList<State>();
-        
+        System.out.println(nos);
         //actual.layout=goal;
         while(actual!=null){
             sol.add(actual);

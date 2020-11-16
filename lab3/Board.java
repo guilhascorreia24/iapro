@@ -1,8 +1,6 @@
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
@@ -33,15 +31,9 @@ interface Ilayout {
 
 class Board implements Ilayout, Cloneable {
     // private int dim;
-    private LinkedList<Stack<Character>> board = new LinkedList<Stack<Character>>();
+    private List<Stack<Character>> board = new ArrayList<Stack<Character>>();
     private double h = 0;
-    int blocks = 0;
-    
-    /**
-     * Board vazia 
-     */
-    public Board() {
-    }
+    public int blocks = 0;
 
     /**
      * 
@@ -84,7 +76,10 @@ class Board implements Ilayout, Cloneable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-        Board nBoard = new Board();
+        Board nBoard = (Board)super.clone();
+        nBoard.board=new ArrayList<>();
+        nBoard.blocks=0;
+        nBoard.h=0;
         for (int i = 0; i < board.size(); i++) {
             int j = 0;
             Stack<Character> line = new Stack<Character>();
@@ -211,14 +206,12 @@ class Board implements Ilayout, Cloneable {
                                 }
                                 //System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq);
                                  if(unders==0){
-                                     if(k<board.size() && s<conf_final.board.size()){
-                                        if(j<board.get(k).size() && i<conf_final.board.get(s).size()){
+                                     if(k<board.size() && s<conf_final.board.size() && j<board.get(k).size() && i<conf_final.board.get(s).size()){
                                             Character c4=board.get(k).get(j);
                                             Character c3=conf_final.board.get(s).get(i);
                                             //System.out.println(c4+" "+c3+" "+c+" "+c2+" "+seq+" "+unders+" "+k+" "+board.indexOf(pilha_inicial));
                                             if(c4==c3 && seq==0 && unders==0 && k!=board.indexOf(pilha_inicial))
                                                 h+=0.5;
-                                        }
                                      }
                                     h++;
                                 }else{

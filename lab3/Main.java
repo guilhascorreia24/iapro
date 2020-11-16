@@ -3,16 +3,12 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {  
-        long startTime = System.nanoTime(); 
+        //long startTime = System.nanoTime(); 
         Scanner sc = new Scanner(System.in);
         //long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
         BestFirst s = new BestFirst();
         Board s1=new Board(sc.nextLine());
         Board s2=new Board(sc.nextLine());
-        /*if(s1.blocks!=s2.blocks){
-            sc.close();
-            throw new IllegalStateException("Fail: Boards sizes");
-        }*/
         Iterator<BestFirst.State> it = s.Ida(s1, s2);
         if (it == null)
             System.out.println("no solution was found");
@@ -24,15 +20,15 @@ public class Main {
             }
         }
         sc.close();
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime);
+        //long endTime = System.nanoTime();
+        //long duration = (endTime - startTime);
         //long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
         //long actualMemUsed=afterUsedMem-beforeUsedMem;
-        System.out.println(duration*0.000001  +"ms");
+        //System.out.println(duration*0.000001  +"ms");
         //System.out.println(actualMemUsed);
     }
 
-    /*public static void main (String [] args) throws Exception {
+   /*public static void main (String [] args) throws Exception {
         //long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
         long startTime = System.nanoTime();
 
