@@ -210,8 +210,10 @@ class Board implements Ilayout, Cloneable {
                                             Character c4=board.get(k).get(j);
                                             Character c3=conf_final.board.get(s).get(i);
                                             //System.out.println(c4+" "+c3+" "+c+" "+c2+" "+seq+" "+unders+" "+k+" "+board.indexOf(pilha_inicial));
-                                            if(c4==c3 && seq==0 && unders==0 && k!=board.indexOf(pilha_inicial))
+                                            if(c4==c3 && seq==0 && unders==0 && k!=board.indexOf(pilha_inicial)){
+                                                //if(h-0.5!=Math.round(h)) h-=0.5;
                                                 h+=0.5;
+                                            }
                                      }
                                     h++;
                                 }else{
@@ -221,6 +223,7 @@ class Board implements Ilayout, Cloneable {
                             }
                         }
                     }
+                    //h=Math.round(h);
                     //System.out.println(c+" "+h);
                     under.add(c);
                 }

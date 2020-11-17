@@ -227,20 +227,51 @@ public class PuzzleUnitTests {
     @Test
     public void test9() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
-        Board b=new Board("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        Board b2=new Board("BCD EFGHI JKLMN OPQR STUVW XYZA");
-        // System.out.println(b.getH(b2));
+        Board b=new Board("ABCD3EF GHIJ2KLMNOP QRSTU1VW XY4Z");
+        Board b2=new Board("B2CD E1FGHI JKLM3N OPQR STU4VW XYZA");
+        //System.out.println(b.blocks);
         BestFirst s = new BestFirst();
         Iterator<BestFirst.State> it = s.Ida(b, b2);
         while (it.hasNext()) {
             BestFirst.State i = it.next();
             if (!it.hasNext()) {
-                assertEquals(50, (int) i.getG());
+                assertEquals(38, (int) i.getG());
             }
         }
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         System.out.println("t9:" + formatter.format(duration * 0.000001) + "ms");
+    }
+
+    @Test
+    public void test13() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("QWERTY4 UIOPASDH JKXCVBNM 12567890");
+        Board b2=new Board("QE4 UIP 25A SRT YDH JKXNM 167CV BO8 90W");
+        //System.out.println(b.blocks);
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.Ida(b, b2);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()) {
+                assertEquals(38, (int) i.getG());
+            }
+        }
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t13:" + formatter.format(duration * 0.000001) + "ms");
+    }
+
+    @Test
+    public void testH20() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+        Board b=new Board("QWERTY4 UIOPASDH JKXCVBNM 12567890");
+        Board b2=new Board("QE4 UIP 25A SRT YDH JKXNM 167CV BO8 90W");
+        assertEquals(38, b.getH(b2), 0);
+        //System.out.println(b.blocks);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("t13:" + formatter.format(duration * 0.000001) + "ms");
     }
 
     @Test
@@ -608,6 +639,32 @@ public class PuzzleUnitTests {
     }
 
     @Test
+    public void testgetH20() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
+        Ilayout b = new Board("QWERTY4 UIOPASDH JKXCVBNM 12567890");
+        Ilayout b2Board = new Board("QE4 UIP 25A SRT YDH JKXNM 167CV BO8 90W");
+        //b.getH(b2Board);
+        assertEquals(36, b.getH(b2Board), 0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration * 0.000001 + "ms");
+    }
+
+    @Test
+    public void testgetH21() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
+        Ilayout b = new Board("ABCDE FGH IJ");
+        Ilayout b2Board = new Board("BAF IGH JCDE");
+        b.getH(b2Board);
+        //assertEquals(6, b.getH(b2Board), 0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration * 0.000001 + "ms");
+    }
+
+    @Test
     public void testgetH5() throws CloneNotSupportedException {
         long startTime = System.nanoTime();
         Ilayout b = new Board("FACE BG D");
@@ -659,8 +716,8 @@ public class PuzzleUnitTests {
         long startTime = System.nanoTime();
 
         Ilayout b = new Board("ABCD");
-        Ilayout b2Board = new Board("ABDC");
-        assertEquals(4, b.getH(b2Board), 0);
+        Ilayout b2Board = new Board("ACDB");
+        assertEquals(6, b.getH(b2Board), 0);
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         System.out.println(duration * 0.000001 + "ms");
@@ -1048,6 +1105,34 @@ public class PuzzleUnitTests {
             BestFirst.State i = it.next();
             if (!it.hasNext()) {
                 assertEquals(11, (int) i.getG());
+            }
+        }
+    }
+
+    
+    @Test
+    public void testgetH19() throws CloneNotSupportedException {
+        long startTime = System.nanoTime();
+
+        Ilayout b = new Board("OPA CV 25678");
+        Ilayout b2Board = new Board("P 25A 67CV O8");
+        assertEquals(9, b.getH(b2Board), 0);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration * 0.000001 + "ms");
+    }
+
+    @Test
+    public void test14() throws CloneNotSupportedException {
+        Ilayout b = new Board("OPA CV 25678");
+        Ilayout b2Board = new Board("P 25A 67CV O8");
+
+        BestFirst s = new BestFirst();
+        Iterator<BestFirst.State> it = s.solve(b, b2Board);
+        while (it.hasNext()) {
+            BestFirst.State i = it.next();
+            if (!it.hasNext()) {
+                assertEquals(9, (int) i.getG());
             }
         }
     }
