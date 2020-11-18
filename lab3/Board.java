@@ -204,7 +204,8 @@ class Board implements Ilayout, Cloneable {
                                     j++;
                                     c2=pilha_final.elementAt(j);
                                 }
-                                //System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq);
+                                //System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq+" ");
+                                //System.out.println(c2+" "+s+" "+i+" & "+k+" "+j);
                                  if(unders==0){
                                      if(k<board.size() && s<conf_final.board.size() && j<board.get(k).size() && i<conf_final.board.get(s).size()){
                                             Character c4=board.get(k).get(j);
