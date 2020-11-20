@@ -1,6 +1,7 @@
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -177,6 +178,7 @@ class Board implements Ilayout, Cloneable {
     @Override
     public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
         Board conf_final = (Board) b;
+        HashMap<Character,Integer> mp=new HashMap<>();
         for (int s=0;s<board.size();s++) {
             Stack<Character> pilha_inicial=board.get(s);
             if (!conf_final.board.contains(pilha_inicial)) {
@@ -184,16 +186,19 @@ class Board implements Ilayout, Cloneable {
             for (int i=0;i<pilha_inicial.size();i++) {
                 Character c=pilha_inicial.get(i);
                     for (int k=0;k<conf_final.board.size();k++) {
+                        List<Character> l=new ArrayList<>();
                         Stack<Character> pilha_final=conf_final.board.get(k);
-                        if (pilha_final.contains(c)) {
+                        if (pilha_final.contains(c) && (mp.get(c)==null || mp.get(c)!=2)) {
                             //System.out.println(pilha_final.indexOf(c)+" "+i);
                             if(pilha_final.indexOf(c)+i==0){
                                 h+=0;
+                                mp.put(c, 0);
                             }
                             else{
                                 Character c2=pilha_final.firstElement();
                                 int j=0,unders=0,seq=0;
                                 while(c2!=c){
+                                    l.add(c2);
                                     if(under.contains(c2)){
                                         if(pilha_final.indexOf(c2)==pilha_inicial.indexOf(c2)){
                                             //System.out.println(pilha_final.indexOf(c2)+" "+pilha_inicial.indexOf(c2)+" "+c2);
@@ -201,25 +206,40 @@ class Board implements Ilayout, Cloneable {
                                         }
                                         unders++;
                                     }
+                                    if(unders==0 && !mp.containsKey(c)){
+                                    for(Stack<Character> s_inicial:board){
+                                        if(s_inicial.contains(c2)){
+                                            for(int p=s_inicial.indexOf(c2);p<s_inicial.size();p++){
+                                                Character c6=s_inicial.get(p);
+                                                for(Stack<Character> s_final:conf_final.board){
+                                                    if(s_final.contains(c6)){
+                                                        for(int t=0;t<s_final.indexOf(c6);t++){
+                                                            if(under.contains(s_final.get(t))){
+                                                                mp.put(c6,1);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                                     j++;
                                     c2=pilha_final.elementAt(j);
                                 }
                                 //System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq+" ");
-                                //System.out.println(c2+" "+s+" "+i+" & "+k+" "+j);
+                                //System.out.println(mp+" "+h);
                                  if(unders==0){
-                                     if(k<board.size() && s<conf_final.board.size() && j<board.get(k).size() && i<conf_final.board.get(s).size()){
-                                            Character c4=board.get(k).get(j);
-                                            Character c3=conf_final.board.get(s).get(i);
-                                            //System.out.println(c4+" "+c3+" "+c+" "+c2+" "+seq+" "+unders+" "+k+" "+board.indexOf(pilha_inicial));
-                                            if(c4==c3 && seq==0 && unders==0 && k!=board.indexOf(pilha_inicial)){
-                                                //if(h-0.5!=Math.round(h)) h-=0.5;
-                                                h+=0.5;
-                                            }
-                                     }
-                                    h++;
+                                    if(mp.get(c)!=null && mp.get(c)==1) mp.put(c, 2);
+                                    else mp.put(c, 1);
                                 }else{
-                                    if(j==unders && j==under.size() && unders==seq) h+=0; // caso tenha o mesmo n de blocos debaixo e estejam nna mema seq 
-                                    else h+=2;
+                                    if(j==unders && j==under.size() && unders==seq){ 
+                                         // caso tenha o mesmo n de blocos debaixo e estejam nna mema seq 
+                                        mp.put(c, 0);
+                                    }
+                                    else {
+                                        mp.put(c, 2);
+                                    }
                                 }
                             }
                         }
@@ -227,8 +247,12 @@ class Board implements Ilayout, Cloneable {
                     //h=Math.round(h);
                     //System.out.println(c+" "+h);
                     under.add(c);
+                    //Character r=under.remove(0);
                 }
             }
+        }
+        for(Integer v:mp.values()){
+            h+=v;
         }
         return h;
     }
