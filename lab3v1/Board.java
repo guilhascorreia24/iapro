@@ -1,7 +1,6 @@
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -175,89 +174,60 @@ class Board implements Ilayout, Cloneable {
      *    e somado 0 a heuristica
      *   3.3)No caso de nenhuma das outras 2 condicoes acontecer e somado +1 a heuristica, 
      */
-        @Override
-        public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
-            Board conf_final = (Board) b;
-            HashMap<Character, Integer> mp = new HashMap<>();
-            for (int s = 0; s < board.size(); s++) {
-                Stack<Character> pilha_inicial = board.get(s);
-                if (!conf_final.board.contains(pilha_inicial)) {
-                    List<Character> under = new ArrayList<>();
-                    for (int i = 0; i < pilha_inicial.size(); i++) {
-                        Character c = pilha_inicial.get(i);
-                        for (int k = 0; k < conf_final.board.size(); k++) {
-                            List<Character> l = new ArrayList<>();
-                            Stack<Character> pilha_final = conf_final.board.get(k);
-                            if (pilha_final.contains(c) && (mp.get(c) == null || mp.get(c) != 2)) {
-                                // System.out.println(pilha_final.indexOf(c)+" "+i);
-                                if (pilha_final.indexOf(c) + i == 0) {
-                                    h += 0;
-                                    mp.put(c, 0);
-                                } else {
-                                    Character c2 = pilha_final.firstElement();
-                                    int j = 0, unders = 0, seq = 0;
-                                    while (c2 != c) {
-                                        l.add(c2);
-                                        if (under.contains(c2)) {
-                                            if (pilha_final.indexOf(c2) == pilha_inicial.indexOf(c2)) {
-                                                // System.out.println(pilha_final.indexOf(c2)+"
-                                                // "+pilha_inicial.indexOf(c2)+" "+c2);
-                                                seq++;
-                                            }
-                                            unders++;
+    @Override
+    public double getH(Ilayout b) throws CloneNotSupportedException { // heuristica
+        Board conf_final = (Board) b;
+        for (int s=0;s<board.size();s++) {
+            Stack<Character> pilha_inicial=board.get(s);
+            if (!conf_final.board.contains(pilha_inicial)) {
+            List<Character> under = new ArrayList<>();
+            for (int i=0;i<pilha_inicial.size();i++) {
+                Character c=pilha_inicial.get(i);
+                    for (int k=0;k<conf_final.board.size();k++) {
+                        Stack<Character> pilha_final=conf_final.board.get(k);
+                        if (pilha_final.contains(c)) {
+                            //System.out.println(pilha_final.indexOf(c)+" "+i);
+                            if(pilha_final.indexOf(c)+i==0){
+                                h+=0;
+                            }
+                            else{
+                                Character c2=pilha_final.firstElement();
+                                int j=0,unders=0,seq=0;
+                                while(c2!=c){
+                                    if(under.contains(c2)){
+                                        if(pilha_final.indexOf(c2)==pilha_inicial.indexOf(c2)){
+                                            //System.out.println(pilha_final.indexOf(c2)+" "+pilha_inicial.indexOf(c2)+" "+c2);
+                                            seq++;
                                         }
-                                        if (unders == 0 && !mp.containsKey(c) && board.size()!=1 && conf_final.board.size()!=1) { // situaçao de pervesao mutua
-                                            for (Stack<Character> s_inicial : board) {// analisar o bloco c2 na conf inicial
-                                                if (s_inicial.contains(c2)) {//encontra-lo
-                                                    for (int p = s_inicial.indexOf(c2)+1; p < s_inicial.size(); p++) {//analisar os blocs que estao a cima do bloc c2 na conf_inicial
-                                                        Character c6 = s_inicial.get(p);//guardar
-                                                        for (Stack<Character> s_final : conf_final.board) {//analisar os bloc c6 
-                                                            if (s_final.contains(c6)) {//encontrar c6 na conf final
-                                                                for (int t = 0; t < s_final.indexOf(c6); t++) {// analisar os blocos abaixo do c6 na conf final
-                                                                    if (under.contains(s_final.get(t))) {// ver se os blcos na conf_final estao tb nos unders da conf inicial
-                                                                        mp.put(c6, 1);//precisara de ser mover pelo menos 1 vez
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        j++;
-                                        c2 = pilha_final.elementAt(j);
+                                        unders++;
                                     }
-                                    // System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq+" ");
-                                    // System.out.println(mp+" "+h);
-                                    if (unders == 0) {
-                                        if (mp.get(c) != null && mp.get(c) == 1)
-                                            mp.put(c, 2);
-                                        else
-                                            mp.put(c, 1);
-                                    } else {
-                                        if (j == unders && j == under.size() && unders == seq) {
-                                            // caso tenha o mesmo n de blocos debaixo e estejam nna mema seq
-                                            mp.put(c, 0);
-                                        } else {
-                                            mp.put(c, 2);
-                                        }
-                                    }
+                                    j++;
+                                    c2=pilha_final.elementAt(j);
+                                }
+                                //System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq);
+                                 if(unders==0){
+                                     if(k<board.size() && s<conf_final.board.size() && j<board.get(k).size() && i<conf_final.board.get(s).size()){
+                                            Character c4=board.get(k).get(j);
+                                            Character c3=conf_final.board.get(s).get(i);
+                                            //System.out.println(c4+" "+c3+" "+c+" "+c2+" "+seq+" "+unders+" "+k+" "+board.indexOf(pilha_inicial));
+                                            if(c4==c3 && seq==0 && unders==0 && k!=board.indexOf(pilha_inicial))
+                                                h+=0.5;
+                                     }
+                                    h++;
+                                }else{
+                                    if(j==unders && j==under.size() && unders==seq) h+=0; // caso tenha o mesmo n de blocos debaixo e estejam nna mema seq 
+                                    else h+=2;
                                 }
                             }
                         }
-                        // h=Math.round(h);
-                        // System.out.println(c+" "+h);
-                        under.add(c);
-                        // Character r=under.remove(0);
                     }
+                    //System.out.println(c+" "+h);
+                    under.add(c);
                 }
             }
-            // System.out.println(mp);
-            for (Integer v : mp.values()) {
-                h += v;
-            }
-            return h;
         }
+        return h;
+    }
 
     /**
      * indice de promessa, estimativa do custo do caminho

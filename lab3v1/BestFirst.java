@@ -51,7 +51,7 @@ class BestFirst {
     private Ilayout objective;
     //private double max_h;
     
-    /**
+    /***
      * Gera os filhos do no atual
      * @param n estado actual
      * @return retorna a lista de filhos que o estado actual tem, expecto os que sao iguais ao estado atual
@@ -133,7 +133,6 @@ class BestFirst {
         while(true){
             actual=search(thres);
             if(actual.isGoal(objective)) break;
-            if(actual.g>root.h) throw new IllegalStateException("Fail");
             thres=actual.f;
             //System.out.println(actual.g);
         }
