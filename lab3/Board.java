@@ -186,27 +186,19 @@ class Board implements Ilayout, Cloneable {
                     for (int i = 0; i < pilha_inicial.size(); i++) {
                         Character c = pilha_inicial.get(i);
                         for (int k = 0; k < conf_final.board.size(); k++) {
-                            List<Character> l = new ArrayList<>();
                             Stack<Character> pilha_final = conf_final.board.get(k);
                             if (pilha_final.contains(c) && (mp.get(c) == null || mp.get(c) != 2)) {
-                                // System.out.println(pilha_final.indexOf(c)+" "+i);
-                                if (pilha_final.indexOf(c) + i == 0) {
-                                    h += 0;
-                                    mp.put(c, 0);
-                                } else {
+                                if (pilha_final.indexOf(c) + i != 0) {
                                     Character c2 = pilha_final.firstElement();
                                     int j = 0, unders = 0, seq = 0;
                                     while (c2 != c) {
-                                        l.add(c2);
                                         if (under.contains(c2)) {
                                             if (pilha_final.indexOf(c2) == pilha_inicial.indexOf(c2)) {
-                                                // System.out.println(pilha_final.indexOf(c2)+"
-                                                // "+pilha_inicial.indexOf(c2)+" "+c2);
                                                 seq++;
                                             }
                                             unders++;
                                         }
-                                        if (unders == 0 && !mp.containsKey(c) && board.size()!=1 && conf_final.board.size()!=1) { // situaçao de pervesao mutua
+                                        if (unders == 0 && !mp.containsKey(c) && board.size()!=1 && conf_final.board.size()!=1) { // situacao de pervesao mutua
                                             for (Stack<Character> s_inicial : board) {// analisar o bloco c2 na conf inicial
                                                 if (s_inicial.contains(c2)) {//encontra-lo
                                                     for (int p = s_inicial.indexOf(c2)+1; p < s_inicial.size(); p++) {//analisar os blocs que estao a cima do bloc c2 na conf_inicial
@@ -221,14 +213,13 @@ class Board implements Ilayout, Cloneable {
                                                             }
                                                         }
                                                     }
+                                                    break;
                                                 }
                                             }
                                         }
                                         j++;
                                         c2 = pilha_final.elementAt(j);
                                     }
-                                    // System.out.println(under.size()+" "+unders+" "+(j-1)+" "+seq+" ");
-                                    // System.out.println(mp+" "+h);
                                     if (unders == 0) {
                                         if (mp.get(c) != null && mp.get(c) == 1)
                                             mp.put(c, 2);
@@ -243,16 +234,13 @@ class Board implements Ilayout, Cloneable {
                                         }
                                     }
                                 }
+                                break;
                             }
                         }
-                        // h=Math.round(h);
-                        // System.out.println(c+" "+h);
                         under.add(c);
-                        // Character r=under.remove(0);
                     }
                 }
             }
-            // System.out.println(mp);
             for (Integer v : mp.values()) {
                 h += v;
             }
