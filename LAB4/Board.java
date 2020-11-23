@@ -11,11 +11,6 @@ interface Ilayout {
     List<Ilayout> children() throws CloneNotSupportedException;
 
     /**
-     * @return true if the receiver equals the argument l; return false otherwise.
-     */
-    boolean isGoal(Ilayout l);
-
-    /**
      * @return the cost for moving from the input config to the receiver.
      */
     double getG();
@@ -85,11 +80,6 @@ class Board implements Ilayout, Cloneable {
         }
         //System.out.println(p);
         return p;
-    }
-
-    @Override
-    public boolean isGoal(Ilayout l) {
-        return this.equals(l);
     }
 
     @Override
