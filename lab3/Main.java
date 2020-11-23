@@ -4,29 +4,16 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws Exception {   
         Scanner sc = new Scanner(System.in);
-        //long startTime = System.nanoTime();
+        long startTime = System.nanoTime();
         BestFirst s = new BestFirst();
         Board s1=new Board(sc.nextLine());
         Board s2=new Board(sc.nextLine());
-        Iterator<BestFirst.State> it = s.Ida(s1, s2);
-        if (it == null)
-            System.out.println("no solution was found");
-        else {
-            while (it.hasNext()) {
-                BestFirst.State i = it.next();
-                /*double g = i.getG();
-                double h = i.getH();
-                double f = i.getF();
-                System.out.println("G: "+g + "    H: " + h + "    F: " + f);
-                System.out.println(i);*/
-                if (!it.hasNext())
-                    System.out.println((int)i.getG());
-            }
-        }
+        int it = s.Ida(s1, s2);
+        System.out.println(it);
         sc.close();
-        //long endTime = System.nanoTime();
-        //long duration = (endTime - startTime);
-        //System.out.println(duration*0.000001  +"ms");
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
     }
 
 }

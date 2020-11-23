@@ -123,7 +123,7 @@ class BestFirst {
      * @return retorna a sequencia de passos minimos da conf inicial ate conf final
      * @throws CloneNotSupportedException
      */
-    public Iterator<State> Ida(Ilayout s,Ilayout goal) throws CloneNotSupportedException {
+    public int Ida(Ilayout s,Ilayout goal) throws CloneNotSupportedException {
         objective=goal;
         State root=new State(s,null,goal);
         double thres=root.getH();
@@ -137,13 +137,7 @@ class BestFirst {
             thres=actual.f;
             //System.out.println(actual.g);
         }
-        List<State> sol=new ArrayList<State>();
-        while(actual!=null){
-            sol.add(actual);
-            actual=actual.father;
-        }
-        Collections.reverse(sol);
-        return sol.iterator(); 
+        return (int)actual.g;
     }
 
 

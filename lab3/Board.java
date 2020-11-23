@@ -198,7 +198,7 @@ class Board implements Ilayout, Cloneable {
                                             }
                                             unders++;
                                         }
-                                        if (unders == 0 && !mp.containsKey(c) && board.size()!=1 && conf_final.board.size()!=1) { // situacao de pervesao mutua
+                                        /*if (unders == 0 && !mp.containsKey(c) && board.size()!=1 && conf_final.board.size()!=1) { // situacao de pervesao mutua
                                             for (Stack<Character> s_inicial : board) {// analisar o bloco c2 na conf inicial
                                                 if (s_inicial.contains(c2)) {//encontra-lo
                                                     for (int p = s_inicial.indexOf(c2)+1; p < s_inicial.size(); p++) {//analisar os blocs que estao a cima do bloc c2 na conf_inicial
@@ -216,7 +216,7 @@ class Board implements Ilayout, Cloneable {
                                                     break;
                                                 }
                                             }
-                                        }
+                                        }*/
                                         j++;
                                         c2 = pilha_final.elementAt(j);
                                     }
