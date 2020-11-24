@@ -19,8 +19,7 @@ interface Ilayout {
 
 class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
-    private int board[][];
-
+    public int board[][];
 
     public Board(String str) throws IllegalStateException {
         if (str.length() != dim * dim)
@@ -73,7 +72,7 @@ class Board implements Ilayout, Cloneable {
             for(int j=0;j<dim;j++){
                 if(board[i][j]==0){
                     Board child=(Board)clone();
-                    child.board[i][j]=(int)'X';
+                    child.board[i][j]=(int)('X'-55);
                     p.add(child);
                 }
             }
@@ -88,6 +87,16 @@ class Board implements Ilayout, Cloneable {
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 if (board[i][j] != b2.board[i][j])
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean full_board(){
+        for(int i=0;i<dim;i++){
+            for(int j=0;j<dim;j++){
+                if(board[i][j]==0)
                     return false;
             }
         }

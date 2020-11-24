@@ -1,17 +1,17 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 class BestFirst {
     static class State {
         private  Ilayout layout;
         private  State father;
-        private double g;
+        private List<State> childs;
+        private final double c=Math.sqrt(2);
+        private double w,N,n,g;
 
-        public State( Ilayout l,  State n) {
+        public State(Ilayout l,  State n) {
             layout = l;
             father = n;
             if (father != null)
@@ -28,16 +28,15 @@ class BestFirst {
             return g;
         }
 
-        /*@Override
-        public boolean equals( Object b){
-             State b2=(State)b;
-            return layout.equals(b2.layout);
-        }*/
+        public double ucb(){
+            return (w/n)+c*Math.sqrt(Math.log(N)/n);
+        }
+
+
     }
 
     protected Queue<State> abertos;
     private State actual;
-    private Ilayout objective;
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
@@ -51,7 +50,28 @@ class BestFirst {
         return sucs;
     }
 
-    final public Iterator<State> solve(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
-        return null;
+    final public Iterator<State> mcts(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
+        actual=new State(s,null);
+        while(true){
+            if(actual.childs.isEmpty()){
+                List<State> sucs=sucessores(actual);
+                actual.childs=sucs;
+            }
+            if(actual.father!=null){
+                int i=0;double ucb_min=Integer.MAX_VALUE;
+                while(i<actual.childs.size()){
+                    if(ucb_min<actual.childs.get(i).ucb()){
+                        actual=actual.childs.get(i);
+                        ucb_min=actual.childs.get(i).ucb();
+                    }
+                }
+            }
+            simulation();
+        }
+
+    }
+
+    private void simulation(BestFirst.State actual2) {
+        
     }
 }
