@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 
 class BestFirst {
     static class State {
@@ -9,27 +10,19 @@ class BestFirst {
         private  State father;
         private List<State> childs;
         private final double c=Math.sqrt(2);
-        private double w,N,n,g;
+        private double w,n;
 
         public State(Ilayout l,  State n) {
             layout = l;
             father = n;
-            if (father != null)
-                g = father.g + l.getG();
-            else
-                g = 0.0;
         }
 
         public String toString() {
             return layout.toString();
         }
 
-        public double getG() {
-            return g;
-        }
-
         public double ucb(){
-            return (w/n)+c*Math.sqrt(Math.log(N)/n);
+            return (w/n)+c*Math.sqrt(Math.log(father.n)/n);
         }
 
 
@@ -37,6 +30,8 @@ class BestFirst {
 
     protected Queue<State> abertos;
     private State actual;
+    private int lvl=2;
+
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
@@ -52,26 +47,49 @@ class BestFirst {
 
     final public Iterator<State> mcts(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
         actual=new State(s,null);
-        while(true){
-            if(actual.childs.isEmpty()){
-                List<State> sucs=sucessores(actual);
-                actual.childs=sucs;
-            }
-            if(actual.father!=null){
-                int i=0;double ucb_min=Integer.MAX_VALUE;
-                while(i<actual.childs.size()){
-                    if(ucb_min<actual.childs.get(i).ucb()){
-                        actual=actual.childs.get(i);
-                        ucb_min=actual.childs.get(i).ucb();
-                    }
-                }
-            }
+        while(lvl<3){
+            if(actual.father!=null)
+                selection();
+            expand();
             simulation();
+            back();
         }
 
     }
 
-    private void simulation(BestFirst.State actual2) {
-        
+    private void back() {
+        int i=0;
+        while(actual.father!=null){
+            actual.father.w+=actual.w;
+            actual.father.n+=actual.n;
+            actual=actual.father;
+            i++;
+        }
+        lvl=i;
+    }
+
+    private void selection() {
+        double max=Integer.MIN_VALUE;
+        for(State s:actual.childs){
+            if(s.ucb()>max){
+                max=s.ucb();
+                actual=s;
+            }
+        }
+    }
+
+    private void expand() throws CloneNotSupportedException {
+        actual.childs=sucessores(actual);
+    }
+
+    private void simulation() throws CloneNotSupportedException {
+        State sim=actual;
+        while(!actual.layout.full_board()){
+            List<State> sucs=sucessores(sim);
+            int rnd=new Random().nextInt(sucs.size());
+            sim=sucs.get(rnd);
+        }
+        actual.w=sim.layout.verification();
+        actual.n++;
     }
 }

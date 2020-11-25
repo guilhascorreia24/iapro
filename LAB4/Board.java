@@ -9,17 +9,17 @@ interface Ilayout {
      * @throws CloneNotSupportedException
      */
     List<Ilayout> children() throws CloneNotSupportedException;
-
-    /**
-     * @return the cost for moving from the input config to the receiver.
-     */
-    double getG();
+    
+    boolean full_board();
+    
+    int verification();
 
 }
 
 class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
     public int board[][];
+    public char character; // defenir depois para quanto for pc vs pc
 
     public Board(String str) throws IllegalStateException {
         if (str.length() != dim * dim)
@@ -30,6 +30,22 @@ class Board implements Ilayout, Cloneable {
             for (int j = 0; j < dim; j++)
                 board[i][j] = Character.getNumericValue(str.charAt(si++));
     }
+
+    public int winningVerification(){
+        for(int i = 0 ; i < dim; i++)
+        {
+            if(board[i][0] == (int) ('X' - 55) && board[i][1] == (int) ('X' - 55) && board[i][2] == (int) ('X' - 55)) //verifica 3 em linha na horizontal
+                return 1;
+            else if(board[0][i] == (int) ('X' - 55) && board[1][i] == (int) ('X' - 55) && board[2][i] == (int) ('X' - 55)) //verifica 3 em linha na vertical
+                return 1;
+        }
+        if(board[0][0] == (int) ('X' - 55) && board[1][1] == (int) ('X' - 55) && board[2][2] == (int) ('X' - 55)) //verifica 3 em linha na diagonal
+            return 1;
+        else if(board[0][2] == (int) ('X' - 55) && board[1][1] == (int) ('X' - 55) && board[2][0] == (int) ('X' - 55)) //verifica 3 em linha na outra diagonal
+            return 1;
+        return 0;
+    }
+
 
     public String toString() {
         StringWriter writer = new StringWriter();
@@ -103,8 +119,4 @@ class Board implements Ilayout, Cloneable {
         return true;
     }
 
-    @Override
-    public double getG() { // custo
-        return 1;
-    }
 }
