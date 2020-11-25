@@ -1,4 +1,4 @@
-import static org.junit.Assert.assertEquals;
+/*import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -218,4 +218,4 @@ public class Tests {
         int result = b.winningVerification();
         assertEquals(0, result);
     }
-}
+}*/

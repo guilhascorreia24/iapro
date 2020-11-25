@@ -12,13 +12,16 @@ interface Ilayout {
     
     boolean full_board();
     
-    int verification();
+    int winningVerification();
+
+    void your_simbol(int pc);
+
 
 }
 
 class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
-    public int board[][];
+    private int board[][];
     public char character; // defenir depois para quanto for pc vs pc
 
     public Board(String str) throws IllegalStateException {
@@ -29,19 +32,38 @@ class Board implements Ilayout, Cloneable {
         for (int i = 0; i < dim; i++)
             for (int j = 0; j < dim; j++)
                 board[i][j] = Character.getNumericValue(str.charAt(si++));
+        your_simbol(0);
+    }
+
+    public void new_value(int x,int y){
+        if(x>=0 && x<dim && y>=0 && y<dim){
+            if(board[x][y]==0)
+                board[x][y]=character-55;
+            else throw new IllegalStateException("Invalid new arg in Board"); 
+        }else{
+            throw new IllegalStateException("Invalid new arg in Board"); 
+        }
+    }
+
+
+    @Override
+    public void your_simbol(int pc){
+        if(pc%2!=0)
+            character='X';
+        else character='O';
     }
 
     public int winningVerification(){
         for(int i = 0 ; i < dim; i++)
         {
-            if(board[i][0] == (int) ('X' - 55) && board[i][1] == (int) ('X' - 55) && board[i][2] == (int) ('X' - 55)) //verifica 3 em linha na horizontal
+            if(board[i][0] == (int) (character - 55) && board[i][1] == (int) (character - 55) && board[i][2] == (int) (character - 55)) //verifica 3 em linha na horizontal
                 return 1;
-            else if(board[0][i] == (int) ('X' - 55) && board[1][i] == (int) ('X' - 55) && board[2][i] == (int) ('X' - 55)) //verifica 3 em linha na vertical
+            else if(board[0][i] == (int) (character - 55) && board[1][i] == (int) (character - 55) && board[2][i] == (int) (character - 55)) //verifica 3 em linha na vertical
                 return 1;
         }
-        if(board[0][0] == (int) ('X' - 55) && board[1][1] == (int) ('X' - 55) && board[2][2] == (int) ('X' - 55)) //verifica 3 em linha na diagonal
+        if(board[0][0] == (int) (character - 55) && board[1][1] == (int) (character - 55) && board[2][2] == (int) (character - 55)) //verifica 3 em linha na diagonal
             return 1;
-        else if(board[0][2] == (int) ('X' - 55) && board[1][1] == (int) ('X' - 55) && board[2][0] == (int) ('X' - 55)) //verifica 3 em linha na outra diagonal
+        else if(board[0][2] == (int) (character - 55) && board[1][1] == (int) (character - 55) && board[2][0] == (int) (character - 55)) //verifica 3 em linha na outra diagonal
             return 1;
         return 0;
     }
@@ -88,7 +110,7 @@ class Board implements Ilayout, Cloneable {
             for(int j=0;j<dim;j++){
                 if(board[i][j]==0){
                     Board child=(Board)clone();
-                    child.board[i][j]=(int)('X'-55);
+                    child.board[i][j]=(int)(character-55);
                     p.add(child);
                 }
             }

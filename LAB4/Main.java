@@ -1,4 +1,3 @@
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class Main {
@@ -6,22 +5,27 @@ public class Main {
         Scanner sc=new Scanner(System.in);
         BestFirst s = new BestFirst();
         Board play = new Board("000000000");
+        int pc=0;
         while (!play.full_board()) {
+            System.out.println(play);
             System.out.print("x:");
             int x=sc.nextInt();
-            if(x>=3) 
-                throw new IllegalStateException("Fail X");
             System.out.print("y:");
             int y=sc.nextInt();
             System.out.println();
-            if(y>=3) 
-                throw new IllegalStateException("Fail Y");
-            if(play.board[y][x]!=0) 
-                throw new IllegalStateException("Fail board");
-            play.board[y][x]=(char)('X'-55);
+            play.new_value(x, y);
             System.out.println(play);
-            Iterator<BestFirst.State> it = s.mcts(play);
-
+            pc++;
+            play = (Board) s.mcts(play, pc % 2);
+            //System.out.println(play);
+            //if(play.winningVerification()==1 || play.winningVerification()==0) break;
+            pc++;
+        }
+        play.your_simbol(pc);
+        if(play.winningVerification()==1){
+            System.out.println("win");
+        }else{
+            System.out.println("lost");
         }
         sc.close();
     }
