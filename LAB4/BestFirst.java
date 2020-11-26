@@ -34,7 +34,7 @@ class BestFirst {
 
     protected Queue<State> abertos;
     private State actual;
-    private BestFirst.State root;
+    private final static int lvl=1000;
 
     final private List<State> sucessores(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
@@ -51,61 +51,56 @@ class BestFirst {
 
     final public State mcts(State s) throws CloneNotSupportedException { // algoritmo bfs
         actual = s;
-        root=s.father;
         int i = 0;
-        int lvl=20;
-        /*int childs=sucessores(actual).size();
-        int res=childs;
-        for(int j=childs-1;j>=1;j++){
-            res+=childs;
-            int h=j;
-            while(h<childs){
-                res*=h;
-                h++;
-            }
-        }*/
         for(State suc:s.father.childs){
             if(suc.equals(s)){
                 actual=suc;
                 break;
             }
         }
+        //System.out.println(actual.w+" "+actual.n);
         while (i < lvl) {
-            if (!actual.childs.isEmpty())
-                selection(actual,actual.pc,Double.MIN_VALUE);
+            if (!s.childs.isEmpty())
+                selection(s,0,Double.MIN_VALUE);
+            //System.out.println(actual.n+" "+actual.w);
+            if(actual.father!=null)
+                ///System.out.println(actual.father.n);
             //System.out.println(actual);
             expand(actual);
-            //System.out.println(actual.childs);
-            actual=simulation(actual);
-            //System.out.println(actual.n+" "+actual.w);
-            back(actual);
-           // System.out.println(actual);
+            //System.out.println(actual.childs.size());
+            simulation();
+            //System.out.println(actual.n+" "+actual.w+" "+actual.father.n);
+            //System.out.println(actual);
+
             i++;
         }
         //System.out.println(actual);
         double max = Double.MIN_VALUE;
-        for (State suc : actual.childs) {
+        for (State suc : s.childs) {
             if (suc.ucb() > max) {
                 max = suc.ucb();
                 actual = suc;
             }
-            System.out.println(suc.n+" "+suc.w+" "+actual.n+" "+suc.ucb()+" "+suc.layout.your_simbol(suc.pc)+" "+suc.pc+" "+s.pc);
-            System.out.println(suc);
+            //System.out.println(suc.n+" "+suc.w+" "+s.n+" "+suc.ucb()+" "+suc.layout.your_simbol(suc.pc)+" "+suc.pc+" "+s.pc);
+            //System.out.println(suc);
         }
         return actual;
     }
 
-    private void back(State s) {
-        while (actual.father != root) {
-            actual.father.w += actual.w;
-            actual.father.n += actual.n;
+    private void back(State s,int w,int n,State f) {
+        actual=s;
+        while (actual.father != null) {
+            actual.father.w += w;
+            actual.father.n += n;
+            //System.out.println(s.n+" "+s.father.n);
             actual = actual.father;
-            //System.out.println(actual);
         }
     }
 
     private void selection(State s,int pc,double max) {
+       // System.out.println(s);
         for (State suc : s.childs) {
+            //System.out.println(suc);
             if (suc.ucb() > max && pc%2==0) {
                 max = suc.ucb();
                 actual = suc;
@@ -113,6 +108,7 @@ class BestFirst {
                 max = suc.ucb();
                 actual = suc;
             }
+            //System.out.println(suc.ucb()+" "+max+" "+pc);
         }
         if (!actual.childs.isEmpty()) {
             pc++;
@@ -120,6 +116,7 @@ class BestFirst {
             else max=Double.MIN_VALUE;
             selection(actual,pc,max);
         }
+        //System.out.println(actual);
     }
 
     private void expand(State s) throws CloneNotSupportedException {
@@ -128,8 +125,8 @@ class BestFirst {
         //System.out.println(actual.childs);
     }
 
-    private State simulation(State sim) throws CloneNotSupportedException {
-        for (State suc : sim.childs) {
+    private void simulation() throws CloneNotSupportedException {
+        for (State suc : actual.childs) {
             State s=suc;
             while (s.layout.winningVerification()==-1) {
                 List<State> sucs = sucessores(s);
@@ -138,14 +135,7 @@ class BestFirst {
                 //System.out.println(s);
                 //System.out.println(s.layout.winningVerification());
             }
-            suc.w+=s.layout.winningVerification();
-            suc.n+=1;
-            sim.w+=suc.w;
-            sim.n+=1;
-            System.out.println(suc);
-            System.out.println(suc.w+" "+suc.n);
-            //System.out.println(s);
+            back(s, s.layout.winningVerification(),1,actual.father);
         }
-    return sim;
     }
 }

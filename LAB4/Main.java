@@ -13,15 +13,17 @@ public class Main {
             System.out.println();
             Board b=(Board) play.layout.clone();
             b.new_value(x, y);
+            if(b.winningVerification()==1){
+                System.out.println(b);
+                System.out.println("win");
+                break;
+            }
             play=new BestFirst.State(b,play,play.pc+1);
-            System.out.println(play);
+           System.out.println(play);
             play = s.mcts(play);
             System.out.println(play);
             play.layout.your_simbol(0);
             if(play.layout.winningVerification()==1){
-                System.out.println("win");
-                break;
-            }else if(play.layout.winningVerification()==0){
                 System.out.println("lost");
                 break;
             }

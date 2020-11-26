@@ -27,6 +27,7 @@ class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
     private int board[][];
     private char character,counter; // defenir depois para quanto for pc vs pc
+    
     public Board(String str) throws IllegalStateException {
         if (str.length() != dim * dim)
             throw new IllegalStateException("Invalid arg in Board constructor");
