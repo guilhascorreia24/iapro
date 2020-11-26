@@ -206,7 +206,8 @@ public class Tests {
     @Test
     public void testWinningVerification9()
     {
-        Board b = new Board("XO00OXX0O");
+        Board b = new Board("XOOOOXXOO");
+        b.your_simbol(1);
         int result = b.winningVerification();
         assertEquals(0, result);
     }
