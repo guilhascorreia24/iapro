@@ -219,4 +219,21 @@ public class Tests {
         int result = b.winningVerification();
         assertEquals(0, result);
     }
+
+
+    @Test
+    public void testsimulation() throws CloneNotSupportedException {
+        BestFirst s=new BestFirst();
+        BestFirst.State s1=new BestFirst.State(new Board("000000000"),null);
+        s.expand(s1);
+        s.simulation(s1);
+    }
+
+
+    @Test
+    public void testseletion(){
+        BestFirst s=new BestFirst();
+        BestFirst.State s1=new BestFirst.State(new Board("000O00000"),new BestFirst.State(new Board("000000000"),null));
+
+    }
 }*/

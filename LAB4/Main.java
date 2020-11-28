@@ -4,30 +4,11 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Scanner sc=new Scanner(System.in);
         BestFirst s = new BestFirst();
-        BestFirst.State play = new BestFirst.State(new Board("000000000"),null,0);
-        while (!play.layout.full_board()) {
-            System.out.print("x:");
-            int x=sc.nextInt();
-            System.out.print("y:");
-            int y=sc.nextInt();
-            System.out.println();
-            Board b=(Board) play.layout.clone();
-            b.new_value(x, y);
-            if(b.winningVerification()==1){
-                System.out.println(b);
-                System.out.println("win");
-                break;
-            }
-            play=new BestFirst.State(b,play,play.pc+1);
-           System.out.println(play);
+        BestFirst.State play = new BestFirst.State(new Board("000000000"),null);
+        while (!s.end_game) {
             play = s.mcts(play);
-            System.out.println(play);
-            play.layout.your_simbol(0);
-            if(play.layout.winningVerification()==1){
-                System.out.println("lost");
-                break;
-            }
-
+            //System.out.println(play);
+            //System.out.println(play.w+"  "+play.n);
         }
         sc.close();
     }
