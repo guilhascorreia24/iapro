@@ -94,23 +94,25 @@ class BestFirst {
     private State bestmove(State s) throws CloneNotSupportedException {
         State res=s;
         int max=0;
-        for(State suc:s.childs){
-            if(suc.final_node) {
-                res=suc;
-                break;
-            }
-            List<State> sucs=sucessores(suc);
-            boolean next=false;
-            for(State suc_suc:sucs){
-                if(suc_suc.final_node && suc_suc.layout.verifywinner()==1){
-                    next=true;
+        if(lvl!=ez){
+            for(State suc:s.childs){
+                if(suc.final_node) {
+                    res=suc;
+                    break;
                 }
-                //System.out.println(suc_suc+"\n"+next);
-            }
-            //System.out.println(suc+"\n"+suc.n);
-            if(!next && suc.n>max){
-                res=suc;
-                max= (int) res.n;
+                List<State> sucs=sucessores(suc);
+                boolean next=false;
+                for(State suc_suc:sucs){
+                    if(suc_suc.final_node && suc_suc.layout.verifywinner()==1){
+                        next=true;
+                    }
+                    //System.out.println(suc_suc+"\n"+next);
+                }
+                //System.out.println(suc+"\n"+suc.n);
+                if(!next && suc.n>max){
+                    res=suc;
+                    max= (int) res.n;
+                }
             }
         }
         if(res.equals(s)){
