@@ -51,7 +51,7 @@ class BestFirst {
     public boolean end_game=false;
     private int i=0;
     public String winner="";
-    private int hard=23,med=10,ez=1,lvl;
+    private int hard=50,med=25,ez=5,lvl;
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
@@ -93,13 +93,13 @@ class BestFirst {
 
     private State bestmove(State s) throws CloneNotSupportedException {
         State res=s;
-        int max=0;
+        List<State> l=new ArrayList<>(s.childs);
         if(lvl!=ez){
             for(State suc:s.childs){
-                if(suc.final_node) {
+                /*if(suc.final_node) {
                     res=suc;
                     break;
-                }
+                }*/
                 List<State> sucs=sucessores(suc);
                 boolean next=false;
                 for(State suc_suc:sucs){
@@ -108,15 +108,25 @@ class BestFirst {
                     }
                     //System.out.println(suc_suc+"\n"+next);
                 }
-                //System.out.println(suc+"\n"+suc.n);
-                if(!next && suc.n>max){
-                    res=suc;
-                    max= (int) res.n;
+                if(next){
+                    l.remove(suc);
                 }
             }
         }
-        if(res.equals(s)){
-            res=Collections.max(s.childs, new Comparator<State>() {
+        if(l.isEmpty()) l=s.childs;
+        if(lvl==ez){
+            res=Collections.min(l, new Comparator<State>() {
+                @Override
+                public int compare(State z1, State z2) {
+                    if (z1.n > z2.n)
+                        return 1;
+                    if (z1.n < z2.n)
+                        return -1;
+                    return 0;
+                }
+            });
+        }else{
+            res=Collections.max(l, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
                     if (z1.n > z2.n)
@@ -127,7 +137,6 @@ class BestFirst {
                 }
             });
         }
-
         if(res.final_node){
             end_game=true;
             if(res.layout.verifywinner()!=0){
