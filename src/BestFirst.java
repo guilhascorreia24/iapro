@@ -51,7 +51,7 @@ class BestFirst {
     public boolean end_game=false;
     private int i=0;
     public String winner="";
-    private int hard=50,med=25,ez=5,lvl;
+    private int hard=190,med=80,ez=5,lvl;
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
@@ -85,67 +85,33 @@ class BestFirst {
         }
         if(!root.final_node)
             actual=bestmove(root);
-        else{
+        if(actual.final_node){
             end_game=true;
-        }
-        return (Board)actual.layout;
-    }
-
-    private State bestmove(State s) throws CloneNotSupportedException {
-        State res=s;
-        List<State> l=new ArrayList<>(s.childs);
-        if(lvl!=ez){
-            for(State suc:s.childs){
-                /*if(suc.final_node) {
-                    res=suc;
-                    break;
-                }*/
-                List<State> sucs=sucessores(suc);
-                boolean next=false;
-                for(State suc_suc:sucs){
-                    if(suc_suc.final_node && suc_suc.layout.verifywinner()==1){
-                        next=true;
-                    }
-                    //System.out.println(suc_suc+"\n"+next);
-                }
-                if(next){
-                    l.remove(suc);
-                }
-            }
-        }
-        if(l.isEmpty()) l=s.childs;
-        if(lvl==ez){
-            res=Collections.min(l, new Comparator<State>() {
-                @Override
-                public int compare(State z1, State z2) {
-                    if (z1.n > z2.n)
-                        return 1;
-                    if (z1.n < z2.n)
-                        return -1;
-                    return 0;
-                }
-            });
-        }else{
-            res=Collections.max(l, new Comparator<State>() {
-                @Override
-                public int compare(State z1, State z2) {
-                    if (z1.n > z2.n)
-                        return 1;
-                    if (z1.n < z2.n)
-                        return -1;
-                    return 0;
-                }
-            });
-        }
-        if(res.final_node){
-            end_game=true;
-            if(res.layout.verifywinner()!=0){
+            if(actual.layout.verifywinner()!=0){
                 if(i%2==0) winner="PC2";
                 else winner="PC1";
             }else{
                 winner="draw";
             }
         }
+        return (Board)actual.layout;
+    }
+
+    private State bestmove(State s) throws CloneNotSupportedException {
+        /*for(State suc:s.childs){
+            System.out.println(suc+"\n"+suc.n);
+        }*/
+        State res=Collections.max(s.childs, new Comparator<State>() {
+            @Override
+            public int compare(State z1, State z2) {
+                if ((z1.n) > (z2.n)){
+                        return 1;
+                }
+                if (z1.n < z2.n)
+                    return -1;
+                return 0;
+            }
+        });
         return res;
     }
 
@@ -169,14 +135,12 @@ class BestFirst {
 
     private State backpropagation(State actual2, int w, int i) {
         while(actual2.father!=null){
-            if(w>0)
-                actual2.w+=w;
+            actual2.w+=w;
             actual2.n+=i;
             actual2=actual2.father;
             w=-w;
         }
-        if(w>0)
-            actual2.w+=w;
+        actual2.w+=w;
         actual2.n+=i;
         return actual2;
     }
