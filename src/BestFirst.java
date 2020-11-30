@@ -51,7 +51,7 @@ class BestFirst {
     public boolean end_game=false;
     private int i=0;
     public String winner="";
-    private int hard=190,med=80,ez=5,lvl;
+    private int hard=200,med=20,ez=5,lvl;//190
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
@@ -98,9 +98,6 @@ class BestFirst {
     }
 
     private State bestmove(State s) throws CloneNotSupportedException {
-        /*for(State suc:s.childs){
-            System.out.println(suc+"\n"+suc.n);
-        }*/
         State res=Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
