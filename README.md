@@ -1,6 +1,5 @@
-# iapro
+# A* & IDA*
 http://tristanpenman.com/demos/n-puzzle/ __
-https://en.wikipedia.org/wiki/Monte_Carlo_tree_search __
 # mcts
 https://www.geeksforgeeks.org/ml-monte-carlo-tree-search-mcts/ __
 https://towardsdatascience.com/monte-carlo-tree-search-158a917a8baa __
