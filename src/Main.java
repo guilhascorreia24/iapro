@@ -9,7 +9,7 @@ public class Main {
         while(!s.end_game){
             b= (Board) b.insertnew(sc.nextInt(), sc.nextInt());
             b=s.BestNextMove(b);
-            System.out.println(b); //+" move ["++"]"
+            System.out.println(b+"\n"+s.winner); //+" move ["++"]"
             System.out.println("-----------------");
 
         }

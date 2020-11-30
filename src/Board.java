@@ -10,11 +10,6 @@ interface Ilayout {
      */
     List<Ilayout> children() throws CloneNotSupportedException;
 
-    /**
-     * @return true if the receiver equals the argument l; return false otherwise.
-     */
-    boolean isGoal(Ilayout l);
-
     int verifywinner();
 
     Ilayout insertnew(int x,int y);
@@ -51,9 +46,7 @@ class Board implements Ilayout, Cloneable {
                     pw.print((char) (board[i][j]));
                 else
                     pw.print("-");
-                // System.out.println(board[i][j]);
             }
-            // if(i<dim-1)
             pw.println();
         }
         pw.println(character);
@@ -93,13 +86,7 @@ class Board implements Ilayout, Cloneable {
                 }
             }
         }
-        // System.out.println(p);
         return p;
-    }
-
-    @Override
-    public boolean isGoal(Ilayout l) {
-        return this.equals(l);
     }
 
     @Override
@@ -117,7 +104,6 @@ class Board implements Ilayout, Cloneable {
     @Override
     public int verifywinner() {
         boolean empty_spaces=false;
-        //System.out.println(character+" "+counter);
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 if (board[i][0] == character && board[i][1] == character && board[i][2] == character)

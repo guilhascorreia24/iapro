@@ -29,10 +29,9 @@ class BestFirst {
             return (double)((w/n)+c*Math.sqrt(Math.log(father.n)/n));
         }
 
-
         public State BestUCT(){
             List<State> k=childs;
-            Collections.sort(k, new Comparator<State>() {
+            return Collections.max(k, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
                     if (z1.uct() > z2.uct())
@@ -40,11 +39,7 @@ class BestFirst {
                     if (z1.uct() < z2.uct())
                         return -1;
                     return 0;
-                }
-
-            });
-            //System.out.println(k);
-            return k.get(k.size()-1);
+                }});
         }
 
         public Board board(){
@@ -52,8 +47,11 @@ class BestFirst {
         }
 
     }
-    private State actual,root;
+    private State actual;
     public boolean end_game=false;
+    private int i=0;
+    public String winner="";
+    private int hard=23,med=10,ez=1;
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
@@ -68,69 +66,86 @@ class BestFirst {
     }
 
     final public Board BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
+        i++;
         actual=new State(s,null);
         State root=actual;
-        //s.childs=sucessores(s);
-        //System.out.println(s.father.father==null);
-        int playouts=0,limit=3000;
+        int playouts=0,limit=hard;
         while(playouts<limit){
-            //System.out.println(actual.childs);
             if(!actual.childs.isEmpty()){
                 actual=selection(actual);
             }
-            //System.out.println("sel");
-           //System.out.println(actual+" "+actual.final_node);
             if(!actual.final_node)
                 actual.childs=sucessores(actual);
-            //System.out.println("exp");
             actual=simulation(actual);
-            //System.out.println("sim");
             playouts++;
         }
         if(!root.final_node)
             actual=bestmove(root);
-        else
+        else{
             end_game=true;
+        }
         return (Board)actual.layout;
     }
 
-    private State bestmove(State s) {
-        List<State> k=s.childs;
-        Collections.sort(k, new Comparator<State>() {
-            @Override
-            public int compare(State z1, State z2) {
-                if (z1.n > z2.n)
-                    return 1;
-                if (z1.n < z2.n)
-                    return -1;
-                return 0;
+    private State bestmove(State s) throws CloneNotSupportedException {
+        State res=s;
+        int max=0;
+        for(State suc:s.childs){
+            if(suc.final_node) {
+                res=suc;
+                break;
             }
-        });
-        
-        for(State p:k){
-            System.out.println(p);
-            System.out.println(p.n);
+            List<State> sucs=sucessores(suc);
+            boolean next=false;
+            for(State suc_suc:sucs){
+                if(suc_suc.final_node && suc_suc.layout.verifywinner()==1){
+                    next=true;
+                }
+                //System.out.println(suc_suc+"\n"+next);
+            }
+            //System.out.println(suc+"\n"+suc.n);
+            if(!next && suc.n>max){
+                res=suc;
+                max= (int) res.n;
+            }
         }
-        State res=k.get(k.size()-1);
-        if(res.final_node) end_game=true;
+        if(res.equals(s)){
+            res=Collections.max(s.childs, new Comparator<State>() {
+                @Override
+                public int compare(State z1, State z2) {
+                    if (z1.n > z2.n)
+                        return 1;
+                    if (z1.n < z2.n)
+                        return -1;
+                    return 0;
+                }
+            });
+        }
+
+        if(res.final_node){
+            end_game=true;
+            if(res.layout.verifywinner()!=0){
+                if(i%2==0) winner="PC2";
+                else winner="PC1";
+            }else{
+                winner="draw";
+            }
+        }
         return res;
     }
 
     private State simulation(State s) throws CloneNotSupportedException {
         actual=s;
         int w=s.layout.verifywinner();
-        //System.out.println("ini\n"+s.father);
         for(State suc:s.childs){
             s=suc;
             while(!s.final_node){
                 List<State> sucs=sucessores(s);
                 int rn=(int)(Math.random()%sucs.size());
                 s=sucs.get(rn);
-                //System.out.println(s.final_node);
             }
             w=s.layout.verifywinner();
             actual=backpropagation(s,w,1);
-            //System.out.println("fim\n"+actual);
         }
         if(actual.final_node)
             actual=backpropagation(s,w,1);
@@ -142,7 +157,6 @@ class BestFirst {
             if(w>0)
                 actual2.w+=w;
             actual2.n+=i;
-            //System.out.println(actual2);
             actual2=actual2.father;
             w=-w;
         }
