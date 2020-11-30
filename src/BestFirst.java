@@ -51,7 +51,7 @@ class BestFirst {
     public boolean end_game=false;
     private int i=0;
     public String winner="";
-    private int hard=23,med=10,ez=1;
+    private int hard=23,med=10,ez=1,lvl;
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
@@ -64,12 +64,16 @@ class BestFirst {
         }
         return sucs;
     }
-
+    public void lvl(int x){
+        if(x==1) lvl=ez;
+        else if(x==2) lvl=med;
+        else if(x==3) lvl=hard;
+    }
     final public Board BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
         i++;
         actual=new State(s,null);
         State root=actual;
-        int playouts=0,limit=hard;
+        int playouts=0,limit=lvl;
         while(playouts<limit){
             if(!actual.childs.isEmpty()){
                 actual=selection(actual);
