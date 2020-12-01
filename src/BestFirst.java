@@ -11,7 +11,7 @@ class BestFirst {
         private double n=0,w=0;
         private boolean final_node=false;
         private static final double c=Math.sqrt(2);
-
+        private int max;
         public State( Ilayout l,  State n) {
             layout = l;
             father = n;
@@ -25,13 +25,26 @@ class BestFirst {
         }
 
         private double uct() {
-            if(n==0) return Double.MAX_VALUE;
+            if(n==0) return max;
             return (double)((w/n)+c*Math.sqrt(Math.log(father.n)/n));
         }
 
         public State BestUCT(){
-            List<State> k=childs;
-            return Collections.max(k, new Comparator<State>() {
+            max=Integer.MAX_VALUE;
+            return Collections.max(childs, new Comparator<State>() {
+                @Override
+                public int compare(State z1, State z2) {
+                    if (z1.uct() > z2.uct())
+                        return 1;
+                    if (z1.uct() < z2.uct())
+                        return -1;
+                    return 0;
+                }});
+        }
+
+        public State WorstUCT(){
+            max=Integer.MIN_VALUE;
+            return Collections.max(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
                     if (z1.uct() > z2.uct())
@@ -51,7 +64,6 @@ class BestFirst {
     public boolean end_game=false;
     private int i=0;
     public String winner="";
-    private int hard=23,med=10,ez=1,lvl;
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
@@ -64,20 +76,18 @@ class BestFirst {
         }
         return sucs;
     }
-    public void lvl(int x){
-        if(x==1) lvl=ez;
-        else if(x==2) lvl=med;
-        else if(x==3) lvl=hard;
-    }
+
+
     final public Board BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
         i++;
         actual=new State(s,null);
         State root=actual;
-        int playouts=0,limit=lvl;
+        int playouts=0,limit=500;
         while(playouts<limit){
             if(!actual.childs.isEmpty()){
                 actual=selection(actual);
             }
+            //System.out.println(actual);
             if(!actual.final_node)
                 actual.childs=sucessores(actual);
             actual=simulation(actual);
@@ -92,29 +102,7 @@ class BestFirst {
     }
 
     private State bestmove(State s) throws CloneNotSupportedException {
-        State res=s;
-        int max=0;
-        for(State suc:s.childs){
-            if(suc.final_node) {
-                res=suc;
-                break;
-            }
-            List<State> sucs=sucessores(suc);
-            boolean next=false;
-            for(State suc_suc:sucs){
-                if(suc_suc.final_node && suc_suc.layout.verifywinner()==1){
-                    next=true;
-                }
-                //System.out.println(suc_suc+"\n"+next);
-            }
-            //System.out.println(suc+"\n"+suc.n);
-            if(!next && suc.n>max){
-                res=suc;
-                max= (int) res.n;
-            }
-        }
-        if(res.equals(s)){
-            res=Collections.max(s.childs, new Comparator<State>() {
+        State res=Collections.max(s.childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
                     if (z1.n > z2.n)
@@ -124,8 +112,6 @@ class BestFirst {
                     return 0;
                 }
             });
-        }
-
         if(res.final_node){
             end_game=true;
             if(res.layout.verifywinner()!=0){
@@ -156,23 +142,28 @@ class BestFirst {
         return actual;
     }
 
-    private State backpropagation(State actual2, int w, int i) {
+    private State backpropagation(State actual2, int w, int ii) {
         while(actual2.father!=null){
             if(w>0)
                 actual2.w+=w;
-            actual2.n+=i;
+            actual2.n+=ii;
             actual2=actual2.father;
             w=-w;
         }
         if(w>0)
             actual2.w+=w;
-        actual2.n+=i;
+        actual2.n+=ii;
         return actual2;
     }
 
     private State selection(State s) {
+        int p=0;
         while(!s.childs.isEmpty()){
-            s=s.BestUCT();
+            if(p%2==0)
+                s=s.BestUCT();
+            else{
+                s=s.WorstUCT();
+            }
         }
         return s;
     }

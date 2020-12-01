@@ -14,6 +14,7 @@ interface Ilayout {
 
     Ilayout insertnew(int x,int y);
 
+
 }
 
 class Board implements Ilayout, Cloneable {
