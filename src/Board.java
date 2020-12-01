@@ -19,23 +19,23 @@ interface Ilayout {
 
 class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
-    private int board[][];
+    private char board[][];
     private char character, counter;
 
     public Board() {
-        board = new int[dim][dim];
+        board = new char[dim][dim];
     }
 
     public Board(String str) throws IllegalStateException {
         if (str.length() != dim * dim)
             throw new IllegalStateException("Invalid arg in Board constructor");
-        board = new int[dim][dim];
+        board = new char[dim][dim];
         int si = 0;
         for (int i = 0; i < dim; i++)
             for (int j = 0; j < dim; j++)
-                board[i][j] = Character.getNumericValue(str.charAt(si++));
-        character='O';
-        counter='X';
+                board[i][j] = str.charAt(si++);
+        character = 'O';
+        counter = 'X';
     }
 
     public String toString() {
@@ -43,14 +43,11 @@ class Board implements Ilayout, Cloneable {
         PrintWriter pw = new PrintWriter(writer);
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                if (board[i][j] != 0)
-                    pw.print((char) (board[i][j]));
-                else
-                    pw.print("-");
+                    pw.print(board[i][j]);
             }
             pw.println();
         }
-        pw.println(character);
+        //pw.println(character);
         return writer.toString();
     }
 
@@ -78,11 +75,11 @@ class Board implements Ilayout, Cloneable {
         List<Ilayout> p = new ArrayList<Ilayout>();
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                if (board[i][j] == 0) {
+                if (board[i][j] == '-') {
                     Board b = (Board) clone();
                     b.character = counter;
                     b.counter = character;
-                    b.board[i][j] = (int) b.character;
+                    b.board[i][j] = b.character;
                     p.add(b);
                 }
             }
@@ -102,23 +99,25 @@ class Board implements Ilayout, Cloneable {
         return true;
     }
 
+    /**
+     * return 1 - winner 1
+     * return -1 - winner 2
+     * return -2 - continue
+     * return 0 - draw
+     */
     @Override
     public int verifywinner() {
-        boolean empty_spaces=false;
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                if (board[i][0] == character && board[i][1] == character && board[i][2] == character)
-                    return 1;
-                else if (board[0][j] == character && board[1][j] == character && board[2][j] == character)
-                    return 1;
-                else if (board[i][0] == counter && board[i][1] == counter && board[i][2] == counter)
-                    return -1;
-                else if (board[0][j] == counter && board[1][j] == counter && board[2][j] == counter)
-                    return -1;
-                if(board[i][j]==0){
-                    empty_spaces=true;
-                }
-            }
+        boolean empty_spaces = false;
+        for (int i = 0; i < dim; i++) 
+        {
+        	if (board[i][0] == character && board[i][1] == character && board[i][2] == character)
+                return 1;
+            else if (board[i][0] == counter && board[i][1] == counter && board[i][2] == counter)
+                return -1;
+            else if (board[0][i] == character && board[1][i] == character && board[2][i] == character)
+                return 1;
+            else if (board[0][i] == counter && board[1][i] == counter && board[2][i] == counter)
+                return -1;
         }
         if (board[0][0] == character && board[1][1] == character && board[2][2] == character)
             return 1;
@@ -128,9 +127,20 @@ class Board implements Ilayout, Cloneable {
             return -1;
         else if (board[0][2] == counter && board[1][1] == counter && board[2][0] == counter)
             return -1;
-        if(empty_spaces) return -2;
+        
+        pause:
+        for(int i = 0; i < dim; i++)
+        {
+        	for(int j = 0; j < dim; j++)
+                if(board[i][j] == '-')
+                {
+                    empty_spaces = true;
+                    break pause;
+                }
+        }
+        if(empty_spaces) 
+        	return -2;
         return 0;
-
     }
 
 

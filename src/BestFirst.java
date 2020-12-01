@@ -44,7 +44,7 @@ class BestFirst {
 
         public State WorstUCT(){
             max=Integer.MIN_VALUE;
-            return Collections.max(childs, new Comparator<State>() {
+            return Collections.min(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
                     if (z1.uct() > z2.uct())
@@ -82,7 +82,7 @@ class BestFirst {
         i++;
         actual=new State(s,null);
         State root=actual;
-        int playouts=0,limit=500;
+        int playouts=0,limit=10000;
         while(playouts<limit){
             if(!actual.childs.isEmpty()){
                 actual=selection(actual);
@@ -95,13 +95,25 @@ class BestFirst {
         }
         if(!root.final_node)
             actual=bestmove(root);
-        else{
+        if(actual.final_node){
             end_game=true;
+            if(actual.layout.verifywinner()!=0){
+                if(i%2==0) winner="PC2";
+                else winner="PC1";
+            }else{
+                winner="draw";
+            }
         }
         return (Board)actual.layout;
     }
 
     private State bestmove(State s) throws CloneNotSupportedException {
+       /* for(State suc:s.childs){
+            System.out.println("sim: "+suc.n+"\n"+suc);
+            for(State suc_suc:suc.childs){
+                //System.out.println("sim: "+suc_suc.n+"\n"+suc_suc);
+            }
+        }*/
         State res=Collections.max(s.childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
@@ -112,15 +124,6 @@ class BestFirst {
                     return 0;
                 }
             });
-        if(res.final_node){
-            end_game=true;
-            if(res.layout.verifywinner()!=0){
-                if(i%2==0) winner="PC2";
-                else winner="PC1";
-            }else{
-                winner="draw";
-            }
-        }
         return res;
     }
 
@@ -159,11 +162,15 @@ class BestFirst {
     private State selection(State s) {
         int p=0;
         while(!s.childs.isEmpty()){
+            /*for(State suc:s.childs){
+                System.out.println("uct: "+suc.uct()+"\n"+suc);
+            }*/
             if(p%2==0)
                 s=s.BestUCT();
             else{
                 s=s.WorstUCT();
             }
+            //s=s.BestUCT();
         }
         return s;
     }

@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         BestFirst s = new BestFirst();
-        Board b=new Board("000000000");
+        Board b=new Board("---------");
         System.out.print("player y/n:");
         String c = sc.nextLine();
         while(!s.end_game){
