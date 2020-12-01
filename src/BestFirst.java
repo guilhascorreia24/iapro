@@ -47,11 +47,13 @@ class BestFirst {
         }
 
     }
+    
     private State actual;
     public boolean end_game=false;
     private int i=0;
     public String winner="";
-    private int hard=200,med=20,ez=5,lvl;//190
+    private int hard=200,med=20,ez=5,lvl;//190   ver melhor os niveis
+
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
