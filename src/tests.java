@@ -1,4 +1,4 @@
-/*import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -19,6 +19,8 @@ public class tests {
         pw.println("---");
         assertEquals(writer.toString(), b.toString());
     }
+
+    
 
     @Test
     public void testConstructor1() {
@@ -61,6 +63,32 @@ public class tests {
         pw.println("OXO");
         pw.println("OOO");
         pw.println("OXO");
+        assertEquals(writer.toString(), b.toString());
+    }
+
+    @Test
+    public void testConstructorState0() {
+        Board b = new Board("-X--O--X-");
+        BestFirst.State s=new BestFirst.State(b,null);
+        StringWriter writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
+        pw.println("-X-");
+        pw.println("-O-");
+        pw.println("-X-");
+        assertEquals(false, s.isfinalnode());
+        assertEquals(writer.toString(), b.toString());
+    }
+
+    @Test
+    public void testConstructorState() {
+        Board b = new Board("OXOOOOOXO");
+        BestFirst.State s=new BestFirst.State(b,null);
+        StringWriter writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
+        pw.println("OXO");
+        pw.println("OOO");
+        pw.println("OXO");
+        assertEquals(true, s.isfinalnode());
         assertEquals(writer.toString(), b.toString());
     }
     
@@ -115,4 +143,12 @@ public class tests {
 		l.add(new Board("-O--X-XXO"));
 		assertEquals(l, result);
     }
-}*/
+
+    @Test
+    public void testUCT(){
+        Board b = new Board("-O--X--XO");
+        BestFirst.State s=new BestFirst.State(b,null);
+        assertEquals(Integer.MAX_VALUE,s.uct(),0);
+    }
+
+}

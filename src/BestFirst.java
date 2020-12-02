@@ -11,7 +11,8 @@ class BestFirst {
         private double n=0,w=0,l=0,d=0;
         private boolean final_node=false;
         private static final double c=Math.sqrt(2);
-        private int max;
+        private int max=Integer.MAX_VALUE;
+
         public State( Ilayout l,  State n) {
             layout = l;
             father = n;
@@ -20,17 +21,29 @@ class BestFirst {
             }
         }
 
+        public void setSim(int n){
+            this.n=n;
+        }
+
+        public void setWin(int w){
+            this.w=w;
+        }
+
+
+        public boolean isfinalnode(){
+            return final_node;
+        }
+
         public String toString() {
             return layout.toString();
         }
 
-        private double uct() {
+        public double uct() {
             if(n==0) return max;
             return (double)((w/n)+c*Math.sqrt(Math.log(father.n)/n));
         }
 
         public State BestUCT(){
-            max=Integer.MAX_VALUE;
             return Collections.max(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
@@ -53,10 +66,6 @@ class BestFirst {
                         return -1;
                     return 0;
                 }});
-        }
-
-        public Board board(){
-            return (Board)layout;
         }
 
     }
@@ -112,19 +121,15 @@ class BestFirst {
         Collections.sort(l, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
-                if(z1.w/z1.n>z2.w/z2.n)
+                if(z1.n>z2.n)
                     return 1;
-                if(z1.w/z1.n<z2.w/z2.n)
+                if(z1.n<z2.n)
                     return -1;
-                if(z1.l/z1.n>z2.l/z2.n)
-                    return -1;
-                if(z1.l/z1.n<z2.l/z2.n)
-                    return 1;
                 return 0;
             }
         });
         for(State suc:l){
-            System.out.println("sim: "+suc.n+" win:"+suc.w+" loses:"+suc.l+" draws:"+suc.d+" uct: "+suc.uct()+"\n"+suc);
+            //System.out.println("sim: "+suc.n+" win:"+suc.w+" loses:"+suc.l+" draws:"+suc.d+" uct: "+suc.uct()+"\n"+suc);
         }
         State res=Collections.max(s.childs, new Comparator<State>() {
                 @Override
