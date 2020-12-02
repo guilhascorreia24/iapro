@@ -8,6 +8,7 @@ public class Main {
         Board b=new Board("---------");
         System.out.print("player y/n:");
         String c = sc.nextLine();
+        long startTime = System.nanoTime();
         while(!s.end_game){
             //System.out.println(c.equals("y"));
             if(c.equals("y"))
@@ -17,6 +18,9 @@ public class Main {
             System.out.println("-----------------");
 
         }
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println(duration*0.000001  +"ms");
         sc.close();
     }
 }
