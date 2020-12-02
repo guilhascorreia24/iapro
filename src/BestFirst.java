@@ -8,7 +8,7 @@ class BestFirst {
         private  Ilayout layout;
         private  State father;
         private List<State> childs=new ArrayList<>();
-        private double n=0,w=0,l=0;
+        private double n=0,w=0,l=0,d=0;
         private boolean final_node=false;
         private static final double c=Math.sqrt(2);
         private int max;
@@ -108,23 +108,35 @@ class BestFirst {
     }
 
     private State bestmove(State s) throws CloneNotSupportedException {
-        for(State suc:s.childs){
-            System.out.println("sim: "+suc.n+" win:"+suc.w+" uct: "+suc.uct()+"\n"+suc);
-            for(State suc_suc:suc.childs){
-                //System.out.println("sim: "+suc_suc.n+"\n"+suc_suc);
+        List<State> l=new ArrayList<>(s.childs);
+        Collections.sort(l, new Comparator<State>() {
+            @Override
+            public int compare(State z1, State z2) {
+                if(z1.w/z1.n>z2.w/z2.n)
+                    return 1;
+                if(z1.w/z1.n<z2.w/z2.n)
+                    return -1;
+                if(z1.l/z1.n>z2.l/z2.n)
+                    return -1;
+                if(z1.l/z1.n<z2.l/z2.n)
+                    return 1;
+                return 0;
             }
+        });
+        for(State suc:l){
+            System.out.println("sim: "+suc.n+" win:"+suc.w+" loses:"+suc.l+" draws:"+suc.d+" uct: "+suc.uct()+"\n"+suc);
         }
         State res=Collections.max(s.childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
-                    if(z1.n==z2.n && z1.l<z2.l)
+                    if(z1.w/z1.n>z2.w/z2.n)
                         return 1;
-                    if(z1.n==z2.n && z1.l>z2.l)
+                    if(z1.w/z1.n<z2.w/z2.n)
                         return -1;
-                    if (z1.n > z2.n)
+                    if(z1.l/z1.n>z2.l/z2.n)
+                        return -1;
+                    if(z1.l/z1.n<z2.l/z2.n)
                         return 1;
-                    if (z1.n < z2.n)
-                        return -1;
                     return 0;
                 }
             });
@@ -149,20 +161,22 @@ class BestFirst {
         return actual;
     }
 
-    private int score(int x){
+    private double score(int x){
         if(x>0){
             return 1;
         }else if(x==0){
-            return 0;
+            return 0.5;
         }else{
-            return -1;
+            return 0;
         }
     }
 
     private State backpropagation(State actual2, int w, int ii) {
-        int score=score(w);
+        double score=score(w);
         while(actual2.father!=null){
             actual2.w+=score;
+            if(w<0) actual2.l++;
+            else if(w==0) actual2.d++;
             actual2.n+=ii;
             actual2=actual2.father;
             w=-w;
@@ -170,6 +184,7 @@ class BestFirst {
         }
         actual2.w+=w;
         if(w<0) actual2.l++;
+        else if(w==0) actual2.d++;
         actual2.n+=ii;
         return actual2;
     }
