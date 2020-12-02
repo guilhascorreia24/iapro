@@ -82,7 +82,7 @@ class BestFirst {
         i++;
         actual=new State(s,null);
         State root=actual;
-        int playouts=0,limit=50;//1000
+        int playouts=0,limit=25;//1000
         while(playouts<limit){
             if(!actual.childs.isEmpty()){
                 actual=selection(actual);
@@ -129,14 +129,10 @@ class BestFirst {
         State res=Collections.max(s.childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
-                    if(z1.w/z1.n>z2.w/z2.n)
+                    if(z1.n>z2.n)
                         return 1;
-                    if(z1.w/z1.n<z2.w/z2.n)
+                    if(z1.n<z2.n)
                         return -1;
-                    if(z1.l/z1.n>z2.l/z2.n)
-                        return -1;
-                    if(z1.l/z1.n<z2.l/z2.n)
-                        return 1;
                     return 0;
                 }
             });
