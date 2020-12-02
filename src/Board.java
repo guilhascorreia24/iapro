@@ -80,7 +80,8 @@ class Board implements Ilayout, Cloneable {
                     b.character = counter;
                     b.counter = character;
                     b.board[i][j] = b.character;
-                    p.add(b);
+                    if(!p.contains(b))
+                        p.add(b);
                 }
             }
         }
@@ -88,15 +89,46 @@ class Board implements Ilayout, Cloneable {
     }
 
     @Override
-    public boolean equals(Object b) { // compara 2 boards
+    public boolean equals(Object b){
         Board b2 = (Board) b;
+        Board b3= ((Board) b2.clone()).rotate();
+        Board b4=((Board) b3.clone()).rotate();
+        Board b5=((Board) b4.clone()).rotate();
+        if(compare(b2) || compare(b3) || compare(b4) || compare(b5)){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean compare (Board b) { //compara 2 boards
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                if (board[i][j] != b2.board[i][j])
+                if (board[i][j] != b.board[i][j])
                     return false;
             }
         }
         return true;
+    }
+
+    public Board rotate(){ //https://www.geeksforgeeks.org/inplace-rotate-square-matrix-by-90-degrees/
+        for (int x = 0; x < dim / 2; x++) { 
+            for (int y = x; y < dim - x - 1; y++) { 
+                char temp = board[x][y]; 
+  
+                // Move values from right to top 
+                board[x][y] = board[y][dim - 1 - x]; 
+  
+                // Move values from bottom to right 
+                board[y][dim - 1 - x] = board[dim - 1 - x][dim - 1 - y]; 
+  
+                // Move values from left to bottom 
+                board[dim - 1 - x][dim - 1 - y] =board[dim - 1 - y][x]; 
+  
+                // Assign temp to left 
+                board[dim - 1 - y][x] = temp; 
+            } 
+        } 
+        return this;
     }
 
     /**

@@ -1,4 +1,4 @@
-import static org.junit.Assert.assertEquals;
+/*import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -19,7 +19,6 @@ public class tests {
         pw.println("---");
         assertEquals(writer.toString(), b.toString());
     }
-
     
 
     @Test
@@ -147,8 +146,82 @@ public class tests {
     @Test
     public void testUCT(){
         Board b = new Board("-O--X--XO");
-        BestFirst.State s=new BestFirst.State(b,null);
+        BestFirst.State s = new BestFirst.State(b,null);
         assertEquals(Integer.MAX_VALUE,s.uct(),0);
     }
+    @Test
+    public void testUCT2(){
+        Board b = new Board("-O--X--XO");
+        BestFirst.State s = new BestFirst.State(b, new BestFirst.State(new Board("----X--XO"), null));
+        s.setSim(5);
+        s.setWin(1);
+        s.getFather().setSim(6);
+        assertEquals(1.04658,s.uct(),5);
+    }
 
-}
+    @Test
+    public void testUCT3(){
+        Board b = new Board("-O--X--X-");
+        BestFirst.State s = new BestFirst.State(b, new BestFirst.State(new Board("----X---O"), null));
+        s.setSim(15);
+        s.setWin(10);
+        s.getFather().setSim(20);
+        assertEquals(1.29867,s.uct(),5);
+    }
+
+    @Test
+    public void testUCT4(){
+        Board b = new Board("-O--X----");
+        BestFirst.State s = new BestFirst.State(b, new BestFirst.State(new Board("----X----"), null));
+        s.setSim(27);
+        s.setWin(12);
+        s.getFather().setSim(33);
+        assertEquals(0.95337,s.uct(),5);
+    }
+
+    @Test
+    public void testRotation(){
+        Board b = new Board("X---O----");
+        Board b2 = ((Board) b.clone()).rotate();
+        Board b3 = ((Board) b2).rotate();
+        Board b4 = ((Board) b3).rotate();
+        Board b5 = ((Board) b4).rotate();
+        assertEquals(new Board("--X-O----"), b2);
+        assertEquals(new Board("----O---X"), b3);
+        assertEquals(new Board("----O-X--"), b3);
+        assertEquals(b, b5);
+        //System.out.println(b+"\n"+b2+"\n"+b.equals(b2));
+    }
+
+    @Test
+    public void testRotation2(){
+        Board b = new Board("XOXOOOXOX");
+        Board b2 = ((Board) b.clone()).rotate();
+        Board b3 = ((Board) b2).rotate();
+        Board b4 = ((Board) b3).rotate();
+        Board b5 = ((Board) b4).rotate();
+        assertEquals(b, b2);
+        assertEquals(b, b3);
+        assertEquals(b, b4);
+        assertEquals(b, b5);
+    }
+
+    @Test
+    public void testRotation3(){
+        Board b = new Board("OXXOXOOXX");
+        Board b2 = ((Board) b.clone()).rotate();
+        Board b3 = ((Board) b2).rotate();
+        Board b4 = ((Board) b3).rotate();
+        Board b5 = ((Board) b4).rotate();
+        assertEquals(new Board("OOOXXXXOX"), b2);
+        assertEquals(new Board("XXOOXOXXO"), b3);
+        assertEquals(new Board("XOXXXXOOO"), b4);
+        assertEquals(b, b5);
+    }
+
+    @Test
+    public void testchilden5() throws CloneNotSupportedException {
+        Board b=new Board("----O----");
+        System.out.println(b.children());
+    }
+}*/

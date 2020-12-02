@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 class BestFirst {
     static class State {
@@ -21,6 +22,9 @@ class BestFirst {
             }
         }
 
+        public State getFather(){
+            return father;
+        }
         public void setSim(int n){
             this.n=n;
         }
@@ -40,7 +44,11 @@ class BestFirst {
 
         public double uct() {
             if(n==0) return max;
-            return (double)((w/n)+c*Math.sqrt(Math.log(father.n)/n));
+            return (w/n)+c*Math.sqrt(Math.log(father.n)/n);
+        }
+
+        public boolean equals(Object b){
+            return layout.equals((Ilayout)b); 
         }
 
         public State BestUCT(){
@@ -69,29 +77,38 @@ class BestFirst {
         }
 
     }
-    private State actual;
+    private State actual,root_father;
     public boolean end_game=false;
-    private int i=0;
-    public String winner="";
 
     final private List<State> sucessores( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
          List<Ilayout> children = n.layout.children();
         for (Ilayout e : children) {
-            if (n.father == null || !e.equals(n.father.layout)) {
                 State nn = new State(e, n);
                 sucs.add(nn);
-            }
         }
         return sucs;
     }
 
 
     final public Board BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
-        i++;
+        /*if(actual!=null){
+            if(!actual.layout.equals(s)){
+                for(State suc:actual.childs){
+                    if(suc.layout.equals(s)){
+                        actual=suc;
+                        break;
+                    }
+                }    
+            }
+        }else{
+            actual=new State(s,null);
+        }*/
         actual=new State(s,null);
         State root=actual;
-        int playouts=0,limit=25;//1000
+        //System.out.println(actual.n+" "+actual.childs.isEmpty());
+        root_father=actual.father;
+        int playouts=0,limit=20;//1000
         while(playouts<limit){
             if(!actual.childs.isEmpty()){
                 actual=selection(actual);
@@ -102,17 +119,10 @@ class BestFirst {
             actual=simulation(actual);
             playouts++;
         }
+        //System.out.println(root.n);
         if(!root.final_node)
             actual=bestmove(root);
-        if(actual.final_node){
-            end_game=true;
-            if(actual.layout.verifywinner()!=0){
-                if(i%2==0) winner="PC2";
-                else winner="PC1";
-            }else{
-                winner="draw";
-            }
-        }
+        if(actual.final_node) end_game=true;
         return (Board)actual.layout;
     }
 
@@ -129,7 +139,7 @@ class BestFirst {
             }
         });
         for(State suc:l){
-            //System.out.println("sim: "+suc.n+" win:"+suc.w+" loses:"+suc.l+" draws:"+suc.d+" uct: "+suc.uct()+"\n"+suc);
+            System.out.println("sim:"+suc.n+" wins:"+suc.w+"\n"+suc);
         }
         State res=Collections.max(s.childs, new Comparator<State>() {
                 @Override
@@ -151,7 +161,9 @@ class BestFirst {
             s=suc;
             while(!s.final_node){
                 List<State> sucs=sucessores(s);
-                int rn=(int)(Math.random()%sucs.size());
+               // System.out.println((int)Math.random()*sucs.size());
+                int rn=(int)(new Random().nextInt(sucs.size()));
+                //System.out.println(rn);
                 s=sucs.get(rn);
             }
             w=s.layout.verifywinner();
@@ -176,16 +188,16 @@ class BestFirst {
         double score=score(w);
         while(actual2.father!=null){
             actual2.w+=score;
-            if(w<0) actual2.l++;
-            else if(w==0) actual2.d++;
+            //if(w<0) actual2.l++;
+            //else if(w==0) actual2.d++;
             actual2.n+=ii;
             actual2=actual2.father;
             w=-w;
             score=score(w);
         }
-        actual2.w+=w;
-        if(w<0) actual2.l++;
-        else if(w==0) actual2.d++;
+        //actual2.w+=w;
+        //if(w<0) actual2.l++;
+        //else if(w==0) actual2.d++;
         actual2.n+=ii;
         return actual2;
     }

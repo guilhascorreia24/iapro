@@ -9,11 +9,11 @@ public class Main {
         System.out.print("player y/n:");
         String c = sc.nextLine();
         while(!s.end_game){
-            //System.out.println(c.equals("y"));
-            if(c.equals("y"))
+            if(c.equals("y")){
                 b= (Board) b.insertnew(sc.nextInt(), sc.nextInt());
+            }
             b=s.BestNextMove(b);
-            System.out.println(b+"\n"+s.winner); //+" move ["++"]"
+            System.out.println(b); //+" move ["++"]"
             System.out.println("-----------------");
 
         }
