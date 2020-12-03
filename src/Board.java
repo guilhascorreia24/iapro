@@ -89,46 +89,91 @@ class Board implements Ilayout, Cloneable {
     }
 
     @Override
-    public boolean equals(Object b){
-        Board b2 = (Board) b;
-        Board b3= ((Board) b2.clone()).rotate();
-        Board b4=((Board) b3.clone()).rotate();
-        Board b5=((Board) b4.clone()).rotate();
-        if(compare(b2) || compare(b3) || compare(b4) || compare(b5)){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean compare (Board b) { //compara 2 boards
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                if (board[i][j] != b.board[i][j])
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    public Board rotate(){ //https://www.geeksforgeeks.org/inplace-rotate-square-matrix-by-90-degrees/
+    public boolean equals(Object b){ //https://www.geeksforgeeks.org/inplace-rotate-square-matrix-by-90-degrees/
+        Board b2=(Board)b;
+        System.out.println(b2);
+        int verify=0;
+        b2= (Board) b2.clone();
         for (int x = 0; x < dim / 2; x++) { 
             for (int y = x; y < dim - x - 1; y++) { 
-                char temp = board[x][y]; 
+                char temp = b2.board[x][y]; 
   
                 // Move values from right to top 
-                board[x][y] = board[y][dim - 1 - x]; 
+                b2.board[x][y] = b2.board[y][dim - 1 - x]; 
   
                 // Move values from bottom to right 
-                board[y][dim - 1 - x] = board[dim - 1 - x][dim - 1 - y]; 
+                b2.board[y][dim - 1 - x] = b2.board[dim - 1 - x][dim - 1 - y]; 
   
                 // Move values from left to bottom 
-                board[dim - 1 - x][dim - 1 - y] =board[dim - 1 - y][x]; 
+                b2.board[dim - 1 - x][dim - 1 - y] =b2.board[dim - 1 - y][x]; 
   
                 // Assign temp to left 
-                board[dim - 1 - y][x] = temp; 
+                b2.board[dim - 1 - y][x] = temp; 
+                System.out.println(b2+"\n"+board[x][y]+" "+b2.board[x][y]);
+
+                if(b2.board[x][y]==board[x][y]){
+                   // System.out.println(b2.board[x][y]+" "+board[x][y]);
+                    verify++;
+                }
+                char temp2 = b2.board[x][y]; 
+  
+                // Move values from right to top 
+                b2.board[x][y] = b2.board[y][dim - 1 - x]; 
+  
+                // Move values from bottom to right 
+                b2.board[y][dim - 1 - x] = b2.board[dim - 1 - x][dim - 1 - y]; 
+  
+                // Move values from left to bottom 
+                b2.board[dim - 1 - x][dim - 1 - y] =b2.board[dim - 1 - y][x]; 
+  
+                // Assign temp to left 
+                b2.board[dim - 1 - y][x] = temp2;
+                System.out.println(b2+"\n"+board[x][y]+" "+b2.board[x][y]);
+                if(b2.board[x][y]==board[x][y]){
+                   // System.out.println(b2.board[x][y]+" "+board[x][y]);
+                    verify++;
+                }
+                char temp3 = b2.board[x][y]; 
+  
+                // Move values from right to top 
+                b2.board[x][y] = b2.board[y][dim - 1 - x]; 
+  
+                // Move values from bottom to right 
+                b2.board[y][dim - 1 - x] = b2.board[dim - 1 - x][dim - 1 - y]; 
+  
+                // Move values from left to bottom 
+                b2.board[dim - 1 - x][dim - 1 - y] =b2.board[dim - 1 - y][x]; 
+  
+                // Assign temp to left 
+                b2.board[dim - 1 - y][x] = temp3;
+                System.out.println(b2+"\n"+board[x][y]+" "+b2.board[x][y]);
+                if(b2.board[x][y]==board[x][y]){
+                    //System.out.println(b2.board[x][y]+" "+board[x][y]);
+                    verify++;
+                }
+                char temp4 = b2.board[x][y]; 
+  
+                // Move values from right to top 
+                b2.board[x][y] = b2.board[y][dim - 1 - x]; 
+  
+                // Move values from bottom to right 
+                b2.board[y][dim - 1 - x] = b2.board[dim - 1 - x][dim - 1 - y]; 
+  
+                // Move values from left to bottom 
+                b2.board[dim - 1 - x][dim - 1 - y] =b2.board[dim - 1 - y][x]; 
+  
+                // Assign temp to left 
+                b2.board[dim - 1 - y][x] = temp4;
+                System.out.println(b2+"\n"+board[x][y]+" "+b2.board[x][y]+"\n-------------");
+                if(b2.board[x][y]==board[x][y]){
+                    // System.out.println(b2.board[x][y]+" "+board[x][y]);
+                     verify++;
+                 }
             } 
-        } 
-        return this;
+        }
+        System.out.println(verify);
+        if(verify==(dim/2)*(dim-(dim/2)-1)) return true;
+        return false;
     }
 
     /**

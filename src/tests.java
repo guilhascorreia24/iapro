@@ -1,4 +1,4 @@
-/*import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -180,48 +180,16 @@ public class tests {
     }
 
     @Test
-    public void testRotation(){
-        Board b = new Board("X---O----");
-        Board b2 = ((Board) b.clone()).rotate();
-        Board b3 = ((Board) b2).rotate();
-        Board b4 = ((Board) b3).rotate();
-        Board b5 = ((Board) b4).rotate();
-        assertEquals(new Board("--X-O----"), b2);
-        assertEquals(new Board("----O---X"), b3);
-        assertEquals(new Board("----O-X--"), b3);
-        assertEquals(b, b5);
-        //System.out.println(b+"\n"+b2+"\n"+b.equals(b2));
+    public void testequalsboard(){
+        Board b = new Board("xoxxxooxo");
+        Board b2=new Board("xxooxxxxo");
+        assertEquals(true, b.equals(b2));
     }
 
-    @Test
-    public void testRotation2(){
-        Board b = new Board("XOXOOOXOX");
-        Board b2 = ((Board) b.clone()).rotate();
-        Board b3 = ((Board) b2).rotate();
-        Board b4 = ((Board) b3).rotate();
-        Board b5 = ((Board) b4).rotate();
-        assertEquals(b, b2);
-        assertEquals(b, b3);
-        assertEquals(b, b4);
-        assertEquals(b, b5);
-    }
-
-    @Test
-    public void testRotation3(){
-        Board b = new Board("OXXOXOOXX");
-        Board b2 = ((Board) b.clone()).rotate();
-        Board b3 = ((Board) b2).rotate();
-        Board b4 = ((Board) b3).rotate();
-        Board b5 = ((Board) b4).rotate();
-        assertEquals(new Board("OOOXXXXOX"), b2);
-        assertEquals(new Board("XXOOXOXXO"), b3);
-        assertEquals(new Board("XOXXXXOOO"), b4);
-        assertEquals(b, b5);
-    }
 
     @Test
     public void testchilden5() throws CloneNotSupportedException {
         Board b=new Board("----O----");
         System.out.println(b.children());
     }
-}*/
+}

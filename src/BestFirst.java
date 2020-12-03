@@ -92,7 +92,7 @@ class BestFirst {
 
 
     final public Board BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
-        /*if(actual!=null){
+        if(actual!=null){
             if(!actual.layout.equals(s)){
                 for(State suc:actual.childs){
                     if(suc.layout.equals(s)){
@@ -103,12 +103,13 @@ class BestFirst {
             }
         }else{
             actual=new State(s,null);
-        }*/
-        actual=new State(s,null);
+        }
+        //actual=new State(s,null);
         State root=actual;
+        root_father=actual.father;
         //System.out.println(actual.n+" "+actual.childs.isEmpty());
         root_father=actual.father;
-        int playouts=0,limit=20;//1000
+        int playouts=0,limit=5;//1000
         while(playouts<limit){
             if(!actual.childs.isEmpty()){
                 actual=selection(actual);
@@ -127,7 +128,7 @@ class BestFirst {
     }
 
     private State bestmove(State s) throws CloneNotSupportedException {
-        List<State> l=new ArrayList<>(s.childs);
+        /*List<State> l=new ArrayList<>(s.childs);
         Collections.sort(l, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
@@ -140,7 +141,7 @@ class BestFirst {
         });
         for(State suc:l){
             System.out.println("sim:"+suc.n+" wins:"+suc.w+"\n"+suc);
-        }
+        }*/
         State res=Collections.max(s.childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
@@ -186,7 +187,7 @@ class BestFirst {
 
     private State backpropagation(State actual2, int w, int ii) {
         double score=score(w);
-        while(actual2.father!=null){
+        while(actual2.father!=root_father){
             actual2.w+=score;
             //if(w<0) actual2.l++;
             //else if(w==0) actual2.d++;
