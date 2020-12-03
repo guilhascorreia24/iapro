@@ -7,7 +7,7 @@ public class Main {
         BestFirst s = new BestFirst();
         Board b=new Board("---------");
         System.out.print("player y/n:");
-        String c = sc.nextLine();
+        String c = "n";
         float start=System.nanoTime();
         while(!s.end_game){
             if(c.equals("y")){

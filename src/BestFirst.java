@@ -109,7 +109,7 @@ class BestFirst {
         root_father=actual.father;
         //System.out.println(actual.n+" "+actual.childs.isEmpty());
         root_father=actual.father;
-        int playouts=0,limit=5;//1000
+        int playouts=0,limit=80;//1000
         while(playouts<limit){
             if(!actual.childs.isEmpty()){
                 actual=selection(actual);
