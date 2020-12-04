@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
-        BestFirst s = new BestFirst();
+        MCTS s = new MCTS();
         Board b=new Board("---------");
         System.out.print("player y/n:");
         String c = "n";

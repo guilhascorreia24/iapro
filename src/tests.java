@@ -1,4 +1,4 @@
-/*import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -68,7 +68,7 @@ public class tests {
     @Test
     public void testConstructorState0() {
         Board b = new Board("-X--O--X-");
-        BestFirst.State s=new BestFirst.State(b,null);
+        MCTS.State s=new MCTS.State(b,null);
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
         pw.println("-X-");
@@ -81,7 +81,7 @@ public class tests {
     @Test
     public void testConstructorState() {
         Board b = new Board("OXOOOOOXO");
-        BestFirst.State s=new BestFirst.State(b,null);
+        MCTS.State s=new MCTS.State(b,null);
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
         pw.println("OXO");
@@ -99,13 +99,7 @@ public class tests {
 		List<Ilayout> l = new ArrayList<Ilayout>();
 		l.add(new Board("X--------"));
 		l.add(new Board("-X-------"));
-		l.add(new Board("--X------"));
-		l.add(new Board("---X-----"));
 		l.add(new Board("----X----"));
-		l.add(new Board("-----X---"));
-		l.add(new Board("------X--"));
-		l.add(new Board("-------X-"));
-		l.add(new Board("--------X"));
 		assertEquals(l, result);
     }
     
@@ -156,15 +150,21 @@ public class tests {
     }
 
     @Test
+    public void testchilden5() throws CloneNotSupportedException {
+        Board b=new Board("----O----");
+        System.out.println(b.children());
+    }
+
+    @Test
     public void testUCT(){
         Board b = new Board("-O--X--XO");
-        BestFirst.State s = new BestFirst.State(b,null);
+        MCTS.State s = new MCTS.State(b,null);
         assertEquals(Integer.MAX_VALUE,s.uct(),0);
     }
     @Test
     public void testUCT2(){
         Board b = new Board("-O--X--XO");
-        BestFirst.State s = new BestFirst.State(b, new BestFirst.State(new Board("----X--XO"), null));
+        MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X--XO"), null));
         s.setSim(5);
         s.setWin(1);
         s.getFather().setSim(6);
@@ -174,7 +174,7 @@ public class tests {
     @Test
     public void testUCT3(){
         Board b = new Board("-O--X--X-");
-        BestFirst.State s = new BestFirst.State(b, new BestFirst.State(new Board("----X---O"), null));
+        MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X---O"), null));
         s.setSim(15);
         s.setWin(10);
         s.getFather().setSim(20);
@@ -184,7 +184,7 @@ public class tests {
     @Test
     public void testUCT4(){
         Board b = new Board("-O--X----");
-        BestFirst.State s = new BestFirst.State(b, new BestFirst.State(new Board("----X----"), null));
+        MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X----"), null));
         s.setSim(27);
         s.setWin(12);
         s.getFather().setSim(33);
@@ -206,9 +206,5 @@ public class tests {
     }
 
 
-    @Test
-    public void testchilden5() throws CloneNotSupportedException {
-        Board b=new Board("----O----");
-        System.out.println(b.children());
-    }
-}*/
+
+}
