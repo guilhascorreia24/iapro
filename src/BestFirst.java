@@ -137,43 +137,6 @@ class BestFirst {
     }
 
     private State bestmove(State s) throws CloneNotSupportedException {
-<<<<<<< HEAD
-        List<State>k=new ArrayList<>(s.childs);
-        Collections.sort(k, new Comparator<State>() {
-            @Override
-            public int compare(State z1, State z2) {
-                if (z1.n > z2.n)
-                    return 1;
-                if (z1.n < z2.n)
-                    return -1;
-                if(z1.l<z2.l)
-                    return 1;
-                if(z1.l>z2.l)
-                    return -1;
-                if(z1.w>z2.w)
-                    return 1;
-                if(z1.w<z2.w)
-                    return -1;
-            return 0;
-            }
-        });
-        for(State suc:k){
-            System.out.println("sim: "+suc.n+" win:"+suc.w+" lose:"+suc.l+" draw:"+suc.d+" uct: "+suc.uct()+"\n"+suc);
-            for(State suc_suc:suc.childs){
-                //System.out.println("sim: "+suc_suc.n+"\n"+suc_suc);
-            }
-        }
-        State res=Collections.max(k, new Comparator<State>() {
-            @Override
-            public int compare(State z1, State z2) {
-                if (z1.w+z1.d > z2.w+z2.d)
-                    return 1;
-                if (z1.w+z1.d < z2.w+z2.d)
-                    return -1;
-                return 0;
-            }
-        });
-=======
         /*List<State> l=new ArrayList<>(s.childs);
         Collections.sort(l, new Comparator<State>() {
             @Override
@@ -198,7 +161,6 @@ class BestFirst {
                     return 0;
                 }
             });
->>>>>>> 528d0af3a9e00437409d5bfaa7b0407bed7cf8e9
         return res;
     }
 

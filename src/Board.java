@@ -12,8 +12,7 @@ interface Ilayout {
 
     int verifywinner();
 
-    Ilayout insertnew(int x,int y);
-
+    Ilayout insertnew(int x, int y);
 
 }
 
@@ -43,19 +42,19 @@ class Board implements Ilayout, Cloneable {
         PrintWriter pw = new PrintWriter(writer);
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                    pw.print(board[i][j]);
+                pw.print(board[i][j]);
             }
             pw.println();
         }
-        //pw.println(character);
+        // pw.println(character);
         return writer.toString();
     }
 
-    public Ilayout insertnew(int x,int y){
-        Board clone=(Board)clone();
-        clone.character=counter;
-        clone.counter=character;
-        clone.board[x][y]=clone.character;
+    public Ilayout insertnew(int x, int y) {
+        Board clone = (Board) clone();
+        clone.character = counter;
+        clone.counter = character;
+        clone.board[x][y] = clone.character;
         return clone;
     }
 
@@ -80,7 +79,8 @@ class Board implements Ilayout, Cloneable {
                     b.character = counter;
                     b.counter = character;
                     b.board[i][j] = b.character;
-                    p.add(b);
+                    if (!p.contains(b))
+                        p.add(b);
                 }
             }
         }
@@ -88,29 +88,102 @@ class Board implements Ilayout, Cloneable {
     }
 
     @Override
-    public boolean equals(Object b) { // compara 2 boards
+    public boolean equals(Object b) { // https://www.geeksforgeeks.org/inplace-rotate-square-matrix-by-90-degrees/
         Board b2 = (Board) b;
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                if (board[i][j] != b2.board[i][j])
-                    return false;
+        //System.out.println(b2);
+        b2 = (Board) b2.clone();
+        int x = 0, y = 0;
+        char temp = b2.board[x][y];
+        char temp_1 = b2.board[x][(y+1)];
+
+        // Move values from right to top
+        b2.board[x][y] = b2.board[y][dim - 1 - x];
+        b2.board[x][(y+1)] = b2.board[(y+1)][dim - 1 - x];
+        // Move values from bottom to right
+        b2.board[y][dim - 1 - x] = b2.board[dim - 1 - x][dim - 1 - y];
+        b2.board[(y+1)][dim - 1 - x] = b2.board[dim - 1 - x][dim - 1 - ((y+1))];
+        // Move values from left to bottom
+        b2.board[dim - 1 - x][dim - 1 - y] = b2.board[dim - 1 - y][x];
+        b2.board[dim - 1 - x][dim - 1 - ((y+1))] = b2.board[dim - 1 - ((y+1))][x];
+        // Assign temp to left
+        b2.board[dim - 1 - y][x] = temp;
+        b2.board[dim - 1 - ((y+1))][x] = temp_1;
+        // System.out.println(b2 + "\n" + board[x][y] + " " + b2.board[x][y]);
+        int v=0;
+        for(int i=0;i<dim;i++){
+            for(int j=0;j<dim;j++){
+                if(b2.board[i][j]==board[i][j]){
+                    v++;
+                }
             }
         }
-        return true;
+        if(v==dim*dim) return true;
+        //System.out.println(b2);
+        temp = b2.board[x][y];
+        temp_1 = b2.board[x][(y+1)];
+
+        // Move values from right to top
+        b2.board[x][y] = b2.board[y][dim - 1 - x];
+        b2.board[x][(y+1)] = b2.board[(y+1)][dim - 1 - x];
+        // Move values from bottom to right
+        b2.board[y][dim - 1 - x] = b2.board[dim - 1 - x][dim - 1 - y];
+        b2.board[(y+1)][dim - 1 - x] = b2.board[dim - 1 - x][dim - 1 - ((y+1))];
+        // Move values from left to bottom
+        b2.board[dim - 1 - x][dim - 1 - y] = b2.board[dim - 1 - y][x];
+        b2.board[dim - 1 - x][dim - 1 - ((y+1))] = b2.board[dim - 1 - ((y+1))][x];
+        // Assign temp to left
+        b2.board[dim - 1 - y][x] = temp;
+        b2.board[dim - 1 - ((y+1))][x] = temp_1;
+        // System.out.println(b2 + "\n" + board[x][y] + " " + b2.board[x][y]);
+
+         v=0;
+        for(int i=0;i<dim;i++){
+            for(int j=0;j<dim;j++){
+                if(b2.board[i][j]==board[i][j]){
+                    v++;
+                }
+            }
+        }
+        if(v==dim*dim) return true;
+        //System.out.println(b2);
+        temp = b2.board[x][y];
+        temp_1 = b2.board[x][(y+1)];
+
+        // Move values from right to top
+        b2.board[x][y] = b2.board[y][dim - 1 - x];
+        b2.board[x][(y+1)] = b2.board[(y+1)][dim - 1 - x];
+        // Move values from bottom to right
+        b2.board[y][dim - 1 - x] = b2.board[dim - 1 - x][dim - 1 - y];
+        b2.board[(y+1)][dim - 1 - x] = b2.board[dim - 1 - x][dim - 1 - (y+1)];
+        // Move values from left to bottom
+        b2.board[dim - 1 - x][dim - 1 - y] = b2.board[dim - 1 - y][x];
+        b2.board[dim - 1 - x][dim - 1 - (y+1)] = b2.board[dim - 1 - (y+1)][x];
+        // Assign temp to left
+        b2.board[dim - 1 - y][x] = temp;
+        b2.board[dim - 1 - (y+1)][x] = temp_1;
+        // System.out.println(b2 + "\n" + board[x][y] + " " + b2.board[x][y]);
+
+         v=0;
+        for(int i=0;i<dim;i++){
+            for(int j=0;j<dim;j++){
+                if(b2.board[i][j]==board[i][j]){
+                    v++;
+                }
+            }
+        }
+        if(v==dim*dim) return true;
+        //System.out.println(b2);
+        return false;
     }
 
     /**
-     * return 1 - winner 1
-     * return -1 - winner 2
-     * return -2 - continue
-     * return 0 - draw
+     * return 1 - winner 1 return -1 - winner 2 return -2 - continue return 0 - draw
      */
     @Override
     public int verifywinner() {
         boolean empty_spaces = false;
-        for (int i = 0; i < dim; i++) 
-        {
-        	if (board[i][0] == character && board[i][1] == character && board[i][2] == character)
+        for (int i = 0; i < dim; i++) {
+            if (board[i][0] == character && board[i][1] == character && board[i][2] == character)
                 return 1;
             else if (board[i][0] == counter && board[i][1] == counter && board[i][2] == counter)
                 return -1;
@@ -127,21 +200,17 @@ class Board implements Ilayout, Cloneable {
             return -1;
         else if (board[0][2] == counter && board[1][1] == counter && board[2][0] == counter)
             return -1;
-        
-        pause:
-        for(int i = 0; i < dim; i++)
-        {
-        	for(int j = 0; j < dim; j++)
-                if(board[i][j] == '-')
-                {
+
+        pause: for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++)
+                if (board[i][j] == '-') {
                     empty_spaces = true;
                     break pause;
                 }
         }
-        if(empty_spaces) 
-        	return -2;
+        if (empty_spaces)
+            return -2;
         return 0;
     }
-
 
 }
