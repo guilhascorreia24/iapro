@@ -7,12 +7,12 @@ import java.util.Random;
 class MCTS {
     static class State {
         private  Ilayout layout;
-        private  State father;
-        private List<State> childs=new ArrayList<>();
-        private double n=0,w=0;
+        public  State father;
+        public List<State> childs=new ArrayList<>();
+        public double n=0,w=0;
         private boolean final_node=false;
         private static final double c=Math.sqrt(2);
-        private int max;
+        private int max=Integer.MAX_VALUE;
         public State( Ilayout l,  State n) {
             layout = l;
             father = n;
@@ -20,18 +20,6 @@ class MCTS {
                 final_node= true;
             }
         }
-
-        public State getFather(){
-            return father;
-        }
-        public void setSim(int n){
-            this.n=n;
-        }
-
-        public void setWin(int w){
-            this.w=w;
-        }
-
 
         public boolean isfinalnode(){
             return final_node;
@@ -47,7 +35,8 @@ class MCTS {
         }
 
         public boolean equals(Object b){
-            return layout.equals((Ilayout)b); 
+            State s=(State) b;
+            return layout.equals(s.layout); 
         }
 
         public State BestUCT(){
@@ -79,7 +68,7 @@ class MCTS {
     private State actual,root_father;
     public boolean end_game=false;
 
-    final private List<State> expand( State n) throws CloneNotSupportedException { //listar os filhos que interessam
+    final public List<State> expand( State n) throws CloneNotSupportedException { //listar os filhos que interessam
          List<State> sucs = new ArrayList<>();
          List<Ilayout> children = n.layout.children();
         for (Ilayout e : children) {

@@ -66,7 +66,7 @@ public class tests {
     }
 
     @Test
-    public void testConstructorState0() {
+    public void testConstructorState() {
         Board b = new Board("-X--O--X-");
         MCTS.State s=new MCTS.State(b,null);
         StringWriter writer = new StringWriter();
@@ -79,7 +79,7 @@ public class tests {
     }
 
     @Test
-    public void testConstructorState() {
+    public void testConstructorState2() {
         Board b = new Board("OXOOOOOXO");
         MCTS.State s=new MCTS.State(b,null);
         StringWriter writer = new StringWriter();
@@ -99,7 +99,7 @@ public class tests {
 		List<Ilayout> l = new ArrayList<Ilayout>();
 		l.add(new Board("X--------"));
 		l.add(new Board("-X-------"));
-		l.add(new Board("----X----"));
+        l.add(new Board("----X----"));
 		assertEquals(l, result);
     }
     
@@ -150,60 +150,187 @@ public class tests {
     }
 
     @Test
-    public void testchilden5() throws CloneNotSupportedException {
-        Board b=new Board("----O----");
-        System.out.println(b.children());
-    }
-
-    @Test
-    public void testUCT(){
+    public void testUCT()
+    {
         Board b = new Board("-O--X--XO");
         MCTS.State s = new MCTS.State(b,null);
         assertEquals(Integer.MAX_VALUE,s.uct(),0);
     }
+    
     @Test
-    public void testUCT2(){
+    public void testUCT2()
+    {
         Board b = new Board("-O--X--XO");
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X--XO"), null));
-        s.setSim(5);
-        s.setWin(1);
-        s.getFather().setSim(6);
+        s.n=5;
+        s.w=1;
+        s.father.n=6;
         assertEquals(1.04658,s.uct(),5);
     }
 
     @Test
-    public void testUCT3(){
+    public void testUCT3()
+    {
         Board b = new Board("-O--X--X-");
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X---O"), null));
-        s.setSim(15);
-        s.setWin(10);
-        s.getFather().setSim(20);
+        s.n=15;
+        s.w=10;
+        s.father.n=20;
         assertEquals(1.29867,s.uct(),5);
     }
 
     @Test
-    public void testUCT4(){
+    public void testUCT4()
+    {
         Board b = new Board("-O--X----");
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X----"), null));
-        s.setSim(27);
-        s.setWin(12);
-        s.getFather().setSim(33);
+        s.n=27;
+        s.w=12;
+        s.father.n=33;
         assertEquals(0.95337,s.uct(),5);
     }
 
     @Test
-    public void testequalsboard(){
-        Board b = new Board("123456789");
-        Board b2=new Board("369258147");
+    public void testEquals()
+    {
+        Board b = new Board("XOXOXOXOX");
+        Board b2 = new Board("XOXOXOXOX");
         assertEquals(true, b.equals(b2));
     }
 
     @Test
-    public void testequalsboard2(){
+    public void testEquals2()
+    {
         Board b = new Board("-X--O----");
-        Board b2=new Board("---XO----");
+        Board b2 = new Board("---XO----");
         assertEquals(true, b.equals(b2));
     }
+
+    @Test
+    public void testEquals3()
+    {
+        Board b = new Board("XX--O----");
+        Board b2 = new Board("XX--O----");
+        assertEquals(true, b.equals(b2));
+    }
+
+    @Test
+    public void testRotate()
+    {
+        Board b = new Board("XOXOXOXOX");
+        Board b2 = b.rotate();
+        Board b3 = b2.rotate();
+        Board b4 = b3.rotate();
+        Board b5 = b4.rotate();
+        assertEquals(b, b2);
+        assertEquals(b, b3);
+        assertEquals(b, b4);
+        assertEquals(b, b5);
+    }
+
+    @Test
+    public void testRotate2()
+    {
+        Board b = new Board("----X----");
+        Board result = b.rotate();
+        assertEquals(new Board("----X----"), result);
+    }
+
+    @Test
+    public void testRotate3()
+    {
+        Board b = new Board("OXXOXOOXX");
+        Board b2 = b.rotate();
+        Board b3 = b2.rotate();
+        Board b4 = b3.rotate();
+        Board b5 = b4.rotate();
+        assertEquals(new Board("XOXXXXOOO"), b2);
+        assertEquals(new Board("XXOOXOXXO"), b3);
+        assertEquals(new Board("OOOXXXXOX"), b4);
+        assertEquals(b, b5);
+    }
+
+    @Test
+    public void testRotate4()
+    {
+        Board b = new Board("OX--OO-XX");
+        Board b2 = b.rotate();
+        Board b3 = b2.rotate();
+        Board b4 = b3.rotate();
+        Board b5 = b4.rotate();
+        assertEquals(new Board("-OXXOXO--"), b2);
+        assertEquals(new Board("XX-OO--XO"), b3);
+        assertEquals(new Board("--OXOXXO-"), b4);
+        assertEquals(b, b5);
+    }
+    
+    @Test
+    public void testBestandWorstUCT() throws CloneNotSupportedException
+    {
+        Board b = new Board("OX--OO-XX");
+        MCTS.State s=new MCTS.State(b, null);
+        List<MCTS.State> l = new ArrayList<>();
+        l.add(new MCTS.State(new Board("OXX-OO-XX"),s));
+        l.add(new MCTS.State(new Board("OX-XOO-XX"),s));
+        l.add(new MCTS.State(new Board("OX--OOXXX"),s));
+        l.get(0).n=10;l.get(0).w=5;
+        l.get(1).n=17;l.get(1).w=7;
+        l.get(2).n=13;l.get(2).w=2;
+        s.n=40;
+        s.childs=l;
+        
+        assertEquals(1.35894,l.get(0).uct(),5);
+        assertEquals(1.07054,l.get(1).uct(),5);
+        assertEquals(0.90719,l.get(2).uct(),5);
+        assertEquals(l.get(0),s.BestUCT());
+        assertEquals(l.get(2),s.WorstUCT());
+    }
+
+
+    @Test
+    public void testBestandWorstUCT2() throws CloneNotSupportedException
+    {
+        Board b = new Board("----X----");
+        MCTS.State s=new MCTS.State(b, null);
+        List<MCTS.State> l = new ArrayList<>();
+        l.add(new MCTS.State(new Board("O---X----"),s));
+        l.add(new MCTS.State(new Board("-O--X----"),s));
+        l.get(0).n=46;l.get(0).w=31;
+        l.get(1).n=54;l.get(1).w=35;
+        s.n=100;
+        s.childs=l;
+        
+        assertEquals(1.12138,l.get(0).uct(),5);
+        assertEquals(1.06114,l.get(1).uct(),5);
+        assertEquals(l.get(0),s.BestUCT());
+        assertEquals(l.get(1),s.WorstUCT());
+    }
+
+    @Test
+    public void testBestandWorstUCT3() throws CloneNotSupportedException
+    {
+        Board b = new Board("OX--OO-X-");
+        MCTS.State s=new MCTS.State(b, null);
+        List<MCTS.State> l = new ArrayList<>();
+        l.add(new MCTS.State(new Board("OXX-OO-X-"),s));
+        l.add(new MCTS.State(new Board("OX-XOO-X-"),s));
+        l.add(new MCTS.State(new Board("OX--OOXX-"),s));
+        l.add(new MCTS.State(new Board("OX--OO-XX"),s));
+        l.get(0).n=15;l.get(0).w=5;
+        l.get(1).n=20;l.get(1).w=8;
+        l.get(2).n=20;l.get(2).w=8;
+        l.get(3).n=25;l.get(3).w=12;
+        s.n=80;
+        s.childs=l;
+        
+        assertEquals(1.09771,l.get(0).uct(),5);
+        assertEquals(1.06197,l.get(1).uct(),5);
+        assertEquals(1.06197,l.get(2).uct(),5);
+        assertEquals(1.07208,l.get(3).uct(),5);
+        assertEquals(l.get(0),s.BestUCT());
+        assertEquals(l.get(1),s.WorstUCT());
+    }
+
 
 
 

@@ -87,7 +87,7 @@ class Board implements Ilayout, Cloneable {
         return p;
     }
 
-    private Board rotate() {
+    public Board rotate() {
         int x = 0, y = 0;
         char temp = board[x][y];
         char temp_1 = board[x][(y + 1)];
@@ -110,17 +110,30 @@ class Board implements Ilayout, Cloneable {
     public boolean equals(Object b) { // https://www.geeksforgeeks.org/inplace-rotate-square-matrix-by-90-degrees/
         Board b2 = (Board) b;
         b2= (Board) b2.clone();
-        // System.out.println(b2);
-        b2=b2.rotate();
-        // System.out.println(b2 + "\n" + board[x][y] + " " + b2.board[x][y]);
-        int v = 0;
+        int v=0;
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
+                //System.out.println(b2.board[i][j]+" "+board[i][j]);
                 if (b2.board[i][j] == board[i][j]) {
                     v++;
                 }
             }
         }
+        if (v == dim * dim)
+        return true;
+        // System.out.println(b2);
+        b2=b2.rotate();
+        // System.out.println(b2 + "\n" + board[x][y] + " " + b2.board[x][y]);
+         v = 0;
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                //System.out.println(b2.board[i][j]+" "+board[i][j]);
+                if (b2.board[i][j] == board[i][j]) {
+                    v++;
+                }
+            }
+        }
+        //System.out.println(v);
         if (v == dim * dim)
             return true;
         // System.out.println(b2);
@@ -130,11 +143,13 @@ class Board implements Ilayout, Cloneable {
         v = 0;
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
+                //System.out.println(b2.board[i][j]+" "+board[i][j]);
                 if (b2.board[i][j] == board[i][j]) {
                     v++;
                 }
             }
         }
+        //System.out.println(v);
         if (v == dim * dim)
             return true;
         // System.out.println(b2);
@@ -144,11 +159,13 @@ class Board implements Ilayout, Cloneable {
         v = 0;
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
+                //System.out.println(b2.board[i][j]+" "+board[i][j]);
                 if (b2.board[i][j] == board[i][j]) {
                     v++;
                 }
             }
         }
+        //System.out.println(v);
         if (v == dim * dim)
             return true;
         // System.out.println(b2);
