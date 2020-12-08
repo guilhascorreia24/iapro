@@ -7,7 +7,7 @@ public class Main {
         MCTS s = new MCTS();
         Board b=new Board("---------");
         System.out.print("player y/n:");
-        String c = "n";
+        String c = sc.next();
         float start=System.nanoTime();
         while(!s.end_game){
             if(c.equals("y")){

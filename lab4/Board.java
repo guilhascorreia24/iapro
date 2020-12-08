@@ -10,9 +10,13 @@ interface Ilayout {
      */
     List<Ilayout> children() throws CloneNotSupportedException;
 
-    int verifywinner();
+    int verifywinner(Ilayout b);
+    
+    int stateBoard();
 
     Ilayout insertnew(int x, int y);
+
+    char getplayer();
 
 }
 
@@ -176,30 +180,31 @@ class Board implements Ilayout, Cloneable {
      * return 1 - winner 1 return -1 - winner 2 return -2 - continue return 0 - draw
      */
     @Override
-    public int verifywinner() {
+    public int verifywinner(Ilayout b) {
+        Board b2=(Board)b;
         boolean empty_spaces = false;
         for (int i = 0; i < dim; i++) {
-            if (board[i][0] == character && board[i][1] == character && board[i][2] == character)
+            if (b2.board[i][0] == character && b2.board[i][1] == character && b2.board[i][2] == character)
                 return 1;
-            else if (board[i][0] == counter && board[i][1] == counter && board[i][2] == counter)
+            else if (b2.board[i][0] == counter && b2.board[i][1] == counter && b2.board[i][2] == counter)
                 return -1;
-            else if (board[0][i] == character && board[1][i] == character && board[2][i] == character)
+            else if (b2.board[0][i] == character && b2.board[1][i] == character && b2.board[2][i] == character)
                 return 1;
-            else if (board[0][i] == counter && board[1][i] == counter && board[2][i] == counter)
+            else if (b2.board[0][i] == counter && b2.board[1][i] == counter && b2.board[2][i] == counter)
                 return -1;
         }
-        if (board[0][0] == character && board[1][1] == character && board[2][2] == character)
+        if (b2.board[0][0] == character && b2.board[1][1] == character && b2.board[2][2] == character)
             return 1;
-        else if (board[0][2] == character && board[1][1] == character && board[2][0] == character)
+        else if (b2.board[0][2] == character && b2.board[1][1] == character && b2.board[2][0] == character)
             return 1;
-        else if (board[0][0] == counter && board[1][1] == counter && board[2][2] == counter)
+        else if (b2.board[0][0] == counter && b2.board[1][1] == counter && b2.board[2][2] == counter)
             return -1;
-        else if (board[0][2] == counter && board[1][1] == counter && board[2][0] == counter)
+        else if (b2.board[0][2] == counter && b2.board[1][1] == counter && b2.board[2][0] == counter)
             return -1;
 
         pause: for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++)
-                if (board[i][j] == '-') {
+                if (b2.board[i][j] == '-') {
                     empty_spaces = true;
                     break pause;
                 }
@@ -207,6 +212,16 @@ class Board implements Ilayout, Cloneable {
         if (empty_spaces)
             return -2;
         return 0;
+    }
+
+    @Override
+    public int stateBoard(){
+        return verifywinner(this);
+    }
+
+    @Override
+    public char getplayer() {
+        return character;
     }
 
 }
