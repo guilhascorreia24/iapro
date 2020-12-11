@@ -31,12 +31,12 @@ class MCTS {
 
         public void setScore(double x) {
             if (x > 0)
-                w += 1;
+                w += x;
             else if (x < 0){
                 l+=1;
             }
             else
-                w+=1;
+                w+=0.5;
         }   
 
         public boolean isfinalnode() {
@@ -129,7 +129,7 @@ class MCTS {
         //System.out.println("#############################");
         }
         root = actual;
-        int playouts = 0, limit = 1000;// 1000 // 370
+        int playouts = 0, limit = 900;// 1000 // 370
         while (playouts < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
@@ -179,9 +179,9 @@ class MCTS {
     }
 
     private MCTS.State backpropagation(State actual2, double win) {
-        double n = (actual.g - actual2.g) * 0.1;
+        double n = (actual.g - actual2.g) * 0.05;
         while (actual2 != root) {
-            if (win > 0)
+            if (win > 0.5)
                 win = win - n;
             else if (win < 0)
                 win = win + n;
@@ -190,7 +190,7 @@ class MCTS {
             actual2 = actual2.father;
             if (win != 0.5) {
                 win = -win;
-                n = 0.1;
+                n = 0.05;
             }
         }
         actual2.s += 1;
@@ -206,7 +206,7 @@ class MCTS {
                 inicio_uct.add(0.0);
             }
             System.out.println(s.childs.get(i).w+" "+inicio_w.get(i) +" " + (s.childs.get(i).s+" "+inicio.get(i))+" "+ s.childs.get(i).uct+" "+inicio_uct.get(i));
-            u.add((s.childs.get(i).s-inicio.get(i)));
+            u.add(s.childs.get(i).s-inicio.get(i));
         }
         int i=u.indexOf(Collections.max(u));
         return s.childs.get(i);
