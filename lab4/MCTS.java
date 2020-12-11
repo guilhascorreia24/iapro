@@ -8,7 +8,7 @@ class MCTS {
         private Ilayout layout;
         public State father;
         public List<State> childs = new ArrayList<>();
-        public double s, w, l, c = Math.sqrt(2),uct;
+        public double s, w, l,uct;
         private boolean final_node = false;
         private int max = Integer.MAX_VALUE;
         public int g;
@@ -47,10 +47,18 @@ class MCTS {
             return layout.toString();
         }
 
-        public double uct() {
+        public double uct(boolean t) {
+            double c = Math.sqrt(2);
+            if(t)   {
+                if (s == 0)
+                        return (double) max;
+                    uct = w / s + c * Math.sqrt(Math.log(father.s) / s);
+            }else{
+                c=-c;
                 if (s == 0)
                     return (double) max;
                 uct = w / s + c * Math.sqrt(Math.log(father.s) / s);
+            }
             return uct;
         }
 
@@ -64,9 +72,9 @@ class MCTS {
             return Collections.max(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
-                    if (z1.uct() > z2.uct())
+                    if (z1.uct(true) > z2.uct(true))
                         return 1;
-                    if (z1.uct() < z2.uct())
+                    if (z1.uct(true) < z2.uct(true))
                         return -1;
                     return 0;
                 }
@@ -74,23 +82,12 @@ class MCTS {
         }
 
         public State WorstUCT() {
-            double media=0;
-            for(State s:childs){
-                media+=s.s;                // igualar as simulaçoes dos filhos para dar oportunidade de visitar os filhos deles
-            }
-            media=media/childs.size();
-            List<State> low_media=new ArrayList<>();
-            for(State s:childs){
-                if(s.s<=media){
-                    low_media.add(s);
-                }
-            }
-            return Collections.min(low_media, new Comparator<State>() {   // ver o uct menor dos filhos com visitas abaixo da media 
+            return Collections.min(childs, new Comparator<State>() {   // ver o uct menor dos filhos com visitas abaixo da media 
                 @Override
                 public int compare(State z1, State z2) {
-                    if (z1.uct() > z2.uct())
+                    if (z1.uct(false) > z2.uct(false))
                         return 1;
-                    if (z1.uct() < z2.uct())
+                    if (z1.uct(false) < z2.uct(false))
                         return -1;
                     return 0;
                 }
@@ -121,17 +118,18 @@ class MCTS {
           else { if (actual.childs.contains(new State(s, null))) { actual =
           actual.childs.get(actual.childs.indexOf(new State(s, null))); } }
          
-        List<Double> inicio_s=new ArrayList<>(), inicio_w=new ArrayList<>();
+        List<Double> inicio_s=new ArrayList<>(), inicio_w=new ArrayList<>(),inicio_uct=new ArrayList<>();
         if(!actual.childs.isEmpty()){
         for (State g : actual.childs) {
             //System.out.println(g.w + " " + g.s + " "+ g.uct+"\n" + g);
             inicio_s.add(g.s);
             inicio_w.add(g.w);
+            inicio_uct.add(g.uct);
             }
         //System.out.println("#############################");
         }
         root = actual;
-        int playouts = 0, limit = 10;// 1000 // 370
+        int playouts = 0, limit = 1000;// 1000 // 370
         while (playouts < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
@@ -145,7 +143,7 @@ class MCTS {
             actual = root;
             playouts++;
         }
-        actual = bestmove(root,inicio_s,inicio_w);
+        actual = bestmove(root,inicio_s,inicio_w,inicio_uct);
         if (actual.final_node)
             end_game = true;
         return (Board) actual.layout;
@@ -173,6 +171,7 @@ class MCTS {
             while (!actual.isfinalnode()) {
                 List<State> sucs = expand(actual);
                 int rng = (int) (Math.random() * sucs.size());
+                //System.out.println(rng!=0);
                 actual = sucs.get(rng);
             }
             actual = backpropagation(s, s.layout.verifywinner(actual.layout));
@@ -180,34 +179,33 @@ class MCTS {
     }
 
     private MCTS.State backpropagation(State actual2, double win) {
-        double n = (actual.g - actual2.g) * 0.05;
-        if (win == 0)
-            win = 0.5;
+        double n = (actual.g - actual2.g) * 0.1;
         while (actual2 != root) {
-            if (win > 0.5)
+            if (win > 0)
                 win = win - n;
-            else if (win < 0.5)
+            else if (win < 0)
                 win = win + n;
             actual2.setScore(win);
             actual2.s += 1;
             actual2 = actual2.father;
             if (win != 0.5) {
                 win = -win;
-                n = 0.05;
+                n = 0.1;
             }
         }
         actual2.s += 1;
         return actual2;
     }
 
-    private State bestmove(State s,List<Double> inicio,List<Double> inicio_w)throws CloneNotSupportedException {
+    private State bestmove(State s,List<Double> inicio,List<Double> inicio_w,List<Double> inicio_uct)throws CloneNotSupportedException {
         List<Double> u=new ArrayList<>();
         for (int i=0;i<s.childs.size();i++) {
             if(inicio.size()!=s.childs.size()){
                 inicio.add(0.0);
                 inicio_w.add(0.0);
+                inicio_uct.add(0.0);
             }
-           // System.out.println(s.childs.get(i).w+" "+inicio_w.get(i) +" " + (s.childs.get(i).s+" "+inicio.get(i))+" "+ s.childs.get(i).uct);
+            System.out.println(s.childs.get(i).w+" "+inicio_w.get(i) +" " + (s.childs.get(i).s+" "+inicio.get(i))+" "+ s.childs.get(i).uct+" "+inicio_uct.get(i));
             u.add((s.childs.get(i).s-inicio.get(i)));
         }
         int i=u.indexOf(Collections.max(u));
