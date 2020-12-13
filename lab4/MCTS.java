@@ -131,9 +131,7 @@ class MCTS {
     }
 
     private void minimax_heuristic(MCTS.State s,int deep,boolean max,int a,int b) {
-        if(deep==0 || s.isfinalnode())
-            return 
-        return value
+        
     }   
 
     private void expand(MCTS.State n) throws CloneNotSupportedException {
