@@ -11,7 +11,7 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c = 0.4015;
+        private double c = 0.4013;
         private int max = -Integer.MAX_VALUE;
         public int g;
 
@@ -56,10 +56,10 @@ class MCTS {
         }
 
         public State BestUCT() {
-            for(State s1:childs){
+            /*for(State s1:childs){
                 if(s1.w<0)
                     System.out.println("skjds");
-            }
+            }*/
             return Collections.max(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
@@ -73,10 +73,10 @@ class MCTS {
         }
 
         public State WorstUCT() {
-            for(State s1:childs){
+            /*for(State s1:childs){
                 if(s1.w<0)
                     System.out.println("skjds");
-            }
+            }*/
             return Collections.min(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
@@ -119,7 +119,7 @@ class MCTS {
             return (Board) actual.layout;
         }
         root = actual;
-        int playouts = 0, limit = 70000;// 50000
+        int playouts = 0, limit = 80000;// 50000
         while (playouts < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
