@@ -56,6 +56,9 @@ class Board implements Ilayout, Cloneable {
 
     public Ilayout insertnew(int x, int y) {
         Board clone = (Board) clone();
+        if(board[x][y]!='-'){
+            throw new IllegalAccessError("occupied position");
+        }
         clone.character = counter;
         clone.counter = character;
         clone.board[x][y] = clone.character;

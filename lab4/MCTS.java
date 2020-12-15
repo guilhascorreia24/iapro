@@ -11,7 +11,7 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c = 0.401169;
+        private double c = 0.40116012894;
         private int max = -Integer.MAX_VALUE;
         public int g;
 
@@ -46,6 +46,9 @@ class MCTS {
         public double uct() {
             if (s == 0)
                 return max;
+            if(w<0){
+                throw new IllegalArgumentException("wins negative");
+            }
             return (w / s) + c * Math.sqrt(Math.log(father.s) / s);
         }
 
@@ -56,9 +59,6 @@ class MCTS {
         }
 
         public State BestUCT() {
-            /*for(State s1:childs){
-                    System.out.println(s1.w+" "+s1.s);
-            }*/
             return Collections.max(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
@@ -72,9 +72,6 @@ class MCTS {
         }
 
         public State WorstUCT() {
-            /*for(State s1:childs){
-                    System.out.println(s1.w+" "+s1.s);
-            }*/
             return Collections.min(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
@@ -154,7 +151,7 @@ class MCTS {
 
     private State simulation(State s) throws CloneNotSupportedException {
         actual = s;
-        int w = -root.layout.verifywinner(actual.layout);
+        int w = root.childs.get(0).layout.verifywinner(actual.layout);
 
         for (State suc : s.childs) {
             s = suc;
@@ -165,7 +162,7 @@ class MCTS {
                 // System.out.println(rn);
                 s = sucs.get(rn);
             }
-            w = -root.layout.verifywinner(s.layout);
+            w = root.childs.get(0).layout.verifywinner(s.layout);
 
             actual = backpropagation(suc, w, 1);
         }
