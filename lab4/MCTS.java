@@ -11,7 +11,7 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c = 0.40116012894;
+        private double c = 0.40116012888;
         private int max = -Integer.MAX_VALUE;
         public int g;
 
@@ -114,7 +114,7 @@ class MCTS {
             return (Board) actual.layout;
         }
         root = actual;
-        int playouts = 0, limit = 10000;// 50000
+        int playouts = 0, limit = 1000;// 50000
         while (playouts < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
