@@ -56,6 +56,10 @@ class MCTS {
         }
 
         public State BestUCT() {
+            for(State s1:childs){
+                if(s1.w<0)
+                    System.out.println("skjds");
+            }
             return Collections.max(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
@@ -69,6 +73,10 @@ class MCTS {
         }
 
         public State WorstUCT() {
+            for(State s1:childs){
+                if(s1.w<0)
+                    System.out.println("skjds");
+            }
             return Collections.min(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
@@ -111,12 +119,11 @@ class MCTS {
             return (Board) actual.layout;
         }
         root = actual;
-        int playouts = 0, limit = 100000;// 1000
+        int playouts = 0, limit = 70000;// 50000
         while (playouts < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
             }
-            // System.out.println();
             if (!actual.final_node)
                 actual.childs = expand(actual);
             actual = simulation(actual);
@@ -159,7 +166,7 @@ class MCTS {
             }
             w = -root.layout.verifywinner(s.layout);
 
-            actual = backpropagation(s, w, 1);
+            actual = backpropagation(suc, w, 1);
         }
         if (actual.final_node)
             actual = backpropagation(actual, w, 1);
