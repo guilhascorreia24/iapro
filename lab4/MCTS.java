@@ -11,7 +11,7 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c = 0.4013;
+        private double c = 0.401169;
         private int max = -Integer.MAX_VALUE;
         public int g;
 
@@ -57,8 +57,7 @@ class MCTS {
 
         public State BestUCT() {
             /*for(State s1:childs){
-                if(s1.w<0)
-                    System.out.println("skjds");
+                    System.out.println(s1.w+" "+s1.s);
             }*/
             return Collections.max(childs, new Comparator<State>() {
                 @Override
@@ -74,8 +73,7 @@ class MCTS {
 
         public State WorstUCT() {
             /*for(State s1:childs){
-                if(s1.w<0)
-                    System.out.println("skjds");
+                    System.out.println(s1.w+" "+s1.s);
             }*/
             return Collections.min(childs, new Comparator<State>() {
                 @Override
@@ -119,7 +117,7 @@ class MCTS {
             return (Board) actual.layout;
         }
         root = actual;
-        int playouts = 0, limit = 80000;// 50000
+        int playouts = 0, limit = 10000;// 50000
         while (playouts < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
@@ -138,6 +136,9 @@ class MCTS {
     }
 
     private State bestmove(State s) throws CloneNotSupportedException {
+            /*for(State s1:s.childs){
+                    System.out.println(s1.w+" "+s1.s);
+            }*/
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
@@ -197,13 +198,11 @@ class MCTS {
     }
 
     private State selection(State s) {
-        boolean t = true;
         while (!s.childs.isEmpty()) {
             if (max) {
                 s = s.BestUCT();
                 max = false;
             } else {
-                State u = s;
                 s = s.WorstUCT();
                 max = true;
             }
