@@ -111,7 +111,7 @@ class MCTS {
             return (Board) actual.layout;
         }
         root = actual;
-        int playouts = 0, limit = 10000;// 1000
+        int playouts = 0, limit = 40000;// 1000
         while (playouts < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
@@ -194,15 +194,14 @@ class MCTS {
         if (actual2.layout.getplayer() == root.layout.getplayer()) {
             score = -score;
         }
-        boolean p = true;
         while (actual2.father != root.father) {
             // if(score>0)
             actual2.setWin(score);
             //score=-score;
             actual2.s += 1;
-            p = !p;
             actual2 = actual2.father;
         }
+        actual2.setWin(score);
         actual2.s += 1;
         return actual2;
     }

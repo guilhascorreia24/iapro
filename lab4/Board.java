@@ -193,30 +193,4 @@ class Board implements Ilayout, Cloneable {
         return character;
     }
 
-    public double getH(){
-        Board clone=(Board) clone();
-        clone.full_board();
-        double res=0,max=8;
-        for (int i = 0; i < dim; i++) {
-            if (clone.board[i][0] == character && clone.board[i][1] == character && clone.board[i][2] == character)
-                res++;
-            else if (clone.board[0][i] == character && clone.board[1][i] == character && clone.board[2][i] == character)
-                res++;
-        }
-        if (clone.board[0][0] == character && clone.board[1][1] == character && clone.board[2][2] == character)
-            res++;
-        else if (clone.board[0][2] == character && clone.board[1][1] == character && clone.board[2][0] == character)
-            res++;
-        return res/8;
-    }
-
-    private void full_board() {
-        for(int i=0;i<dim;i++){
-            for(int j=0;j<dim;j++){
-                if(board[i][j]=='-')
-                    board[i][j]=character;
-            }
-        }
-    }
-
 }
