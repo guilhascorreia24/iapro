@@ -11,7 +11,7 @@ interface Ilayout {
     List<Ilayout> children() throws CloneNotSupportedException;
 
     int verifywinner(Ilayout b);
-    
+
     int stateBoard();
 
     Ilayout insertnew(int x, int y);
@@ -91,89 +91,58 @@ class Board implements Ilayout, Cloneable {
         return p;
     }
 
-    public Board rotate() {
-        int x = 0, y = 0;
-        char temp = board[x][y];
-        char temp_1 = board[x][(y + 1)];
-        // Move values from right to top
-        board[x][y] = board[y][dim - 1 - x];
-        board[x][(y + 1)] = board[(y + 1)][dim - 1 - x];
-        // Move values from bottom to right
-        board[y][dim - 1 - x] = board[dim - 1 - x][dim - 1 - y];
-        board[(y + 1)][dim - 1 - x] = board[dim - 1 - x][dim - 1 - ((y + 1))];
-        // Move values from left to bottom
-        board[dim - 1 - x][dim - 1 - y] = board[dim - 1 - y][x];
-        board[dim - 1 - x][dim - 1 - ((y + 1))] =board[dim - 1 - ((y + 1))][x];
-        // Assign temp to left
-        board[dim - 1 - y][x] = temp;
-        board[dim - 1 - ((y + 1))][x] = temp_1;
-        return this;
-    }
-
     @Override
-    public boolean equals(Object b) { // https://www.geeksforgeeks.org/inplace-rotate-square-matrix-by-90-degrees/
+    public boolean equals(Object b) {
         Board b2 = (Board) b;
-        b2= (Board) b2.clone();
-        int v=0;
+        int p = 0;
+        boolean s=true,s1=true,s2=true,s3=true;
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                //System.out.println(b2.board[i][j]+" "+board[i][j]);
-                if (b2.board[i][j] == board[i][j]) {
-                    v++;
+                if (board[i][j] == b2.board[i][j]) {
+                    p++;
                 }
             }
         }
-        if (v == dim * dim)
+        if (p != dim * dim) { 
+            // simetria vertical
+            for (int i = 0; i < dim; i++) {
+                for (int j = 0; j <= dim / 2; j++) {
+                    if (board[i][j] != b2.board[i][(dim - 1) - j]) {
+                        s=false;
+                    }
+                }
+            }
+            // simetria hori
+            for (int i = 0; i <= dim / 2; i++) {
+                for (int j = 0; j < dim; j++) {
+                    if (board[i][j] != b2.board[(dim - 1) - i][j]) {
+                        s1=false;
+                    }
+                }
+            }
+            // simetria diagonal (c->b)
+            for (int i = 0; i < dim; i++) {
+                for (int j = 0; j <= i ; j++) {
+                    //System.out.println(board[i][j]+" "+b2.board[j][i]);
+                    if (board[i][j] != b2.board[j][i]) {
+                        s2=false;
+                    }
+                }
+            }
+            // simetria diagonal(b->c)
+            for (int i = 0; i < dim; i++) {
+                for (int j = 0; j < (dim - i); j++) {
+                    if (board[i][j] != b2.board[(dim-1) - i][(dim-1) - j]) {
+                        s3= false;
+                    }
+                }
+            }
+        }
+        //System.out.println(s+" "+s1+" "+s2+" "+s3);
+        if(!s && !s1 && !s2 && !s3){
+            return false;
+        }
         return true;
-        // System.out.println(b2);
-        b2=b2.rotate();
-        // System.out.println(b2 + "\n" + board[x][y] + " " + b2.board[x][y]);
-         v = 0;
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                //System.out.println(b2.board[i][j]+" "+board[i][j]);
-                if (b2.board[i][j] == board[i][j]) {
-                    v++;
-                }
-            }
-        }
-        //System.out.println(v);
-        if (v == dim * dim)
-            return true;
-        // System.out.println(b2);
-        b2=b2.rotate();
-        // System.out.println(b2 + "\n" + board[x][y] + " " + b2.board[x][y]);
-
-        v = 0;
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                //System.out.println(b2.board[i][j]+" "+board[i][j]);
-                if (b2.board[i][j] == board[i][j]) {
-                    v++;
-                }
-            }
-        }
-        //System.out.println(v);
-        if (v == dim * dim)
-            return true;
-        // System.out.println(b2);
-        b2=b2.rotate();
-        // System.out.println(b2 + "\n" + board[x][y] + " " + b2.board[x][y]);
-
-        v = 0;
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                //System.out.println(b2.board[i][j]+" "+board[i][j]);
-                if (b2.board[i][j] == board[i][j]) {
-                    v++;
-                }
-            }
-        }
-        //System.out.println(v);
-        if (v == dim * dim)
-            return true;
-        // System.out.println(b2);
-        return false;
     }
 
     /**
@@ -181,7 +150,7 @@ class Board implements Ilayout, Cloneable {
      */
     @Override
     public int verifywinner(Ilayout b) {
-        Board b2=(Board)b;
+        Board b2 = (Board) b;
         boolean empty_spaces = false;
         for (int i = 0; i < dim; i++) {
             if (b2.board[i][0] == character && b2.board[i][1] == character && b2.board[i][2] == character)
@@ -215,7 +184,7 @@ class Board implements Ilayout, Cloneable {
     }
 
     @Override
-    public int stateBoard(){
+    public int stateBoard() {
         return verifywinner(this);
     }
 
@@ -224,6 +193,30 @@ class Board implements Ilayout, Cloneable {
         return character;
     }
 
-    
+    public double getH(){
+        Board clone=(Board) clone();
+        clone.full_board();
+        double res=0,max=8;
+        for (int i = 0; i < dim; i++) {
+            if (clone.board[i][0] == character && clone.board[i][1] == character && clone.board[i][2] == character)
+                res++;
+            else if (clone.board[0][i] == character && clone.board[1][i] == character && clone.board[2][i] == character)
+                res++;
+        }
+        if (clone.board[0][0] == character && clone.board[1][1] == character && clone.board[2][2] == character)
+            res++;
+        else if (clone.board[0][2] == character && clone.board[1][1] == character && clone.board[2][0] == character)
+            res++;
+        return res/8;
+    }
+
+    private void full_board() {
+        for(int i=0;i<dim;i++){
+            for(int j=0;j<dim;j++){
+                if(board[i][j]=='-')
+                    board[i][j]=character;
+            }
+        }
+    }
 
 }

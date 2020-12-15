@@ -162,9 +162,9 @@ public class tests {
     {
         Board b = new Board("-O--X--XO");
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X--XO"), null));
-        s.n=5;
+        s.s=5;
         s.w=1;
-        s.father.n=6;
+        s.father.s=6;
         assertEquals(1.04658,s.uct(),5);
     }
 
@@ -173,9 +173,9 @@ public class tests {
     {
         Board b = new Board("-O--X--X-");
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X---O"), null));
-        s.n=15;
+        s.s=15;
         s.w=10;
-        s.father.n=20;
+        s.father.s=20;
         assertEquals(1.29867,s.uct(),5);
     }
 
@@ -184,9 +184,9 @@ public class tests {
     {
         Board b = new Board("-O--X----");
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X----"), null));
-        s.n=27;
+        s.s=27;
         s.w=12;
-        s.father.n=33;
+        s.father.s=33;
         assertEquals(0.95337,s.uct(),5);
     }
 
@@ -194,8 +194,8 @@ public class tests {
     public void testEquals()
     {
         Board b = new Board("XOXOXOXOX");
-        Board b2 = new Board("XOXOXOXOX");
-        assertEquals(true, b.equals(b2));
+        Board b2 = new Board("XOXOXXXOX");
+        assertEquals(false, b.equals(b2));
     }
 
     @Test
@@ -214,56 +214,7 @@ public class tests {
         assertEquals(true, b.equals(b2));
     }
 
-    @Test
-    public void testRotate()
-    {
-        Board b = new Board("XOXOXOXOX");
-        Board b2 = b.rotate();
-        Board b3 = b2.rotate();
-        Board b4 = b3.rotate();
-        Board b5 = b4.rotate();
-        assertEquals(b, b2);
-        assertEquals(b, b3);
-        assertEquals(b, b4);
-        assertEquals(b, b5);
-    }
 
-    @Test
-    public void testRotate2()
-    {
-        Board b = new Board("----X----");
-        Board result = b.rotate();
-        assertEquals(new Board("----X----"), result);
-    }
-
-    @Test
-    public void testRotate3()
-    {
-        Board b = new Board("OXXOXOOXX");
-        Board b2 = b.rotate();
-        Board b3 = b2.rotate();
-        Board b4 = b3.rotate();
-        Board b5 = b4.rotate();
-        assertEquals(new Board("XOXXXXOOO"), b2);
-        assertEquals(new Board("XXOOXOXXO"), b3);
-        assertEquals(new Board("OOOXXXXOX"), b4);
-        assertEquals(b, b5);
-    }
-
-    @Test
-    public void testRotate4()
-    {
-        Board b = new Board("OX--OO-XX");
-        Board b2 = b.rotate();
-        Board b3 = b2.rotate();
-        Board b4 = b3.rotate();
-        Board b5 = b4.rotate();
-        assertEquals(new Board("-OXXOXO--"), b2);
-        assertEquals(new Board("XX-OO--XO"), b3);
-        assertEquals(new Board("--OXOXXO-"), b4);
-        assertEquals(b, b5);
-    }
-    
     @Test
     public void testBestandWorstUCT() throws CloneNotSupportedException
     {
@@ -273,10 +224,10 @@ public class tests {
         l.add(new MCTS.State(new Board("OXX-OO-XX"),s));
         l.add(new MCTS.State(new Board("OX-XOO-XX"),s));
         l.add(new MCTS.State(new Board("OX--OOXXX"),s));
-        l.get(0).n=10;l.get(0).w=5;
-        l.get(1).n=17;l.get(1).w=7;
-        l.get(2).n=13;l.get(2).w=2;
-        s.n=40;
+        l.get(0).s=10;l.get(0).w=5;
+        l.get(1).s=17;l.get(1).w=7;
+        l.get(2).s=13;l.get(2).w=2;
+        s.s=40;
         s.childs=l;
         
         assertEquals(1.35894,l.get(0).uct(),5);
@@ -295,9 +246,9 @@ public class tests {
         List<MCTS.State> l = new ArrayList<>();
         l.add(new MCTS.State(new Board("O---X----"),s));
         l.add(new MCTS.State(new Board("-O--X----"),s));
-        l.get(0).n=46;l.get(0).w=31;
-        l.get(1).n=54;l.get(1).w=35;
-        s.n=100;
+        l.get(0).s=46;l.get(0).w=31;
+        l.get(1).s=54;l.get(1).w=35;
+        s.s=100;
         s.childs=l;
         
         assertEquals(1.12138,l.get(0).uct(),5);
@@ -316,11 +267,11 @@ public class tests {
         l.add(new MCTS.State(new Board("OX-XOO-X-"),s));
         l.add(new MCTS.State(new Board("OX--OOXX-"),s));
         l.add(new MCTS.State(new Board("OX--OO-XX"),s));
-        l.get(0).n=15;l.get(0).w=5;
-        l.get(1).n=20;l.get(1).w=8;
-        l.get(2).n=20;l.get(2).w=8;
-        l.get(3).n=25;l.get(3).w=12;
-        s.n=80;
+        l.get(0).s=15;l.get(0).w=5;
+        l.get(1).s=20;l.get(1).w=8;
+        l.get(2).s=20;l.get(2).w=8;
+        l.get(3).s=25;l.get(3).w=12;
+        s.s=80;
         s.childs=l;
         
         assertEquals(1.09771,l.get(0).uct(),5);
