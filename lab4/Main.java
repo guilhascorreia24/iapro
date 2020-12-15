@@ -29,7 +29,7 @@ public class Main {
                 }
             }
             float end = System.nanoTime() - start;
-            System.out.println(end * Math.pow(10, -6));
+            System.out.println(end * Math.pow(1, -6));
         } else
 
         {
@@ -43,7 +43,7 @@ public class Main {
                 }
                 float end = System.nanoTime() - start;
                 System.out.println(i + ":" + end * Math.pow(1, -6) + "\n" + b);
-                if (b.stateBoard() == 0) {
+                if (b.stateBoard() != 0) {
                     res++;
                 }
                 i++;

@@ -11,7 +11,7 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c = 0.40116012888;
+        private double c = 0.40116012886201;
         private int max = -Integer.MAX_VALUE;
         public int g;
 
@@ -44,9 +44,10 @@ class MCTS {
         }
 
         public double uct() {
+            //System.out.println(w+" "+s);
             if (s == 0)
                 return max;
-            if(w<0){
+            if(w<0 || s<0 || (father!=null && father.s<1)){
                 throw new IllegalArgumentException("wins negative");
             }
             return (w / s) + c * Math.sqrt(Math.log(father.s) / s);
@@ -87,7 +88,7 @@ class MCTS {
     }
 
     private State actual, root;
-    public boolean end_game = false, max = true;
+    public boolean end_game = false;
 
     final public List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
@@ -99,16 +100,8 @@ class MCTS {
         return sucs;
     }
 
-    final public Board BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
-        if (actual == null)
-            actual = new State(s, null);
-        else {
-            if (actual.layout != s) {
-                actual = new State(s, actual);
-            } else
-                actual = new State(s, actual.father);
-            actual.max = -Integer.MAX_VALUE;
-        }
+    final public Board BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo mcts
+        actual = new State(s, null);
         if (actual.final_node) {
             end_game = true;
             return (Board) actual.layout;
@@ -124,7 +117,6 @@ class MCTS {
             actual = simulation(actual);
 
             playouts++;
-            max = true;
         }
         actual = bestmove(root);
         if (actual.final_node)
@@ -133,9 +125,6 @@ class MCTS {
     }
 
     private State bestmove(State s) throws CloneNotSupportedException {
-            /*for(State s1:s.childs){
-                    System.out.println(s1.w+" "+s1.s);
-            }*/
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
@@ -195,6 +184,7 @@ class MCTS {
     }
 
     private State selection(State s) {
+        boolean max = true;
         while (!s.childs.isEmpty()) {
             if (max) {
                 s = s.BestUCT();
