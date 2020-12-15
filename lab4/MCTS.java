@@ -11,8 +11,8 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c = 0.40116012888;
-        private int max = -Integer.MAX_VALUE;
+        private double c = 0.40116012977;
+        private int max = Integer.MAX_VALUE;
         public int g;
 
         public State(Ilayout l, State n) {
@@ -27,7 +27,7 @@ class MCTS {
                 g = 0;
             else {
                 g = n.g + 1;
-                max = -n.max;
+                //max = -n.max;
             }
         }
 
@@ -87,7 +87,7 @@ class MCTS {
     }
 
     private State actual, root;
-    public boolean end_game = false, max = true;
+    public boolean end_game = false;
 
     final public List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
@@ -100,15 +100,7 @@ class MCTS {
     }
 
     final public Board BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
-        if (actual == null)
-            actual = new State(s, null);
-        else {
-            if (actual.layout != s) {
-                actual = new State(s, actual);
-            } else
-                actual = new State(s, actual.father);
-            actual.max = -Integer.MAX_VALUE;
-        }
+        actual=new State(s,null);
         if (actual.final_node) {
             end_game = true;
             return (Board) actual.layout;
@@ -124,7 +116,6 @@ class MCTS {
             actual = simulation(actual);
 
             playouts++;
-            max = true;
         }
         actual = bestmove(root);
         if (actual.final_node)
@@ -172,7 +163,7 @@ class MCTS {
     }
 
     private double score(int x) {
-        if (x > 0) {
+        if (x == 1) {
             return 1 ;
         }else if(x==0)
             return 0.5;
@@ -195,6 +186,7 @@ class MCTS {
     }
 
     private State selection(State s) {
+        boolean max = true;
         while (!s.childs.isEmpty()) {
             if (max) {
                 s = s.BestUCT();
