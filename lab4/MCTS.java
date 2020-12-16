@@ -114,7 +114,6 @@ class MCTS {
             if (!actual.final_node)
                 actual.childs = expand(actual);
             actual = simulation(actual);
-
             playouts++;
         }
         actual = bestmove(root);
@@ -124,9 +123,6 @@ class MCTS {
     }
 
     private State bestmove(State s) throws CloneNotSupportedException {
-            /*for(State s1:s.childs){
-                    System.out.println(s1.w+" "+s1.s);
-            }*/
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
@@ -143,18 +139,14 @@ class MCTS {
     private State simulation(State s) throws CloneNotSupportedException {
         actual = s;
         int w = root.childs.get(0).layout.verifywinner(actual.layout);
-
         for (State suc : s.childs) {
             s = suc;
             while (!s.final_node) {
                 List<State> sucs = expand(s);
-                // System.out.println((int)Math.random()*sucs.size());
                 int rn = (int) (new Random().nextInt(sucs.size()));
-                // System.out.println(rn);
                 s = sucs.get(rn);
             }
             w = root.childs.get(0).layout.verifywinner(s.layout);
-
             actual = backpropagation(suc, w, 1);
         }
         if (actual.final_node)
@@ -174,9 +166,7 @@ class MCTS {
     private State backpropagation(State actual2, int w, int ii) {
         double score = score(w);
         while (actual2.father != root.father) {
-            // if(score>0)
             actual2.setWin(score);
-            //score=-score;
             actual2.s += 1;
             actual2 = actual2.father;
         }
