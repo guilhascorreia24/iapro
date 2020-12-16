@@ -1,5 +1,4 @@
 /*import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -165,6 +164,12 @@ public class tests {
     }
 
     @Test
+    public void testequals(){
+        Board b=new Board("---X--O--");
+        Board b2=new Board("------OX-");
+        assertEquals(true, b2.equals(b));
+    }
+    @Test
     public void testChildren7() throws CloneNotSupportedException
     {
         Board b = new Board("-------O-");
@@ -184,11 +189,11 @@ public class tests {
     	Board b = new Board("------O--");
 		List<Ilayout> result = b.children();
 		List<Ilayout> l = new ArrayList<Ilayout>();
+        l.add(new Board("X-----O--"));
+        l.add(new Board("-X----O--"));
         l.add(new Board("--X---O--"));
+        l.add(new Board("---X--O--"));
         l.add(new Board("----X-O--"));
-        l.add(new Board("-----XO--"));
-        l.add(new Board("------OX-"));
-        l.add(new Board("------O-X"));
 		assertEquals(l, result);
     }
 

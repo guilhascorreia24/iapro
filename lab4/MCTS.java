@@ -11,7 +11,7 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c = 0.40116012977;
+        private double c =Math.sqrt(0.1574);
         private int max = Integer.MAX_VALUE;
         public int g;
 
@@ -107,8 +107,9 @@ class MCTS {
             return (Board) actual.layout;
         }
         root = actual;
-        int playouts = 0, limit = 1000;// 50000
+        float playouts = 0, limit = 5000;// 50000
         while (playouts < limit) {
+            ;
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
             }
@@ -116,7 +117,7 @@ class MCTS {
                 actual.childs = expand(actual);
             actual = simulation(actual);
 
-            playouts++;
+            playouts++;;
         }
         actual = bestmove(root);
         if (actual.final_node)
