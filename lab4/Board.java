@@ -97,6 +97,7 @@ class Board implements Ilayout, Cloneable {
     @Override
     public boolean equals(Object b) {
         Board b2 = (Board) b;
+       // System.out.println(b2+"\n"+this);
         int p = 0;
         boolean s=true,s1=true,s2=true,s3=true;
         for (int i = 0; i < dim; i++) {

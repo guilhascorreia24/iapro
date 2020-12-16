@@ -11,8 +11,8 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c = 0.40116012886201;
-        private int max = -Integer.MAX_VALUE;
+        private double c = 0.40116012977;
+        private int max = Integer.MAX_VALUE;
         public int g;
 
         public State(Ilayout l, State n) {
@@ -27,7 +27,7 @@ class MCTS {
                 g = 0;
             else {
                 g = n.g + 1;
-                max = -n.max;
+                //max = -n.max;
             }
         }
 
@@ -161,7 +161,7 @@ class MCTS {
     }
 
     private double score(int x) {
-        if (x > 0) {
+        if (x == 1) {
             return 1 ;
         }else if(x==0)
             return 0.5;

@@ -1,4 +1,5 @@
 /*import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -124,17 +125,6 @@ public class tests {
     }
 
     @Test
-    public void testChildren5() throws CloneNotSupportedException
-    {
-    	Board b = new Board("----O----");
-		List<Ilayout> result = b.children();
-		List<Ilayout> l = new ArrayList<Ilayout>();
-		l.add(new Board("X---O----"));
-        l.add(new Board("-X--O----"));
-		assertEquals(l, result);
-    }
-    
-    @Test
     public void testChildren4() throws CloneNotSupportedException
     {
     	Board b = new Board("-O--X--XO");
@@ -146,6 +136,97 @@ public class tests {
 		l.add(new Board("-O-XX--XO"));
 		l.add(new Board("-O--XX-XO"));
 		l.add(new Board("-O--X-XXO"));
+		assertEquals(l, result);
+    }
+
+    @Test
+    public void testChildren5() throws CloneNotSupportedException
+    {
+    	Board b = new Board("----O----");
+		List<Ilayout> result = b.children();
+		List<Ilayout> l = new ArrayList<Ilayout>();
+		l.add(new Board("X---O----"));
+        l.add(new Board("-X--O----"));
+		assertEquals(l, result);
+    }
+
+    @Test
+    public void testChildren6() throws CloneNotSupportedException
+    {
+    	Board b = new Board("-O-------");
+		List<Ilayout> result = b.children();
+		List<Ilayout> l = new ArrayList<Ilayout>();
+		l.add(new Board("XO-------"));
+        l.add(new Board("-O-X-----"));
+		l.add(new Board("-O--X----"));
+        l.add(new Board("-O----X--"));
+		l.add(new Board("-O-----X-"));
+		assertEquals(l, result);
+    }
+
+    @Test
+    public void testChildren7() throws CloneNotSupportedException
+    {
+        Board b = new Board("-------O-");
+		List<Ilayout> result = b.children();
+		List<Ilayout> l = new ArrayList<Ilayout>();
+        l.add(new Board("X------O-"));
+        l.add(new Board("-X-----O-"));
+        l.add(new Board("---X---O-"));
+		l.add(new Board("----X--O-"));
+        l.add(new Board("------XO-"));
+		assertEquals(l, result);
+    }
+
+    @Test
+    public void testChildren8() throws CloneNotSupportedException
+    {
+    	Board b = new Board("------O--");
+		List<Ilayout> result = b.children();
+		List<Ilayout> l = new ArrayList<Ilayout>();
+        l.add(new Board("--X---O--"));
+        l.add(new Board("----X-O--"));
+        l.add(new Board("-----XO--"));
+        l.add(new Board("------OX-"));
+        l.add(new Board("------O-X"));
+		assertEquals(l, result);
+    }
+
+    @Test
+    public void testChildren8_2() throws CloneNotSupportedException
+    {
+    	Board b = new Board("--O------");
+		List<Ilayout> result = b.children();
+		List<Ilayout> l = new ArrayList<Ilayout>();
+        l.add(new Board("X-O------"));
+        l.add(new Board("-XO------"));
+        l.add(new Board("--OX-----"));
+        l.add(new Board("--O-X----"));
+        l.add(new Board("--O---X--"));
+		assertEquals(l, result);
+    }
+
+    @Test
+    public void testChildren9() throws CloneNotSupportedException
+    {
+    	Board b = new Board("---OXX---");
+		List<Ilayout> result = b.children();
+		List<Ilayout> l = new ArrayList<Ilayout>();
+		l.add(new Board("X--OXX---"));
+        l.add(new Board("-X-OXX---"));
+		l.add(new Board("--XOXX---"));
+		assertEquals(l, result);
+    }
+
+    @Test
+    public void testChildren10() throws CloneNotSupportedException
+    {
+    	Board b = new Board("---OXX---");
+		List<Ilayout> result = b.children();
+		List<Ilayout> l = new ArrayList<Ilayout>();
+		l.add(new Board("---OXXX--"));
+        l.add(new Board("---OXX-X-"));
+		l.add(new Board("---OXX--X"));
 		assertEquals(l, result);
     }
 
@@ -165,7 +246,7 @@ public class tests {
         s.s=5;
         s.w=1;
         s.father.s=6;
-        assertEquals(1.04658,s.uct(),5);
+        assertEquals(0.4401444,s.uct(),5);
     }
 
     @Test
@@ -176,7 +257,7 @@ public class tests {
         s.s=15;
         s.w=10;
         s.father.s=20;
-        assertEquals(1.29867,s.uct(),5);
+        assertEquals(1.29867,s.uct(),0);
     }
 
     @Test
@@ -187,7 +268,7 @@ public class tests {
         s.s=27;
         s.w=12;
         s.father.s=33;
-        assertEquals(0.95337,s.uct(),5);
+        assertEquals(0.95337,s.uct(),0);
     }
 
     @Test
@@ -230,9 +311,9 @@ public class tests {
         s.s=40;
         s.childs=l;
         
-        assertEquals(1.35894,l.get(0).uct(),5);
-        assertEquals(1.07054,l.get(1).uct(),5);
-        assertEquals(0.90719,l.get(2).uct(),5);
+        assertEquals(1.35894,l.get(0).uct(),0);
+        assertEquals(1.07054,l.get(1).uct(),0);
+        assertEquals(0.90719,l.get(2).uct(),0);
         assertEquals(l.get(0),s.BestUCT());
         assertEquals(l.get(2),s.WorstUCT());
     }
@@ -251,8 +332,8 @@ public class tests {
         s.s=100;
         s.childs=l;
         
-        assertEquals(1.12138,l.get(0).uct(),5);
-        assertEquals(1.06114,l.get(1).uct(),5);
+        assertEquals(1.12138,l.get(0).uct(),0);
+        assertEquals(1.06114,l.get(1).uct(),0);
         assertEquals(l.get(0),s.BestUCT());
         assertEquals(l.get(1),s.WorstUCT());
     }
@@ -270,16 +351,15 @@ public class tests {
         l.get(0).s=15;l.get(0).w=5;
         l.get(1).s=20;l.get(1).w=8;
         l.get(2).s=20;l.get(2).w=8;
-        l.get(3).s=25;l.get(3).w=12;
+        l.get(3).s=25;l.get(3).w=12; //0.40116012888   0.5501584751465185
         s.s=80;
         s.childs=l;
-        
-        assertEquals(1.09771,l.get(0).uct(),5);
-        assertEquals(1.06197,l.get(1).uct(),5);
-        assertEquals(1.06197,l.get(2).uct(),5);
-        assertEquals(1.07208,l.get(3).uct(),5);
-        assertEquals(l.get(0),s.BestUCT());
-        assertEquals(l.get(1),s.WorstUCT());
+        assertEquals(1.09771,l.get(0).uct(),0);
+        assertEquals(1.06197,0,0);
+        assertEquals(1.06197,l.get(2).uct(),0);
+        assertEquals(1.07208,l.get(3).uct(),0);
+        assertEquals(l.get(3),s.BestUCT());
+        assertEquals(l.get(0),s.WorstUCT());
     }
 
 
