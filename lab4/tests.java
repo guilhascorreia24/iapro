@@ -375,12 +375,9 @@ public class tests {
             while (i < 100) {
                 MCTS s = new MCTS();
                 Board b = new Board("---------");
-                // float start = System.nanoTime();
                 while (!s.end_game) {
                     b = (Board) s.BestNextMove(b).layout;
                 }
-                // float end = System.nanoTime() - start;
-                // System.out.println(i + ":" + end * Math.pow(1, -6) + "\n" + b);
                 if (b.stateBoard() != 0) {
                     res++;
                 }

@@ -12,7 +12,7 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c =Math.sqrt(0.0031);
+        private double c =Math.sqrt(0.0057);
         private int max = Integer.MAX_VALUE;
         public int g;
 
