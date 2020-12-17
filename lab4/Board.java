@@ -23,7 +23,7 @@ interface Ilayout {
 class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
     private char board[][];
-    private char character, counter;
+    public char character, counter;
 
     public Board() {
         board = new char[dim][dim];
@@ -50,7 +50,7 @@ class Board implements Ilayout, Cloneable {
             }
             pw.println();
         }
-        // pw.println(character);
+         pw.println(character);
         return writer.toString();
     }
 

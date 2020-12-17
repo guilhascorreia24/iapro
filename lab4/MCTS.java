@@ -1,17 +1,18 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 class MCTS {
     static class State {
-        private Ilayout layout;
+        public Ilayout layout;
         public State father;
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c =Math.sqrt(0.1574);
+        private double c =Math.sqrt(0.0031);
         private int max = Integer.MAX_VALUE;
         public int g;
 
@@ -35,7 +36,17 @@ class MCTS {
             return final_node;
         }
 
-        public void setWin(double score) {
+        public String winner(){
+            if(layout.getplayer()=='O' && layout.stateBoard()==1){
+                return "win O";
+            }else if (layout.getplayer()=='X' && layout.stateBoard()==1){
+                return "win X";
+            }else{
+                return "Draw";
+            }
+        }
+        
+        private void setWin(double score) {
             this.w += score;
         }
 
@@ -99,15 +110,25 @@ class MCTS {
         }
         return sucs;
     }
-
-    final public Board BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo mcts
+    final public Iterator<State> solve(Ilayout s) throws CloneNotSupportedException {
+        List<State> l=new ArrayList<>();
+        State k=new State(s,null);
+        l.add(k);
+        while(!end_game){
+            k=BestNextMove(k.layout);
+            l.add(k);
+        }
+        return l.iterator();
+        
+    }
+    final public State BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo mcts
         actual = new State(s, null);
         if (actual.final_node) {
             end_game = true;
-            return (Board) actual.layout;
+            return actual;
         }
         root = actual;
-        float playouts = 0, limit = 5000;// 50000
+        float playouts = 0, limit = 10000;// 50000
         while (playouts < limit) {
             ;
             if (!actual.childs.isEmpty()) {
@@ -122,10 +143,13 @@ class MCTS {
         actual = bestmove(root);
         if (actual.final_node)
             end_game = true;
-        return (Board) actual.layout;
+        return actual;
     }
 
     private State bestmove(State s) throws CloneNotSupportedException {
+        /*for(State s1:s.childs){
+            System.out.println(s1.uct()+" "+s1.w+" "+s1.s+"\n"+s1);
+        }*/
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
