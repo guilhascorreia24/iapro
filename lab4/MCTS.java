@@ -12,7 +12,7 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c =Math.sqrt(0.0241);
+        private double c =Math.sqrt(0.0159);
         private int max = Integer.MAX_VALUE;
         public int g;
 
@@ -98,7 +98,7 @@ class MCTS {
 
     }
 
-    private State actual, root;
+    public State actual, root;
     public boolean end_game = false;
 
     final public List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
@@ -128,7 +128,7 @@ class MCTS {
             return actual;
         }
         root = actual;
-        float playouts = 0, limit = 10000;// 50000
+        float playouts = 0, limit = 1000;// 50000
         while (playouts < limit) {
             ;
             if (!actual.childs.isEmpty()) {
@@ -163,7 +163,7 @@ class MCTS {
         return res;
     }
 
-    private State simulation(State s) throws CloneNotSupportedException {
+    public State simulation(State s) throws CloneNotSupportedException {
         actual = s;
         int w = root.childs.get(0).layout.verifywinner(actual.layout);
 
@@ -178,10 +178,10 @@ class MCTS {
             }
             w = root.childs.get(0).layout.verifywinner(s.layout);
 
-            actual = backpropagation(suc, w, 1);
+            actual = backpropagation(suc, w);
         }
         if (actual.final_node)
-            actual = backpropagation(actual, w, 1);
+            actual = backpropagation(actual, w);
         return actual;
     }
 
@@ -194,9 +194,9 @@ class MCTS {
             return 0;
     }
 
-    private State backpropagation(State actual2, int w, int ii) {
+    public State backpropagation(State actual2, int w) {
         double score = score(w);
-        while (actual2.father != root.father) {
+        while (actual2.father != null) {
             // if(score>0)
             actual2.setWin(score);
             //score=-score;
