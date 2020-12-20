@@ -10,9 +10,9 @@ interface Ilayout {
      */
     List<Ilayout> children() throws CloneNotSupportedException;
 
-    int verifywinner(Ilayout b);
+    double verifywinner(Ilayout b);
 
-    int stateBoard();
+    double stateBoard();
 
     Ilayout insertnew(int x, int y);
 
@@ -112,48 +112,27 @@ class Board implements Ilayout, Cloneable {
         boolean s=true,s1=true,s2=true,s3=true;
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                if (board[i][j] == b2.board[i][j]) {
+                if (board[i][j] == b2.board[i][j] ) {
                     p++;
                 }
-            }
-        }
-        if (p != dim * dim) { 
-            // simetria vertical
-            for (int i = 0; i < dim; i++) {
-                for (int j = 0; j <dim ; j++) {
-                    if (board[i][j] != b2.board[i][(dim - 1) - j]) {
-                        s=false;
-                    }
+                if (board[i][j] != b2.board[i][(dim - 1) - j]) {
+                    s=false;
                 }
-            }
-            // simetria hori
-            for (int i = 0; i < dim; i++) {
-                for (int j = 0; j < dim; j++) {
-                    if (board[i][j] != b2.board[(dim - 1) - i][j]) {
-                        s1=false;
-                    }
+                if (board[i][j] != b2.board[(dim - 1) - i][j]) {
+                    s1=false;
                 }
-            }
-            // simetria diagonal (c->b)
-            for (int i = 0; i < dim; i++) {
-                for (int j = 0; j < dim ; j++) {
-                    //System.out.println(board[i][j]+" "+b2.board[j][i]);
-                    if (board[i][j] != b2.board[j][i]) {
-                        s2=false;
-                    }
+                if (board[i][j] != b2.board[j][i]) {
+                    s2=false;
                 }
-            }
-            // simetria diagonal(b->c)
-            for (int i = 0; i < dim; i++) {
-                for (int j = 0; j < dim; j++) {
-                    //System.out.println(board[i][j] +" "+ b2.board[(dim-1) - i][(dim-1) - j]);
-                    if (board[i][j] != b2.board[(dim-1) - j][(dim-1) - i]) {
-                        s3= false;
-                    }
+                if (board[i][j] != b2.board[(dim-1) - j][(dim-1) - i]) {
+                    s3= false;
                 }
             }
         }
-        //System.out.println(s+" "+s1+" "+s2+" "+s3+" "+p);
+        if (p == dim * dim) { 
+            return true;
+        }
+       //System.out.println(s+" "+s1+" "+s2+" "+s3+" "+p);
         if(!s && !s1 && !s2 && !s3){
             return false;
         }
@@ -164,27 +143,27 @@ class Board implements Ilayout, Cloneable {
      * return 1 - winner 1 return -1 - winner 2 return -2 - continue return 0 - draw
      */
     @Override
-    public int verifywinner(Ilayout b) {
+    public double verifywinner(Ilayout b) {
         Board b2 = (Board) b;
         boolean empty_spaces = false;
         for (int i = 0; i < dim; i++) {
             if (b2.board[i][0] == character && b2.board[i][1] == character && b2.board[i][2] == character)
                 return 1;
             else if (b2.board[i][0] == counter && b2.board[i][1] == counter && b2.board[i][2] == counter)
-                return -1;
+                return 0;
             else if (b2.board[0][i] == character && b2.board[1][i] == character && b2.board[2][i] == character)
                 return 1;
             else if (b2.board[0][i] == counter && b2.board[1][i] == counter && b2.board[2][i] == counter)
-                return -1;
+                return 0;
         }
         if (b2.board[0][0] == character && b2.board[1][1] == character && b2.board[2][2] == character)
             return 1;
         else if (b2.board[0][2] == character && b2.board[1][1] == character && b2.board[2][0] == character)
             return 1;
         else if (b2.board[0][0] == counter && b2.board[1][1] == counter && b2.board[2][2] == counter)
-            return -1;
+            return 0;
         else if (b2.board[0][2] == counter && b2.board[1][1] == counter && b2.board[2][0] == counter)
-            return -1;
+            return 0;
 
         pause: for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++)
@@ -195,11 +174,11 @@ class Board implements Ilayout, Cloneable {
         }
         if (empty_spaces)
             return -2;
-        return 0;
+        return 0.5;
     }
 
     @Override
-    public int stateBoard() {
+    public double stateBoard() {
         return verifywinner(this);
     }
 

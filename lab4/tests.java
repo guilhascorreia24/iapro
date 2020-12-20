@@ -120,8 +120,8 @@ public class tests {
         Board b = new Board("XOX-XX-XO");
         List<Ilayout> result = b.children();
         List<Ilayout> l = new ArrayList<Ilayout>();
-        l.add(new Board("XOXXXX-XO"));
-        l.add(new Board("XOX-XXXXO"));
+        l.add(new Board("XOXOXX-XO"));
+        l.add(new Board("XOX-XXOXO"));
         assertEquals(l, result);
     }
 
@@ -213,9 +213,9 @@ public class tests {
         Board b = new Board("---OXX---");
         List<Ilayout> result = b.children();
         List<Ilayout> l = new ArrayList<Ilayout>();
-        l.add(new Board("X--OXX---"));
-        l.add(new Board("-X-OXX---"));
-        l.add(new Board("--XOXX---"));
+        l.add(new Board("O--OXX---"));
+        l.add(new Board("-O-OXX---"));
+        l.add(new Board("--OOXX---"));
         assertEquals(l, result);
     }
 
@@ -224,9 +224,9 @@ public class tests {
         Board b = new Board("---OXX---");
         List<Ilayout> result = b.children();
         List<Ilayout> l = new ArrayList<Ilayout>();
-        l.add(new Board("---OXXX--"));
-        l.add(new Board("---OXX-X-"));
-        l.add(new Board("---OXX--X"));
+        l.add(new Board("---OXXO--"));
+        l.add(new Board("---OXX-O-"));
+        l.add(new Board("---OXX--O"));
         assertEquals(l, result);
     }
 
@@ -234,7 +234,7 @@ public class tests {
     public void testChildren11() throws CloneNotSupportedException {
         Board b = new Board("OOX-X--X-");
         b.character='X';b.counter='O';
-        List<Ilayout> result = b.children();
+        //List<Ilayout> result = b.children();
         //System.out.println(result);
     }
 
@@ -363,7 +363,7 @@ public class tests {
         l.get(2).s = 20;
         l.get(2).w = 8;
         l.get(3).s = 25;
-        l.get(3).w = 12; // 0.40116012888 0.5501584751465185
+        l.get(3).w = 12; 
         s.s = 80;
         s.childs = l;
         assertEquals(1.09771, l.get(0).uct(), 0);
@@ -465,7 +465,7 @@ public class tests {
         s.childs.add(new MCTS.State(new Board("XX-OO--X-"), s));
         s.childs.add(new MCTS.State(new Board("XX-OO---X"), s));
         h.root=s;
-        System.out.println(h.root.layout.getplayer());
+        //System.out.println(h.root.layout.getplayer());
         MCTS.State g=h.simulation(s);
         assertEquals(true, s.s==5);
         assertEquals(1,s.childs.get(0).w,0);
@@ -505,7 +505,7 @@ public class tests {
         s.childs.add(new MCTS.State(new Board("OX--OO-XX"), s));
         h.root=s;
         MCTS.State g=h.backpropagation(s.childs.get(2), 0);
-        assertEquals(true, s.s==4);
+        assertEquals(true, s.s==1);
         assertEquals(g, s);
     }
 
@@ -519,17 +519,17 @@ public class tests {
         s.childs.add(new MCTS.State(new Board("XX-OO--X-"), s));
         s.childs.add(new MCTS.State(new Board("XX-OO---X"), s));
         h.root=s;
-        System.out.println(s.childs.get(0).w);
+        //System.out.println(s.childs.get(0).w);
         MCTS.State g=h.backpropagation(s.childs.get(0), 1);
         g=h.backpropagation(s.childs.get(1), 0);
-         g=h.backpropagation(s.childs.get(2), -1);
+         g=h.backpropagation(s.childs.get(2), 0.5);
          g=h.backpropagation(s.childs.get(3), 0);
-         g=h.backpropagation(s.childs.get(4), -1);
+         g=h.backpropagation(s.childs.get(4), 0);
         assertEquals(true, s.s==5);
         assertEquals(true, s.childs.get(0).s==1 && s.childs.get(0).w==1);
-        assertEquals(true, s.childs.get(1).s==1 && s.childs.get(1).w==0.5);
-        assertEquals(true, s.childs.get(2).s==1 && s.childs.get(2).w==0);
-        assertEquals(true, s.childs.get(3).s==1 && s.childs.get(3).w==0.5);
+        assertEquals(true, s.childs.get(1).s==1 && s.childs.get(1).w==0);
+        assertEquals(true, s.childs.get(2).s==1 && s.childs.get(2).w==0.5);
+        assertEquals(true, s.childs.get(3).s==1 && s.childs.get(3).w==0);
         assertEquals(true, s.childs.get(4).s==1 && s.childs.get(4).w==0);
         assertEquals(g, s);
     }
@@ -546,7 +546,7 @@ public class tests {
                 while (!s.end_game) {
                     b = (Board) s.BestNextMove(b).layout;
                 }
-                if (b.stateBoard() != 0) {
+                if (b.stateBoard() != 0.5) {
                     res++;
                 }
                 i++;

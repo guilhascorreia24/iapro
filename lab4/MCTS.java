@@ -12,7 +12,7 @@ class MCTS {
         public List<State> childs = new ArrayList<>();
         public double s, w;
         private boolean final_node = false;
-        private double c =Math.sqrt(0.0159);
+        private double c =Math.sqrt(0.038);
         private int max = Integer.MAX_VALUE;
         public int g;
 
@@ -128,8 +128,8 @@ class MCTS {
             return actual;
         }
         root = actual;
-        float playouts = 0, limit = 1000;// 50000
-        while (playouts < limit) {
+        float  limit = 1000;// 50000
+        while (root.s < limit) {
             ;
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
@@ -137,7 +137,6 @@ class MCTS {
             if (!actual.final_node)
                 actual.childs = expand(actual);
             actual = simulation(actual);
-            playouts++;
         }
         actual = bestmove(root);
         if (actual.final_node)
@@ -164,7 +163,7 @@ class MCTS {
 
     public State simulation(State s) throws CloneNotSupportedException {
         actual = s;
-        int w = root.childs.get(0).layout.verifywinner(actual.layout);
+        double w = root.childs.get(0).layout.verifywinner(actual.layout);
         for (State suc : s.childs) {
             s = suc;
             while (!s.final_node) {
@@ -181,24 +180,16 @@ class MCTS {
         return actual;
     }
 
-    private double score(int x) {
-        if (x == 1) {
-            return 1 ;
-        }else if(x==0)
-            return 0.5;
-        else
-            return 0;
-    }
 
-    public State backpropagation(State actual2, int w) {
-        double score = score(w);
+    public State backpropagation(State actual2, double w) {
+        //System.out.println(w);
         while (actual2.father != null) {
             // if(score>0)
-            actual2.setWin(score);
+            actual2.setWin(w);
             actual2.s += 1;
             actual2 = actual2.father;
         }
-        actual2.setWin(score);
+        actual2.setWin(w);
         actual2.s += 1;
         return actual2;
     }
