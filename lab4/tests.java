@@ -535,7 +535,7 @@ public class tests {
     }
 
 
-    /*@Test
+    @Test
     public void testPrecision() throws CloneNotSupportedException {
         int i = 0, res = 0, j = 0,p=0;
         while (j < 5) {
@@ -556,7 +556,7 @@ public class tests {
             p+=res;
         }
         System.out.println((double)p/(double)(i*j));
-    }*/
+    }
 
 
 
