@@ -23,7 +23,7 @@ interface Ilayout {
 class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
     private char board[][];
-    private char character, counter;
+    public char character, counter;
 
     public Board() {
         board = new char[dim][dim];
@@ -33,12 +33,22 @@ class Board implements Ilayout, Cloneable {
         if (str.length() != dim * dim)
             throw new IllegalStateException("Invalid arg in Board constructor");
         board = new char[dim][dim];
+        int x=0,o=0;
         int si = 0;
-        for (int i = 0; i < dim; i++)
-            for (int j = 0; j < dim; j++)
+        for (int i = 0; i < dim; i++){
+            for (int j = 0; j < dim; j++){
                 board[i][j] = str.charAt(si++);
-        character = 'O';
-        counter = 'X';
+                if(board[i][j]=='X') x++;
+                else if(board[i][j]=='O') o++;
+            }
+        }
+        if(x>o){
+            character='X';
+            counter='O';
+        }else{
+            character = 'O';
+            counter = 'X';
+        }
     }
 
     public String toString() {
@@ -50,7 +60,7 @@ class Board implements Ilayout, Cloneable {
             }
             pw.println();
         }
-        // pw.println(character);
+         pw.println(character);
         return writer.toString();
     }
 
@@ -97,7 +107,7 @@ class Board implements Ilayout, Cloneable {
     @Override
     public boolean equals(Object b) {
         Board b2 = (Board) b;
-       // System.out.println(b2+"\n"+this);
+      // System.out.println(b2+"\n"+this);
         int p = 0;
         boolean s=true,s1=true,s2=true,s3=true;
         for (int i = 0; i < dim; i++) {
@@ -110,14 +120,14 @@ class Board implements Ilayout, Cloneable {
         if (p != dim * dim) { 
             // simetria vertical
             for (int i = 0; i < dim; i++) {
-                for (int j = 0; j <= dim / 2; j++) {
+                for (int j = 0; j <dim ; j++) {
                     if (board[i][j] != b2.board[i][(dim - 1) - j]) {
                         s=false;
                     }
                 }
             }
             // simetria hori
-            for (int i = 0; i <= dim / 2; i++) {
+            for (int i = 0; i < dim; i++) {
                 for (int j = 0; j < dim; j++) {
                     if (board[i][j] != b2.board[(dim - 1) - i][j]) {
                         s1=false;
@@ -126,7 +136,7 @@ class Board implements Ilayout, Cloneable {
             }
             // simetria diagonal (c->b)
             for (int i = 0; i < dim; i++) {
-                for (int j = 0; j <= i ; j++) {
+                for (int j = 0; j < dim ; j++) {
                     //System.out.println(board[i][j]+" "+b2.board[j][i]);
                     if (board[i][j] != b2.board[j][i]) {
                         s2=false;
@@ -135,14 +145,15 @@ class Board implements Ilayout, Cloneable {
             }
             // simetria diagonal(b->c)
             for (int i = 0; i < dim; i++) {
-                for (int j = 0; j < (dim - i); j++) {
-                    if (board[i][j] != b2.board[(dim-1) - i][(dim-1) - j]) {
+                for (int j = 0; j < dim; j++) {
+                    //System.out.println(board[i][j] +" "+ b2.board[(dim-1) - i][(dim-1) - j]);
+                    if (board[i][j] != b2.board[(dim-1) - j][(dim-1) - i]) {
                         s3= false;
                     }
                 }
             }
         }
-        //System.out.println(s+" "+s1+" "+s2+" "+s3);
+        //System.out.println(s+" "+s1+" "+s2+" "+s3+" "+p);
         if(!s && !s1 && !s2 && !s3){
             return false;
         }
