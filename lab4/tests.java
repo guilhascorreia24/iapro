@@ -78,7 +78,7 @@ public class tests {
         pw.println("-O-");
         pw.println("-X-");
         pw.println("X");
-        assertEquals(false, s.isfinalnode());
+        assertEquals(false, s.final_node);
         assertEquals(writer.toString(), b.toString());
     }
 
@@ -92,7 +92,7 @@ public class tests {
         pw.println("OOO");
         pw.println("OXO");
         pw.println("O");
-        assertEquals(true, s.isfinalnode());
+        assertEquals(true, s.final_node);
         assertEquals(writer.toString(), b.toString());
     }
 
@@ -537,10 +537,8 @@ public class tests {
 
     @Test
     public void testPrecision() throws CloneNotSupportedException {
-        int i = 0, res = 0, j = 0,p=0;
-        while (j < 5) {
-            i = 0;res=0;
-            while (i < 100) {
+        int i = 0, res = 0;
+            while (i < 1000) {
                 MCTS s = new MCTS();
                 Board b = new Board("---------");
                 while (!s.end_game) {
@@ -552,12 +550,5 @@ public class tests {
                 i++;
             }
             System.out.println(res + "/" + i);
-            j++;
-            p+=res;
-        }
-        System.out.println((double)p/(double)(i*j));
     }
-
-
-
 }   

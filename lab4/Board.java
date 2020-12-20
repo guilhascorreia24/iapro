@@ -5,17 +5,37 @@ import java.util.List;
 
 interface Ilayout {
     /**
-     * @return the children of the receiver.
+     * @return os filhos do receptor.
      * @throws CloneNotSupportedException
      */
     List<Ilayout> children() throws CloneNotSupportedException;
 
+    /**
+     * 
+     * @param b
+     * @return
+     */
     double verifywinner(Ilayout b);
 
+    /**
+     * 
+     */
     double stateBoard();
 
-    Ilayout insertnew(int x, int y);
+    /**
+     * 
+     * @param x
+     * @param y
+     * @return
+     * @throws CloneNotSupportedException
+     */
+    Ilayout insertnew(int x, int y) throws CloneNotSupportedException;
 
+
+    /**
+     * 
+     * @return
+     */
     char getplayer();
 
 }
@@ -24,10 +44,6 @@ class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
     private char board[][];
     public char character, counter;
-
-    public Board() {
-        board = new char[dim][dim];
-    }
 
     public Board(String str) throws IllegalStateException {
         if (str.length() != dim * dim)
@@ -63,8 +79,9 @@ class Board implements Ilayout, Cloneable {
          pw.println(character);
         return writer.toString();
     }
-
-    public Ilayout insertnew(int x, int y) {
+    
+    @Override
+    public Ilayout insertnew(int x, int y) throws CloneNotSupportedException {
         Board clone = (Board) clone();
         if(board[x][y]!='-'){
             throw new IllegalAccessError("occupied position");
@@ -76,8 +93,9 @@ class Board implements Ilayout, Cloneable {
     }
 
     @Override
-    public Object clone() {
-        Board b = new Board();
+    public Object clone() throws CloneNotSupportedException {
+        Board b = (Board) super.clone();
+        b.board=new char[dim][dim];
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 b.board[i][j] = board[i][j];
