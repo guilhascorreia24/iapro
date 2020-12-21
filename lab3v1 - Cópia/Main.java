@@ -1,25 +1,20 @@
-import java.util.Iterator;
+
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws Exception {  
+    public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
-        //long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
         BestFirst s = new BestFirst();
-        Board s1=new Board(sc.nextLine());
-        Board s2=new Board(sc.nextLine());
-        Iterator<BestFirst.State> it = s.solve(s1, s2);
-        if (it == null)
-            System.out.println("no solution was found");
-        else {
-            while (it.hasNext()) {
-                BestFirst.State i = it.next();
-                System.out.println(i);
-                if (!it.hasNext())
-                    System.out.println((int)i.getG());
-            }
+        Board b=new Board("000000000");
+        System.out.println("ez:1   med:2   hard:3");
+        s.lvl(sc.nextInt());
+        while(!s.end_game){
+            //b= (Board) b.insertnew(sc.nextInt(), sc.nextInt());
+            b=s.BestNextMove(b);
+            System.out.println(b+"\n"+s.winner); //+" move ["++"]"
+            System.out.println("-----------------");
+
         }
         sc.close();
     }
-
 }

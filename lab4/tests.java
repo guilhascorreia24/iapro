@@ -537,18 +537,25 @@ public class tests {
 
     @Test
     public void testPrecision() throws CloneNotSupportedException {
-        int i = 0, res = 0;
-            while (i < 1000) {
+        int i = 0, res = 0,j=0,p=0;
+        while(j<1){
+            i=0;res=0;
+            while (i < 10) {
                 MCTS s = new MCTS();
                 Board b = new Board("---------");
                 while (!s.end_game) {
                     b = (Board) s.BestNextMove(b).layout;
                 }
-                if (b.stateBoard() != 0.5) {
+                if (b.stateBoard() != 0.99999) {
                     res++;
                 }
                 i++;
+                System.out.println(b);
             }
+            p+=res;
             System.out.println(res + "/" + i);
+            j++;
+        }
+        System.out.println((double)p/(double)(i*j));
     }
 } 

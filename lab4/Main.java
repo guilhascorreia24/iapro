@@ -17,8 +17,6 @@ public class Main {
                 while (it.hasNext()) {
                     MCTS.State i = it.next();
                     System.out.println(i);
-                    if (!it.hasNext())
-                        System.out.println(i.winner());
                 }
             }}
         else{

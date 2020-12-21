@@ -44,6 +44,7 @@ class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
     private char board[][];
     public char character, counter;
+    private double WIN=1,LOST=0,DRAW=0.99999;
 
     public Board(String str) throws IllegalStateException {
         if (str.length() != dim * dim)
@@ -166,22 +167,22 @@ class Board implements Ilayout, Cloneable {
         boolean empty_spaces = false;
         for (int i = 0; i < dim; i++) {
             if (b2.board[i][0] == character && b2.board[i][1] == character && b2.board[i][2] == character)
-                return 1;
+                return WIN;
             else if (b2.board[i][0] == counter && b2.board[i][1] == counter && b2.board[i][2] == counter)
-                return 0;
+                return LOST;
             else if (b2.board[0][i] == character && b2.board[1][i] == character && b2.board[2][i] == character)
-                return 1;
+                return WIN;
             else if (b2.board[0][i] == counter && b2.board[1][i] == counter && b2.board[2][i] == counter)
-                return 0;
+                return LOST;
         }
         if (b2.board[0][0] == character && b2.board[1][1] == character && b2.board[2][2] == character)
-            return 1;
+            return WIN;
         else if (b2.board[0][2] == character && b2.board[1][1] == character && b2.board[2][0] == character)
-            return 1;
+            return WIN;
         else if (b2.board[0][0] == counter && b2.board[1][1] == counter && b2.board[2][2] == counter)
-            return 0;
+            return LOST;
         else if (b2.board[0][2] == counter && b2.board[1][1] == counter && b2.board[2][0] == counter)
-            return 0;
+            return LOST;
 
         pause: for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++)
@@ -192,7 +193,7 @@ class Board implements Ilayout, Cloneable {
         }
         if (empty_spaces)
             return -2;
-        return 0.5;
+        return DRAW;
     }
 
     @Override
@@ -204,5 +205,6 @@ class Board implements Ilayout, Cloneable {
     public char getplayer() {
         return character;
     }
+
 
 }
