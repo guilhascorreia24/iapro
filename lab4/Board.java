@@ -12,31 +12,31 @@ interface Ilayout {
 
     /**
      * 
-     * @param b
-     * @return
+     * @param b representa o estado da board
+     * @return o valor associado ao estado da board atual
      */
     double verifywinner(Ilayout b);
 
     /**
      * 
+     * @param x representa uma coordenada
+     * @param y representa uma coordenada
+     * @return o estado da board com a jogada feita
+     * @throws CloneNotSupportedException
+     */
+    Ilayout insertnew(int x, int y) throws CloneNotSupportedException;
+
+    /**
+     * @return o valor associado ao estado da board atual
      */
     double stateBoard();
 
     /**
      * 
-     * @param x
-     * @param y
-     * @return
-     * @throws CloneNotSupportedException
-     */
-    Ilayout insertnew(int x, int y) throws CloneNotSupportedException;
-
-
-    /**
-     * 
-     * @return
+     * @return o simbolo do jogador
      */
     char getplayer();
+
 
 }
 
@@ -46,6 +46,12 @@ class Board implements Ilayout, Cloneable {
     public char character, counter;
     private double WIN=1,LOST=0,DRAW=0.99999;
 
+    /**
+     * Cria a board apartir de uma string
+     * @param str representa uma String
+     * @inv str tem que ter tamanho 9
+     * @throws IllegalStateException se @inv for violada
+     */
     public Board(String str) throws IllegalStateException {
         if (str.length() != dim * dim)
             throw new IllegalStateException("Invalid arg in Board constructor");
@@ -68,6 +74,9 @@ class Board implements Ilayout, Cloneable {
         }
     }
 
+    /**
+     * @return representação da board
+     */
     public String toString() {
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
@@ -81,6 +90,11 @@ class Board implements Ilayout, Cloneable {
         return writer.toString();
     }
     
+    /**
+     * @param x representa uma coordenada
+     * @param y representa uma coordenada
+     * @return da nova board com a jogada feita pelo jogador  
+     */
     @Override
     public Ilayout insertnew(int x, int y) throws CloneNotSupportedException {
         Board clone = (Board) clone();
@@ -93,6 +107,9 @@ class Board implements Ilayout, Cloneable {
         return clone;
     }
 
+    /**
+     * @return um clone da board atual
+     */
     @Override
     public Object clone() throws CloneNotSupportedException {
         Board b = (Board) super.clone();
@@ -105,6 +122,10 @@ class Board implements Ilayout, Cloneable {
         return b;
     }
 
+    /**
+     * Cria boards filhas partir da original
+     * @return uma lista com os filhos da board 
+     */
     @Override
     public List<Ilayout> children() throws CloneNotSupportedException { // criar os filhos
         List<Ilayout> p = new ArrayList<Ilayout>();
@@ -123,6 +144,11 @@ class Board implements Ilayout, Cloneable {
         return p;
     }
 
+    /**
+     * Comparação se 2 boards são iguais, usando simetrias
+     * @return true se as boards são iguais
+     * @return false se as boards são diferentes
+     */
     @Override
     public boolean equals(Object b) {
         Board b2 = (Board) b;
@@ -159,7 +185,13 @@ class Board implements Ilayout, Cloneable {
     }
 
     /**
-     * return 1 - winner 1 return -1 - winner 2 return -2 - continue return 0 - draw
+     * @param b representa o estado a board atual
+     * Verificação se existe algum vencedor ou empate
+     * se não houve o jogo continua
+     * @return 1 - winner 1 
+     * @return -1 - winner 2 
+     * @return -2 - continue 
+     * @return 0 - draw
      */
     @Override
     public double verifywinner(Ilayout b) {

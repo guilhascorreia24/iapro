@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c = 0.175353;
+    public static double c = 0.185353;
 
     static class State {
         public Ilayout layout;
@@ -181,11 +181,18 @@ class MCTS {
      */
     private State bestmove(State s) throws CloneNotSupportedException {
         /*for (State s1 : s.childs) {
-            System.out.println(s1.uct() + " " + s1.w + " " + s1.s + "\n" + s1);
-            /*for(State s2:s1.childs){
-                System.out.println(s2.uct() + " " + s2.w + " " + s2.s + "\n" + s2);
+            System.out.println(s1.uct() + " " + s1.w/s1.s + " " + s1.s + "\n" + s1);
+            boolean max=true;
+            while (!s1.childs.isEmpty()) {
+                if (max) {
+                    s1 = s1.BestUCT();
+                    max = false;
+                } else {
+                    s1 = s1.WorstUCT();
+                    max = true;
+                }
+                System.out.println(s1+"\n");
             }
-            System.out.println("----------------------------------");
         }
         System.out.println("----------------------------------");*/
         State res = Collections.max(s.childs, new Comparator<State>() {
