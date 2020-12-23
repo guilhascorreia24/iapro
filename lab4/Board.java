@@ -38,10 +38,9 @@ interface Ilayout {
     char getplayer();
 
     /**
-     * Pontuacao, os empates valem 0.99999, isto é um empate é o melhor resultado em algumas situacoes
-     * nao pode valer 1 porque senao os empates tem o mesmo penso que as vitorias. 
+     * Pontuacao,  
      */
-    double WIN=1,LOST=0,DRAW=0.99999;
+    double WIN=1,LOST=0,DRAW=1-Math.pow(10,-20);
 
 }
 

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.182453    ,limit=2000;
+    public static double c =0.182453    ,limit=50000;
     static class State {
         public Ilayout layout;
         public State father;
@@ -232,7 +232,6 @@ class MCTS {
             actual2.setWin(w);
             actual2.s += 1;
             actual2 = actual2.father;
-            //w=-w;
         }
         actual2.setWin(w);
         actual2.s += 1;
