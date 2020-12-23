@@ -1,13 +1,11 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c = 0.185353;
-
+    public static double c =0.182453    ,limit=2000;
     static class State {
         public Ilayout layout;
         public State father;
@@ -15,7 +13,7 @@ class MCTS {
         public double s, w;
         public boolean final_node = false;
         private int max = Integer.MAX_VALUE;
-        private int g;
+        public int g;
 
         /**
          * Cria um estado
@@ -41,9 +39,7 @@ class MCTS {
          * @param score 1 (vitoria) ,0.5 empate e 0 derrota
          */
         private void setWin(double score) {
-            if(score>0)
-                this.w += score;
-
+            this.w+=score;
         }
 
         /**
@@ -65,7 +61,7 @@ class MCTS {
             if (w < 0 || s < 0 || (father != null && father.s < 1)) {
                 throw new IllegalArgumentException("wins negative");
             }
-            return (w / s) + c * Math.sqrt(Math.log(father.s) / s);
+            return (w/ s) + c * Math.sqrt(Math.log(father.s) / s);
         }
 
         @Override
@@ -132,15 +128,15 @@ class MCTS {
         return sucs;
     }
 
-    final public Iterator<State> solve(Ilayout s) throws CloneNotSupportedException {
+    final public List<State> solve(Ilayout s) throws CloneNotSupportedException {
         List<State> l = new ArrayList<>();
         State k = new State(s, null);
-        l.add(k);
+        //l.add(k);
         while (!end_game) {
             k = BestNextMove(k.layout);
             l.add(k);
         }
-        return l.iterator();
+        return l;
     }
 
     /**
@@ -157,7 +153,7 @@ class MCTS {
             return actual;
         }
         root = actual;
-        double limit = 500000;// 50000
+        // 50000
         while (root.s < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
@@ -180,21 +176,9 @@ class MCTS {
      * @throws CloneNotSupportedException
      */
     private State bestmove(State s) throws CloneNotSupportedException {
-        /*for (State s1 : s.childs) {
-            System.out.println(s1.uct() + " " + s1.w/s1.s + " " + s1.s + "\n" + s1);
-            boolean max=true;
-            while (!s1.childs.isEmpty()) {
-                if (max) {
-                    s1 = s1.BestUCT();
-                    max = false;
-                } else {
-                    s1 = s1.WorstUCT();
-                    max = true;
-                }
-                System.out.println(s1+"\n");
-            }
+        for(State s1:s.childs){
+            System.out.println(s1.s+" "+s1.w+" "+s1.uct()+"\n"+s1+"\n");
         }
-        System.out.println("----------------------------------");*/
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
@@ -228,7 +212,6 @@ class MCTS {
                     s = sucs.get(rn);
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
-
                 actual = backpropagation(suc, w);
             }
         } else
@@ -249,7 +232,7 @@ class MCTS {
             actual2.setWin(w);
             actual2.s += 1;
             actual2 = actual2.father;
-            
+            //w=-w;
         }
         actual2.setWin(w);
         actual2.s += 1;
@@ -263,7 +246,7 @@ class MCTS {
      * @param s State estado atual do jogo
      * @return State devolve um estado sem filhos
      */
-    private State selection(State s) {
+    public State selection(State s) {
         boolean max = true;
         while (!s.childs.isEmpty()) {
             if (max) {

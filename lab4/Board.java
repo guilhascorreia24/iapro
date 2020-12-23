@@ -37,6 +37,11 @@ interface Ilayout {
      */
     char getplayer();
 
+    /**
+     * Pontuacao, os empates valem 0.99999, isto é um empate é o melhor resultado em algumas situacoes
+     * nao pode valer 1 porque senao os empates tem o mesmo penso que as vitorias. 
+     */
+    double WIN=1,LOST=0,DRAW=0.99999;
 
 }
 
@@ -44,7 +49,7 @@ class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
     private char board[][];
     public char character, counter;
-    private double WIN=1,LOST=0,DRAW=0.99999;
+    //private double WIN=1,LOST=0,DRAW=0.5;
 
     /**
      * Cria a board apartir de uma string

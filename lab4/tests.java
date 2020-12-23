@@ -129,7 +129,7 @@ public class tests {
     public void testChildren4() throws CloneNotSupportedException {
         Board b = new Board("-O--X--XO");
         List<Ilayout> result = b.children();
-        //System.out.println(result);
+        // System.out.println(result);
         List<Ilayout> l = new ArrayList<Ilayout>();
         l.add(new Board("XO--X--XO"));
         l.add(new Board("-OX-X--XO"));
@@ -233,9 +233,10 @@ public class tests {
     @Test
     public void testChildren11() throws CloneNotSupportedException {
         Board b = new Board("OOX-X--X-");
-        b.character='X';b.counter='O';
-        //List<Ilayout> result = b.children();
-        //System.out.println(result);
+        b.character = 'X';
+        b.counter = 'O';
+        // List<Ilayout> result = b.children();
+        // System.out.println(result);
     }
 
     @Test
@@ -363,7 +364,7 @@ public class tests {
         l.get(2).s = 20;
         l.get(2).w = 8;
         l.get(3).s = 25;
-        l.get(3).w = 12; 
+        l.get(3).w = 12;
         s.s = 80;
         s.childs = l;
         assertEquals(1.09771, l.get(0).uct(), 0);
@@ -376,8 +377,8 @@ public class tests {
 
     @Test
     public void testexpand() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("OX--OO-X-"),null);
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("OX--OO-X-"), null);
         List<MCTS.State> l = new ArrayList<>();
         l.add(new MCTS.State(new Board("OXX-OO-X-"), s));
         l.add(new MCTS.State(new Board("OX-XOO-X-"), s));
@@ -387,28 +388,41 @@ public class tests {
     }
 
     @Test
+    public void testexpand22() throws CloneNotSupportedException {
+        MCTS h = new MCTS();
+        Board p = new Board("-O-XX----");
+        MCTS.State s = new MCTS.State(p, null);
+
+        // List<MCTS.State> l = new ArrayList<>();
+        System.out.println(h.expand(s));
+        // assertEquals(h.expand(s), l);
+    }
+
+    @Test
     public void testexpand2() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("---------"),null);
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("---------"), null);
         List<MCTS.State> l = new ArrayList<>();
         l.add(new MCTS.State(new Board("X--------"), s));
         l.add(new MCTS.State(new Board("-X-------"), s));
         l.add(new MCTS.State(new Board("----X----"), s));
         assertEquals(h.expand(s), l);
     }
+
     @Test
     public void testexpand3() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("----O----"),null);
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("----O----"), null);
         List<MCTS.State> l = new ArrayList<>();
         l.add(new MCTS.State(new Board("X---O----"), s));
         l.add(new MCTS.State(new Board("-X--O----"), s));
         assertEquals(h.expand(s), l);
     }
+
     @Test
     public void testexpand4() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("OX--OO-XX"),null);
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("OX--OO-XX"), null);
         List<MCTS.State> l = new ArrayList<>();
         l.add(new MCTS.State(new Board("OXX-OO-XX"), s));
         l.add(new MCTS.State(new Board("OX-XOO-XX"), s));
@@ -418,35 +432,36 @@ public class tests {
 
     @Test
     public void testsimulation() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("---------"), null);
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("---------"), null);
         s.childs.add(new MCTS.State(new Board("X--------"), s));
         s.childs.add(new MCTS.State(new Board("-X-------"), s));
         s.childs.add(new MCTS.State(new Board("----X----"), s));
-        h.root=s;
-        MCTS.State g=h.simulation(s);
-        assertEquals(true, s.s==3);
+        h.root = s;
+        MCTS.State g = h.simulation(s);
+        assertEquals(true, s.s == 3);
         assertEquals(g, s);
     }
 
     @Test
     public void testsimulation2() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("OX--OO-X-"), null);
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("OX--OO-X-"), null);
         s.childs.add(new MCTS.State(new Board("OXX-OO-X-"), s));
         s.childs.add(new MCTS.State(new Board("OX-XOO-X-"), s));
         s.childs.add(new MCTS.State(new Board("OX--OOXX-"), s));
         s.childs.add(new MCTS.State(new Board("OX--OO-XX"), s));
-        h.root=s;
-        MCTS.State g=h.simulation(s);
-        assertEquals(true, s.s==4);
+        h.root = s;
+        MCTS.State g = h.simulation(s);
+        assertEquals(true, s.s == 4);
         assertEquals(g, s);
     }
+
     @Test
     public void testexpand5() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("XX-OO----"), null);
-        List<MCTS.State> l=new ArrayList<>();
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("XX-OO----"), null);
+        List<MCTS.State> l = new ArrayList<>();
         l.add(new MCTS.State(new Board("XXXOO----"), s));
         l.add(new MCTS.State(new Board("XX-OOX---"), s));
         l.add(new MCTS.State(new Board("XX-OO-X--"), s));
@@ -454,108 +469,151 @@ public class tests {
         l.add(new MCTS.State(new Board("XX-OO---X"), s));
         assertEquals(h.expand(s), l);
     }
+
     @Test
     public void testsimulation3() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        Board b=new Board("XX-OO----");
-        MCTS.State s=new MCTS.State(b, null);
+        MCTS h = new MCTS();
+        Board b = new Board("XX-OO----");
+        MCTS.State s = new MCTS.State(b, null);
         s.childs.add(new MCTS.State(new Board("XXXOO----"), s));
         s.childs.add(new MCTS.State(new Board("XX-OOX---"), s));
         s.childs.add(new MCTS.State(new Board("XX-OO-X--"), s));
         s.childs.add(new MCTS.State(new Board("XX-OO--X-"), s));
         s.childs.add(new MCTS.State(new Board("XX-OO---X"), s));
-        h.root=s;
-        //System.out.println(h.root.layout.getplayer());
-        MCTS.State g=h.simulation(s);
-        assertEquals(true, s.s==5);
-        assertEquals(1,s.childs.get(0).w,0);
+        h.root = s;
+        // System.out.println(h.root.layout.getplayer());
+        MCTS.State g = h.simulation(s);
+        assertEquals(true, s.s == 5);
+        assertEquals(1, s.childs.get(0).w, 0);
         assertEquals(g, s);
     }
+
     @Test
     public void testsimulation4() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("-OOOXXXXO"), null);
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("-OOOXXXXO"), null);
         s.childs.add(new MCTS.State(new Board("XOOOXXXXO"), s));
-        h.root=s;
-        MCTS.State g=h.simulation(s.childs.get(0));
-        assertEquals(true, (s.s>0 && s.childs.get(0).w==0.5));
+        h.root = s;
+        MCTS.State g = h.simulation(s.childs.get(0));
+        assertEquals(true, (s.s > 0 && s.childs.get(0).w == 0.5));
         assertEquals(g, s);
     }
 
     @Test
     public void testBack() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("---------"), null);
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("---------"), null);
         s.childs.add(new MCTS.State(new Board("X--------"), s));
         s.childs.add(new MCTS.State(new Board("-X-------"), s));
         s.childs.add(new MCTS.State(new Board("----X----"), s));
-        h.root=s;
-        MCTS.State g=h.backpropagation(s.childs.get(0),1);
+        h.root = s;
+        MCTS.State g = h.backpropagation(s.childs.get(0), 1);
         assertEquals(s, g);
-        assertEquals(true, s.s>0);
+        assertEquals(true, s.s > 0);
     }
 
     @Test
     public void testback2() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("OX--OO-X-"), null);
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("OX--OO-X-"), null);
         s.childs.add(new MCTS.State(new Board("OXX-OO-X-"), s));
         s.childs.add(new MCTS.State(new Board("OX-XOO-X-"), s));
         s.childs.add(new MCTS.State(new Board("OX--OOXX-"), s));
         s.childs.add(new MCTS.State(new Board("OX--OO-XX"), s));
-        h.root=s;
-        MCTS.State g=h.backpropagation(s.childs.get(2), 0);
-        assertEquals(true, s.s==1);
+        h.root = s;
+        MCTS.State g = h.backpropagation(s.childs.get(2), 0);
+        assertEquals(true, s.s == 1);
         assertEquals(g, s);
     }
 
     @Test
     public void testback3() throws CloneNotSupportedException {
-        MCTS h=new MCTS();
-        MCTS.State s=new MCTS.State(new Board("XX-OO----"), null);
+        MCTS h = new MCTS();
+        MCTS.State s = new MCTS.State(new Board("XX-OO----"), null);
         s.childs.add(new MCTS.State(new Board("XXXOO----"), s));
         s.childs.add(new MCTS.State(new Board("XX-OOX---"), s));
         s.childs.add(new MCTS.State(new Board("XX-OO-X--"), s));
         s.childs.add(new MCTS.State(new Board("XX-OO--X-"), s));
         s.childs.add(new MCTS.State(new Board("XX-OO---X"), s));
-        h.root=s;
-        //System.out.println(s.childs.get(0).w);
-        MCTS.State g=h.backpropagation(s.childs.get(0), 1);
-        g=h.backpropagation(s.childs.get(1), 0);
-         g=h.backpropagation(s.childs.get(2), 0.5);
-         g=h.backpropagation(s.childs.get(3), 0);
-         g=h.backpropagation(s.childs.get(4), 0);
-        assertEquals(true, s.s==5);
-        assertEquals(true, s.childs.get(0).s==1 && s.childs.get(0).w==1);
-        assertEquals(true, s.childs.get(1).s==1 && s.childs.get(1).w==0);
-        assertEquals(true, s.childs.get(2).s==1 && s.childs.get(2).w==0.5);
-        assertEquals(true, s.childs.get(3).s==1 && s.childs.get(3).w==0);
-        assertEquals(true, s.childs.get(4).s==1 && s.childs.get(4).w==0);
+        h.root = s;
+        // System.out.println(s.childs.get(0).w);
+        MCTS.State g = h.backpropagation(s.childs.get(0), 1);
+        g = h.backpropagation(s.childs.get(1), 0);
+        g = h.backpropagation(s.childs.get(2), 0.5);
+        g = h.backpropagation(s.childs.get(3), 0);
+        g = h.backpropagation(s.childs.get(4), 0);
+        assertEquals(true, s.s == 5);
+        assertEquals(true, s.childs.get(0).s == 1 && s.childs.get(0).w == 1);
+        assertEquals(true, s.childs.get(1).s == 1 && s.childs.get(1).w == 0);
+        assertEquals(true, s.childs.get(2).s == 1 && s.childs.get(2).w == 0.5);
+        assertEquals(true, s.childs.get(3).s == 1 && s.childs.get(3).w == 0);
+        assertEquals(true, s.childs.get(4).s == 1 && s.childs.get(4).w == 0);
         assertEquals(g, s);
     }
 
-
     @Test
     public void testPrecision() throws CloneNotSupportedException {
-        int i = 0, res = 0,j=0,p=0;
-        while(j<1){
-            i=0;res=0;
+        int i = 0, res = 0, j = 0, p = 0;
+        while (j < 10) {
+            i = 0;
+            res = 0;
             while (i < 10) {
                 MCTS s = new MCTS();
                 Board b = new Board("---------");
-                while (!s.end_game) {
-                    b = (Board) s.BestNextMove(b).layout;
-                }
-                if (b.stateBoard() != 0.99999) {
-                    res++;
+                List<MCTS.State> l = s.solve(b);
+                if (l == null)
+                    System.out.println("no solution was found");
+                else {
+                    MCTS.State t = l.get(l.size() - 1);
+                    if (t.layout.stateBoard() != Ilayout.DRAW) {
+                        res++;
+                        // System.out.println(t);
+                        for (MCTS.State t1 : l) {
+                            System.out.println(t1);
+                        }
+                        System.out.println("--------------------");
+                    }
                 }
                 i++;
-                System.out.println(b);
+                // System.out.println(b);
             }
-            p+=res;
+            p += res;
             System.out.println(res + "/" + i);
             j++;
         }
-        System.out.println((double)p/(double)(i*j));
+        System.out.println((double) p / (double) (i * j));
     }
-} 
+
+    @Test
+    public void testprofundidade() throws CloneNotSupportedException {
+        MCTS h = new MCTS();
+        int i = 0, j = 0;
+        // Board p=new Board("O---XX---");
+        while (i < 1) {
+            //Board p = new Board("X--------");
+            Board p = new Board("X--------");
+            p.character = 'X';
+            p.counter = 'O';
+            MCTS.State s = new MCTS.State(p, null);
+            MCTS.State t = h.BestNextMove(s.layout);
+            // h.selection(t);
+            test(t.father);
+            System.out.println(t);
+            // System.out.println("-----------------------------------------------------------");
+            i++;
+        }
+        // System.out.println(j);
+
+    }
+
+    private void test(MCTS.State y) {
+        // System.out.println(y.childs.isEmpty());
+        for (MCTS.State t : y.childs) {
+            System.out.println("g:" + t.g + " sim" + t.s + " win" + t.w + " winrate:" + t.w / t.s + " ucb:"
+                    + (t.uct() - (t.w / t.s)) + "\n" + t);
+            if (!t.childs.isEmpty()) {
+                test(t);
+            }
+        }
+    }
+}

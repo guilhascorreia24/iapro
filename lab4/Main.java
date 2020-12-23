@@ -10,7 +10,7 @@ public class Main {
         System.out.print("play 1/0?");
         int t=sc.nextInt();
         if(t==0){
-            Iterator<MCTS.State> it = s.solve(b);
+            Iterator<MCTS.State> it = s.solve(b).iterator();
             if (it == null)
                 System.out.println("no solution was found");
             else {
@@ -18,7 +18,9 @@ public class Main {
                     MCTS.State i = it.next();
                     System.out.println(i);
                 }
-            }}
+            }
+            
+        }
         else{
             while(!s.end_game){
                 b = (Board) b.insertnew(sc.nextInt(), sc.nextInt());

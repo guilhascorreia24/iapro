@@ -15,7 +15,7 @@ class BestFirst {
         public State( Ilayout l,  State n) {
             layout = l;
             father = n;
-            if(layout.verifywinner()!=-2){
+            if(layout.stateBoard()!=0.5){
                 final_node= true;
             }
         }
@@ -47,7 +47,7 @@ class BestFirst {
         }
 
     }
-    private State actual;
+    private State actual,root;
     public boolean end_game=false;
     private int i=0;
     public String winner="";
@@ -72,13 +72,13 @@ class BestFirst {
     final public Board BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo bfs
         i++;
         actual=new State(s,null);
-        State root=actual;
+        root=actual;
         int playouts=0,limit=hard;
         while(playouts<limit){
             if(!actual.childs.isEmpty()){
                 actual=selection(actual);
             }
-            if(!actual.final_node)
+            if(actual.childs.isEmpty() && !actual.final_node)
                 actual.childs=sucessores(actual);
             actual=simulation(actual);
             playouts++;
@@ -94,9 +94,6 @@ class BestFirst {
     private State bestmove(State s) throws CloneNotSupportedException {
         State res=s;
         int max=0;
-        for(State s1:s.childs){
-            System.out.println(s1.uct()+" "+s1.w+" "+s1.n+"\n"+s1);
-        }
             res=Collections.max(s.childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
@@ -110,7 +107,7 @@ class BestFirst {
 
         if(res.final_node){
             end_game=true;
-            if(res.layout.verifywinner()!=0){
+            if(res.layout.stateBoard()!=0.5){
                 if(i%2==0) winner="PC2";
                 else winner="PC1";
             }else{
@@ -122,15 +119,15 @@ class BestFirst {
 
     private State simulation(State s) throws CloneNotSupportedException {
         actual=s;
-        int w= (int) s.layout.verifywinner();
+        double w= root.childs.get(0).layout.verifywinner(actual.layout);
         for(State suc:s.childs){
             s=suc;
             while(!s.final_node){
                 List<State> sucs=sucessores(s);
-                int rn=(int)(Math.random()%sucs.size());
+                int rn=(int)(Math.random()*sucs.size());
                 s=sucs.get(rn);
             }
-            w= (int) s.layout.verifywinner();
+            w= root.childs.get(0).layout.verifywinner(s.layout);
             actual=backpropagation(s,w,1);
         }
         if(actual.final_node)
@@ -138,13 +135,13 @@ class BestFirst {
         return actual;
     }
 
-    private State backpropagation(State actual2, int w, int i) {
+    private State backpropagation(State actual2, double w, int i) {
         while(actual2.father!=null){
             if(w>0)
                 actual2.w+=w;
             actual2.n+=i;
             actual2=actual2.father;
-            w=-w;
+            //w=-w;
         }
         if(w>0)
             actual2.w+=w;

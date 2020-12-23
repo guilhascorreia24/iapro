@@ -12,7 +12,7 @@ public class test {
                 while (!s.end_game) {
                     b = (Board) s.BestNextMove(b);
                 }
-                if (b.stateBoard() != 0.5) {
+                if (b.verifywinner() != 0) {
                     res++;
                 }
                 i++;
