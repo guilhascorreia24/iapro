@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.182453    ,limit=50000;
+    public static double c =0.182453    ,limit=2000;
     static class State {
         public Ilayout layout;
         public State father;
@@ -176,9 +176,9 @@ class MCTS {
      * @throws CloneNotSupportedException
      */
     private State bestmove(State s) throws CloneNotSupportedException {
-        for(State s1:s.childs){
+       /* for(State s1:s.childs){
             System.out.println(s1.s+" "+s1.w+" "+s1.uct()+"\n"+s1+"\n");
-        }
+        }*/
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {

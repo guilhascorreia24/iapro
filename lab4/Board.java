@@ -40,7 +40,7 @@ interface Ilayout {
     /**
      * Pontuacao,  
      */
-    double WIN=1,LOST=0,DRAW=1-Math.pow(10,-20);
+    double WIN=1,LOST=0,DRAW=0.5;//1-Math.pow(10,-20);
 
 }
 
