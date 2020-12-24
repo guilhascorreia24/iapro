@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.182453    ,limit=2000;
+    public static double c =0.18224645786    ,limit=5000;
     static class State {
         public Ilayout layout;
         public State father;
@@ -61,7 +61,7 @@ class MCTS {
             if (w < 0 || s < 0 || (father != null && father.s < 1)) {
                 throw new IllegalArgumentException("wins negative");
             }
-            return (w/ s) + c * Math.sqrt(Math.log(father.s) / s);
+            return ((w)/ s) + c * Math.sqrt(Math.log(father.s) / s);
         }
 
         @Override
@@ -176,7 +176,7 @@ class MCTS {
      * @throws CloneNotSupportedException
      */
     private State bestmove(State s) throws CloneNotSupportedException {
-       /* for(State s1:s.childs){
+        /*for(State s1:s.childs){
             System.out.println(s1.s+" "+s1.w+" "+s1.uct()+"\n"+s1+"\n");
         }*/
         State res = Collections.max(s.childs, new Comparator<State>() {
@@ -208,8 +208,17 @@ class MCTS {
                 s = suc;
                 while (!s.final_node) {
                     List<State> sucs = expand(s);
-                    int rn = (int) (new Random().nextInt(sucs.size()));
-                    s = sucs.get(rn);
+                    State p=null;
+                    for(State t:sucs){
+                        if(t.final_node){
+                            p=t;
+                        }
+                    }
+                    if(p==null){
+                        int rn = (int) (new Random().nextInt(sucs.size()));
+                        p = sucs.get(rn);
+                    }
+                    s=p;
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
                 actual = backpropagation(suc, w);
