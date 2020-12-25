@@ -263,7 +263,7 @@ public class tests {
         s.s = 15;
         s.w = 10;
         s.father.s = 20;
-        assertEquals(1.29867, s.uct(), 0);
+        assertEquals(0.74721, s.uct(), 0.00001);
     }
 
     @Test
@@ -273,7 +273,7 @@ public class tests {
         s.s = 27;
         s.w = 12;
         s.father.s = 33;
-        assertEquals(0.95337, s.uct(), 0);
+        assertEquals(0.50931, s.uct(), 0.00001);
     }
 
     @Test
@@ -321,9 +321,9 @@ public class tests {
         s.s = 40;
         s.childs = l;
 
-        assertEquals(1.35894, l.get(0).uct(), 0);
-        assertEquals(1.07054, l.get(1).uct(), 0);
-        assertEquals(0.90719, l.get(2).uct(), 0);
+        assertEquals(0.60947, l.get(0).uct(), 0.00001);
+        assertEquals(0.49573, l.get(1).uct(), 0.00001);
+        assertEquals(0.24986, l.get(2).uct(), 0.00001);
         assertEquals(l.get(0), s.BestUCT());
         assertEquals(l.get(2), s.WorstUCT());
     }
@@ -342,8 +342,8 @@ public class tests {
         s.s = 100;
         s.childs = l;
 
-        assertEquals(1.12138, l.get(0).uct(), 0);
-        assertEquals(1.06114, l.get(1).uct(), 0);
+        assertEquals(0.73094, l.get(0).uct(), Math.pow(10,-5));
+        assertEquals(0.70078, l.get(1).uct(), Math.pow(10,-5));
         assertEquals(l.get(0), s.BestUCT());
         assertEquals(l.get(1), s.WorstUCT());
     }
@@ -367,10 +367,10 @@ public class tests {
         l.get(3).w = 12;
         s.s = 80;
         s.childs = l;
-        assertEquals(1.09771, l.get(0).uct(), 0);
-        assertEquals(1.06197, 0, 0);
-        assertEquals(1.06197, l.get(2).uct(), 0);
-        assertEquals(1.07208, l.get(3).uct(), 0);
+        assertEquals(0.43076, l.get(0).uct(), 0.00001);
+        assertEquals(0.48437, l.get(1).uct(), 0.00001);
+        assertEquals(0.48437, l.get(2).uct(), 0.00001);
+        assertEquals(0.55546, l.get(3).uct(), 0.00001);
         assertEquals(l.get(3), s.BestUCT());
         assertEquals(l.get(0), s.WorstUCT());
     }
@@ -392,10 +392,16 @@ public class tests {
         MCTS h = new MCTS();
         Board p = new Board("-O-XX----");
         MCTS.State s = new MCTS.State(p, null);
-
+        List<MCTS.State> l = new ArrayList<>();
+        l.add(new MCTS.State(new Board("OO-XX----"), s));
+        l.add(new MCTS.State(new Board("-OOXX----"), s));
+        l.add(new MCTS.State(new Board("-O-XXO---"), s));
+        l.add(new MCTS.State(new Board("-O-XX-O--"), s));
+        l.add(new MCTS.State(new Board("-O-XX--O-"), s));
+        l.add(new MCTS.State(new Board("-O-XX---O"), s));
         // List<MCTS.State> l = new ArrayList<>();
-        System.out.println(h.expand(s));
-        // assertEquals(h.expand(s), l);
+        //System.out.println(h.expand(s));
+        assertEquals(h.expand(s), l);
     }
 
     @Test
@@ -554,10 +560,10 @@ public class tests {
     @Test
     public void testPrecision() throws CloneNotSupportedException {
         int i = 0, res = 0, j = 0, p = 0;
-        while (j < 10) {
+        while (j < 100) {
             i = 0;
             res = 0;
-            while (i < 10) {
+            while (i < 3) {
                 MCTS s = new MCTS();
                 Board b = new Board("---------");
                 List<MCTS.State> l = s.solve(b);
@@ -584,10 +590,10 @@ public class tests {
         System.out.println((double) p / (double) (i * j));
     }
 
-    @Test
+    /*@Test
     public void testprofundidade() throws CloneNotSupportedException {
         MCTS h = new MCTS();
-        int i = 0, j = 0;
+        int i = 0 ;
         // Board p=new Board("O---XX---");
         while (i < 1) {
             //Board p = new Board("X--------");
@@ -615,5 +621,5 @@ public class tests {
                 test(t);
             }
         }
-    }
+    }*/
 }

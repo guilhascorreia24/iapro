@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.18224645786    ,limit=5000;
+    public static double c =0.18024645786    ,limit=6000;
     static class State {
         public Ilayout layout;
         public State father;
@@ -212,6 +212,7 @@ class MCTS {
                     for(State t:sucs){
                         if(t.final_node){
                             p=t;
+                            //break;
                         }
                     }
                     if(p==null){
