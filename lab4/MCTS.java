@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.18024645786    ,limit=6000;
+    public static double c =0.18024645786    ,limit=10000;
     static class State {
         public Ilayout layout;
         public State father;
