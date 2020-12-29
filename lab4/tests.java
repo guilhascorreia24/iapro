@@ -559,11 +559,8 @@ public class tests {
 
     @Test
     public void testPrecision() throws CloneNotSupportedException {
-        int i = 0, res = 0, j = 0, p = 0;
-        while (j < 100) {
-            i = 0;
-            res = 0;
-            while (i < 3) {
+            int i = 0, res = 0;
+            while (i < 3*400) {
                 MCTS s = new MCTS();
                 Board b = new Board("---------");
                 List<MCTS.State> l = s.solve(b);
@@ -573,53 +570,15 @@ public class tests {
                     MCTS.State t = l.get(l.size() - 1);
                     if (t.layout.stateBoard() != Ilayout.DRAW) {
                         res++;
-                        // System.out.println(t);
-                        for (MCTS.State t1 : l) {
-                            System.out.println(t1);
-                        }
+                        //System.out.println(t);
+                        
+                         for (MCTS.State t1 : l) { System.out.println(t1); }
+                         
                         System.out.println("--------------------");
                     }
                 }
                 i++;
-                // System.out.println(b);
             }
-            p += res;
             System.out.println(res + "/" + i);
-            j++;
         }
-        System.out.println((double) p / (double) (i * j));
-    }
-
-    /*@Test
-    public void testprofundidade() throws CloneNotSupportedException {
-        MCTS h = new MCTS();
-        int i = 0 ;
-        // Board p=new Board("O---XX---");
-        while (i < 1) {
-            //Board p = new Board("X--------");
-            Board p = new Board("X--------");
-            p.character = 'X';
-            p.counter = 'O';
-            MCTS.State s = new MCTS.State(p, null);
-            MCTS.State t = h.BestNextMove(s.layout);
-            // h.selection(t);
-            test(t.father);
-            System.out.println(t);
-            // System.out.println("-----------------------------------------------------------");
-            i++;
-        }
-        // System.out.println(j);
-
-    }
-
-    private void test(MCTS.State y) {
-        // System.out.println(y.childs.isEmpty());
-        for (MCTS.State t : y.childs) {
-            System.out.println("g:" + t.g + " sim" + t.s + " win" + t.w + " winrate:" + t.w / t.s + " ucb:"
-                    + (t.uct() - (t.w / t.s)) + "\n" + t);
-            if (!t.childs.isEmpty()) {
-                test(t);
-            }
-        }
-    }*/
 }

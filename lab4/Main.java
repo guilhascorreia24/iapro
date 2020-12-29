@@ -23,8 +23,12 @@ public class Main {
         }
         else{
             while(!s.end_game){
-                b = (Board) b.insertnew(sc.nextInt(), sc.nextInt());
+                b = (Board) b.insertnew(sc.nextInt());
+                long startTime = System.nanoTime();
                 b= (Board) s.BestNextMove(b).layout;
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);
+                System.out.println((duration/1000000)*0.001  +"s");
                 System.out.println(b);
             }
         }

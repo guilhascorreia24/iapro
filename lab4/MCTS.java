@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -5,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.18024645786    ,limit=10000;
+    public static double c =0.183,limit=10000;
     static class State {
         public Ilayout layout;
         public State father;
@@ -46,6 +48,21 @@ class MCTS {
          * Imprime o estado
          */
         public String toString() {
+            if(!childs.isEmpty()){
+                State res=null;
+                double n=0;
+                for(State s1:childs){
+                    //System.out.println(s1.s+"\n"+s1.layout);
+                    if(s1.s>n){
+                        res=s1;
+                        n=s1.s;
+                    }
+                }
+                StringWriter writer = new StringWriter();
+                PrintWriter pw = new PrintWriter(writer);
+                pw.println(res.layout.getplayer()+" move["+res.layout.getPosition()+"]");
+                return layout.toString()+writer.toString();
+            }
             return layout.toString();
         }
 
@@ -130,11 +147,12 @@ class MCTS {
 
     final public List<State> solve(Ilayout s) throws CloneNotSupportedException {
         List<State> l = new ArrayList<>();
-        State k = new State(s, null);
+        actual = new State(s, null);
         //l.add(k);
         while (!end_game) {
-            k = BestNextMove(k.layout);
-            l.add(k);
+            actual = BestNextMove(actual.layout);
+           // System.out.println(actual);
+            l.add(actual);
         }
         return l;
     }
@@ -153,7 +171,6 @@ class MCTS {
             return actual;
         }
         root = actual;
-        // 50000
         while (root.s < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
@@ -176,9 +193,6 @@ class MCTS {
      * @throws CloneNotSupportedException
      */
     private State bestmove(State s) throws CloneNotSupportedException {
-        /*for(State s1:s.childs){
-            System.out.println(s1.s+" "+s1.w+" "+s1.uct()+"\n"+s1+"\n");
-        }*/
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
@@ -212,7 +226,6 @@ class MCTS {
                     for(State t:sucs){
                         if(t.final_node){
                             p=t;
-                            //break;
                         }
                     }
                     if(p==null){
