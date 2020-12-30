@@ -10,6 +10,7 @@ public class Main {
         System.out.print("play 1/0?");
         int t=sc.nextInt();
         if(t==0){
+            long startTime = System.nanoTime();
             Iterator<MCTS.State> it = s.solve(b).iterator();
             if (it == null)
                 System.out.println("no solution was found");
@@ -18,6 +19,10 @@ public class Main {
                     MCTS.State i = it.next();
                     System.out.println(i);
                 }
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);
+                System.out.println((duration/1000000)*0.001  +"s");
+
             }
             
         }
@@ -25,11 +30,12 @@ public class Main {
             while(!s.end_game){
                 b = (Board) b.insertnew(sc.nextInt());
                 long startTime = System.nanoTime();
-                b= (Board) s.BestNextMove(b).layout;
+                MCTS.State b1= s.BestNextMove(b);
                 long endTime = System.nanoTime();
                 long duration = (endTime - startTime);
                 System.out.println((duration/1000000)*0.001  +"s");
-                System.out.println(b);
+                System.out.println(b1);
+                b= (Board) b1.layout;
             }
         }
         sc.close();

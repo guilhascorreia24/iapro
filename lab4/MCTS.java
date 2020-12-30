@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.183,limit=10000;
+    public static double c = 0.18, limit = 10000;
+
     static class State {
         public Ilayout layout;
         public State father;
@@ -31,8 +32,10 @@ class MCTS {
             if (layout.stateBoard() != -2) {
                 final_node = true;
             }
-            if(father==null) g=0;
-            else g=father.g+1;
+            if (father == null)
+                g = 0;
+            else
+                g = father.g + 1;
         }
 
         /**
@@ -41,26 +44,21 @@ class MCTS {
          * @param score 1 (vitoria) ,0.5 empate e 0 derrota
          */
         private void setWin(double score) {
-            this.w+=score;
+            this.w += score;
         }
 
         /**
          * Imprime o estado
          */
         public String toString() {
-            if(!childs.isEmpty()){
-                State res=null;
-                double n=0;
-                for(State s1:childs){
-                    //System.out.println(s1.s+"\n"+s1.layout);
-                    if(s1.s>n){
-                        res=s1;
-                        n=s1.s;
-                    }
+            if (!childs.isEmpty()) {
+                State res=WorstUCT();
+                for(State r:childs){
+                    System.out.println(r.uct()+"\n"+r.layout);
                 }
                 StringWriter writer = new StringWriter();
                 PrintWriter pw = new PrintWriter(writer);
-                pw.println(res.layout.getplayer()+" move["+res.layout.getPosition()+"]");
+                pw.println(res.layout.getplayer() + " move[" + res.layout.getPosition() + "]");
                 return layout.toString()+writer.toString();
             }
             return layout.toString();
@@ -135,7 +133,7 @@ class MCTS {
      * @return List<State> filhos do estado n
      * @throws CloneNotSupportedException
      */
-    final public List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
+    protected List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
         List<Ilayout> children = n.layout.children();
         for (Ilayout e : children) {
@@ -235,10 +233,14 @@ class MCTS {
                     s=p;
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
+                if(w==1){
+                    w=1-(0.01*(s.g-actual.g));
+                }
                 actual = backpropagation(suc, w);
             }
-        } else
+        } else{
             actual = backpropagation(actual, w);
+        }
         return actual;
     }
 

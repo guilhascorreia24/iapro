@@ -16,7 +16,6 @@ public class tests {
         pw.println("---");
         pw.println("---");
         pw.println("---");
-        pw.println("O");
         assertEquals(writer.toString(), b.toString());
     }
 
@@ -28,7 +27,6 @@ public class tests {
         pw.println("-X-");
         pw.println("-O-");
         pw.println("-X-");
-        pw.println("X");
         assertEquals(writer.toString(), b.toString());
     }
 
@@ -39,8 +37,7 @@ public class tests {
         PrintWriter pw = new PrintWriter(writer);
         pw.println("XX-");
         pw.println("-OO");
-        pw.println("-X-");
-        pw.println("X");
+        pw.println("-X-");;
         assertEquals(writer.toString(), b.toString());
     }
 
@@ -52,7 +49,6 @@ public class tests {
         pw.println("XXX");
         pw.println("XOX");
         pw.println("XXX");
-        pw.println("X");
         assertEquals(writer.toString(), b.toString());
     }
 
@@ -64,35 +60,6 @@ public class tests {
         pw.println("OXO");
         pw.println("OOO");
         pw.println("OXO");
-        pw.println("O");
-        assertEquals(writer.toString(), b.toString());
-    }
-
-    @Test
-    public void testConstructorState() {
-        Board b = new Board("-X--O--X-");
-        MCTS.State s = new MCTS.State(b, null);
-        StringWriter writer = new StringWriter();
-        PrintWriter pw = new PrintWriter(writer);
-        pw.println("-X-");
-        pw.println("-O-");
-        pw.println("-X-");
-        pw.println("X");
-        assertEquals(false, s.final_node);
-        assertEquals(writer.toString(), b.toString());
-    }
-
-    @Test
-    public void testConstructorState2() {
-        Board b = new Board("OXOOOOOXO");
-        MCTS.State s = new MCTS.State(b, null);
-        StringWriter writer = new StringWriter();
-        PrintWriter pw = new PrintWriter(writer);
-        pw.println("OXO");
-        pw.println("OOO");
-        pw.println("OXO");
-        pw.println("O");
-        assertEquals(true, s.final_node);
         assertEquals(writer.toString(), b.toString());
     }
 
@@ -321,9 +288,9 @@ public class tests {
         s.s = 40;
         s.childs = l;
 
-        assertEquals(0.60947, l.get(0).uct(), 0.00001);
-        assertEquals(0.49573, l.get(1).uct(), 0.00001);
-        assertEquals(0.24986, l.get(2).uct(), 0.00001);
+        assertEquals(0.61054, l.get(0).uct(), 0.00001);
+        assertEquals(0.49654, l.get(1).uct(), 0.00001);
+        assertEquals(0.25079, l.get(2).uct(), 0.00001);
         assertEquals(l.get(0), s.BestUCT());
         assertEquals(l.get(2), s.WorstUCT());
     }
@@ -342,8 +309,8 @@ public class tests {
         s.s = 100;
         s.childs = l;
 
-        assertEquals(0.73094, l.get(0).uct(), Math.pow(10,-5));
-        assertEquals(0.70078, l.get(1).uct(), Math.pow(10,-5));
+        assertEquals(0.731498, l.get(0).uct(), Math.pow(10,-5));
+        assertEquals(0.70129, l.get(1).uct(), Math.pow(10,-5));
         assertEquals(l.get(0), s.BestUCT());
         assertEquals(l.get(1), s.WorstUCT());
     }
@@ -367,12 +334,55 @@ public class tests {
         l.get(3).w = 12;
         s.s = 80;
         s.childs = l;
-        assertEquals(0.43076, l.get(0).uct(), 0.00001);
-        assertEquals(0.48437, l.get(1).uct(), 0.00001);
-        assertEquals(0.48437, l.get(2).uct(), 0.00001);
-        assertEquals(0.55546, l.get(3).uct(), 0.00001);
+        assertEquals(0.43170, l.get(0).uct(), 0.00001);
+        assertEquals(0.48519, l.get(1).uct(), 0.00001);
+        assertEquals(0.48519, l.get(2).uct(), 0.00001);
+        assertEquals(0.55619, l.get(3).uct(), 0.00001);
         assertEquals(l.get(3), s.BestUCT());
         assertEquals(l.get(0), s.WorstUCT());
+    }
+
+
+    @Test
+    public void testBestandWorstUCT4() throws CloneNotSupportedException {
+        Board b = new Board("OX--X----");
+        MCTS.State s = new MCTS.State(b, null);
+        List<MCTS.State> l = new ArrayList<>();
+        l.add(new MCTS.State(new Board("OXO-X----"), s));
+        l.add(new MCTS.State(new Board("OX-OX----"), s));
+        l.add(new MCTS.State(new Board("OX--XO---"), s));
+        l.add(new MCTS.State(new Board("OX--X-O--"), s));
+        l.add(new MCTS.State(new Board("OX--X--O-"), s));
+        l.add(new MCTS.State(new Board("OX--X---O"), s));
+        l.get(0).s = 15;
+        l.get(0).w = 5;
+
+        l.get(1).s = 20;
+        l.get(1).w = 8;
+
+        l.get(2).s = 20;
+        l.get(2).w = 8;
+
+        l.get(3).s = 25;
+        l.get(3).w = 12;
+
+        l.get(4).s = 20;
+        l.get(4).w = 7;
+
+        l.get(5).s = 20;
+        l.get(5).w = 3;
+
+        s.s = 120;
+        s.childs = l;
+        assertEquals(0.43615, l.get(0).uct(), 0.00001);
+        assertEquals(0.48905, l.get(1).uct(), 0.00001);
+        assertEquals(0.48905, l.get(2).uct(), 0.00001);
+        assertEquals(0.55964, l.get(3).uct(), 0.00001);
+        assertEquals(0.43905, l.get(4).uct(), 0.00001);
+        assertEquals(0.23905, l.get(5).uct(), 0.00001);
+        
+        assertEquals(l.get(3), s.BestUCT());
+        assertEquals(l.get(5), s.WorstUCT());
     }
 
     @Test
@@ -560,7 +570,7 @@ public class tests {
     @Test
     public void testPrecision() throws CloneNotSupportedException {
             int i = 0, res = 0;
-            while (i < 3*400) {
+            while (i < 100) {
                 MCTS s = new MCTS();
                 Board b = new Board("---------");
                 List<MCTS.State> l = s.solve(b);
