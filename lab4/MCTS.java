@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c = 0.18, limit = 7000;
+    public static double c = 1 / Math.sqrt(30.8), limit = 7000;
 
     static class State {
         public Ilayout layout;
@@ -39,7 +39,7 @@ class MCTS {
         }
 
         /**
-         * atualiza o valor das vitorias, 
+         * atualiza o valor das vitorias,
          * 
          * @param score >0.9 (vitoria),0.5 (empate) e 0 (derrota)
          */
@@ -47,12 +47,40 @@ class MCTS {
             this.w += score;
         }
 
+        private State nextbestplay() throws CloneNotSupportedException {
+            int p = 0;
+            State res = WorstUCT();
+            for (State r : childs) {
+                List<Ilayout> t = r.layout.children();
+                boolean terminal = false;
+                for (Ilayout k : t) {
+                    if (k.stateBoard() != -2) {
+                        terminal = true;
+                    }
+                }
+                if (!terminal) {
+                    res = r;
+                    p++;
+                }
+                //System.out.println(r.layout+" "+res.layout);
+            }
+            if (p == childs.size()) {
+                return WorstUCT();
+            }
+            return res;
+        }
+
         /**
          * Imprime o estado
          */
         public String toString() {
             if (!childs.isEmpty()) {
-                State res=WorstUCT();
+                State res=null;
+                try {
+                    res = nextbestplay();
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
                 StringWriter writer = new StringWriter();
                 PrintWriter pw = new PrintWriter(writer);
                 pw.println(res.layout.getplayer() + " move[" + res.layout.getPosition() + "]");
@@ -230,9 +258,7 @@ class MCTS {
                     s=p;
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
-                if(w==1){
-                    //w=1-(0.01*(s.g-actual.g)); //para mostra o proximo movimento
-                }
+                if(w==1)//w=1-(0.01*(s.g-actual.g)); //para mostra o proximo movimento
                 actual = backpropagation(suc, w);
             }
         } else{
