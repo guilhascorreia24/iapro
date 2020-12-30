@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c = 0.18, limit = 10000;
+    public static double c = 0.18, limit = 7000;
 
     static class State {
         public Ilayout layout;
@@ -39,9 +39,9 @@ class MCTS {
         }
 
         /**
-         * atualiza o valor das vitorias
+         * atualiza o valor das vitorias, 
          * 
-         * @param score 1 (vitoria) ,0.5 empate e 0 derrota
+         * @param score >0.9 (vitoria),0.5 (empate) e 0 (derrota)
          */
         private void setWin(double score) {
             this.w += score;
@@ -53,9 +53,6 @@ class MCTS {
         public String toString() {
             if (!childs.isEmpty()) {
                 State res=WorstUCT();
-                for(State r:childs){
-                    System.out.println(r.uct()+"\n"+r.layout);
-                }
                 StringWriter writer = new StringWriter();
                 PrintWriter pw = new PrintWriter(writer);
                 pw.println(res.layout.getplayer() + " move[" + res.layout.getPosition() + "]");
@@ -234,7 +231,7 @@ class MCTS {
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
                 if(w==1){
-                    w=1-(0.01*(s.g-actual.g));
+                    //w=1-(0.01*(s.g-actual.g)); //para mostra o proximo movimento
                 }
                 actual = backpropagation(suc, w);
             }
