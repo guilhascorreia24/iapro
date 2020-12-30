@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c = 1 / Math.sqrt(30.8), limit = 7000;
+    public static double c = Math.sqrt(1/30.8009), limit = 4000;
 
     static class State {
         public Ilayout layout;
@@ -62,6 +62,7 @@ class MCTS {
                     res = r;
                     p++;
                 }
+                if(r.final_node) return r;
                 //System.out.println(r.layout+" "+res.layout);
             }
             if (p == childs.size()) {
@@ -75,7 +76,7 @@ class MCTS {
          */
         public String toString() {
             if (!childs.isEmpty()) {
-                State res=null;
+                State res=WorstUCT();
                 try {
                     res = nextbestplay();
                 } catch (CloneNotSupportedException e) {
@@ -258,7 +259,7 @@ class MCTS {
                     s=p;
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
-                if(w==1)//w=1-(0.01*(s.g-actual.g)); //para mostra o proximo movimento
+                //if(w==1) w=1-(0.01*(s.g-actual.g)); //para mostra o proximo movimento
                 actual = backpropagation(suc, w);
             }
         } else{
