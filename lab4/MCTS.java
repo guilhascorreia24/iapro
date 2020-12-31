@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c = Math.sqrt(1/30.8009), limit = 4000;
+    public static double c = Math.sqrt(1/30.8009), limit = 10000;
 
     static class State {
         public Ilayout layout;
@@ -47,37 +47,13 @@ class MCTS {
             this.w += score;
         }
 
-        private State nextbestplay() throws CloneNotSupportedException {
-            int p = 0;
-            State res = WorstUCT();
-            for (State r : childs) {
-                List<Ilayout> t = r.layout.children();
-                boolean terminal = false;
-                for (Ilayout k : t) {
-                    if (k.stateBoard() != -2) {
-                        terminal = true;
-                    }
-                }
-                if (!terminal) {
-                    res = r;
-                    p++;
-                }
-                if(r.final_node) return r;
-                //System.out.println(r.layout+" "+res.layout);
-            }
-            if (p == childs.size()) {
-                return WorstUCT();
-            }
-            return res;
-        }
-
         /**
          * Imprime o estado
          */
         public String toString() {
             if (!childs.isEmpty()) {
                 State res=WorstUCT();
-                for(State r:childs){
+                for(State r:father.childs){
                     System.out.println(r.uct()+" "+r.w+" "+r.s);
                 }
                 StringWriter writer = new StringWriter();
@@ -252,7 +228,7 @@ class MCTS {
                         }else{
                             List<State> sucs2=expand(t);
                             for(State r:sucs2){
-                                if(r.layout.verifywinner(root.layout)==Ilayout.WIN && sucs3.contains(t)){
+                                if(r.layout.verifywinner(root.childs.get(0).layout)==Ilayout.WIN && sucs3.contains(t)){
                                     sucs3.remove(t);
                                 }
                                 else if(r.layout.stateBoard()==Ilayout.DRAW){
