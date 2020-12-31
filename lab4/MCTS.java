@@ -77,10 +77,8 @@ class MCTS {
         public String toString() {
             if (!childs.isEmpty()) {
                 State res=WorstUCT();
-                try {
-                    res = nextbestplay();
-                } catch (CloneNotSupportedException e) {
-                    e.printStackTrace();
+                for(State r:childs){
+                    System.out.println(r.uct()+" "+r.w+" "+r.s);
                 }
                 StringWriter writer = new StringWriter();
                 PrintWriter pw = new PrintWriter(writer);
@@ -246,12 +244,25 @@ class MCTS {
                 s = suc;
                 while (!s.final_node) {
                     List<State> sucs = expand(s);
+                    List<State> sucs3=new ArrayList<>(sucs);
                     State p=null;
                     for(State t:sucs){
                         if(t.final_node){
                             p=t;
+                        }else{
+                            List<State> sucs2=expand(t);
+                            for(State r:sucs2){
+                                if(r.layout.verifywinner(root.layout)==Ilayout.WIN && sucs3.contains(t)){
+                                    sucs3.remove(t);
+                                }
+                                else if(r.layout.stateBoard()==Ilayout.DRAW){
+                                    p=t;
+                                }
+                            }
                         }
                     }
+                    if(!sucs3.isEmpty())
+                        sucs=sucs3;
                     if(p==null){
                         int rn = (int) (new Random().nextInt(sucs.size()));
                         p = sucs.get(rn);
