@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.182, limit = 10000;
+    public static double c =Math.sqrt(1/31.5)/*Math.sqrt(1/30.8005)*/, limit = 5000;
 
     static class State {
         public Ilayout layout;
-        private State final_m;
         public State father;
         public List<State> childs = new ArrayList<>();
         public double s, w;
@@ -42,7 +41,7 @@ class MCTS {
         /**
          * atualiza o valor das vitorias,
          * 
-         * @param score >0.9 (vitoria),0.5 (empate) e 0 (derrota)
+         * @param score 1 (vitoria),0.5 (empate) e 0 (derrota)
          */
         private void setWin(double score) {
             this.w += score;
@@ -55,7 +54,7 @@ class MCTS {
             if (!childs.isEmpty()) {
                 State res=WorstUCT();
                 for(State r:childs){
-                   //System.out.println(r.uct()+" "+r.w+" "+r.s+"\n"+r.final_m.father.layout+"\n"+r.final_m.father.layout);
+                   System.out.println(r.uct()+" "+r.w+" "+r.s);
                 }
                 StringWriter writer = new StringWriter();
                 PrintWriter pw = new PrintWriter(writer);
@@ -232,7 +231,7 @@ class MCTS {
                             List<State> k=expand(t);
                             boolean lost=false;
                             for(State s2:k){
-                                if(suc.layout.verifywinner(s2.layout)==Ilayout.LOST){
+                                if(suc.layout.verifywinner(s2.layout)==Ilayout.LOST){ //indicar a melhor jogada para o adversario (concourso falar com o prof)
                                     lost=true;
                                     break;}
                             }
@@ -249,12 +248,10 @@ class MCTS {
                     s=p;
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
-                suc.final_m=s;
-                //if(w==1) w=1-(0.01*(s.g-actual.g)); //para mostra o proximo movimento
                 actual = backpropagation(suc, w);
             }
         } else{
-            actual.final_m=actual;
+
             actual = backpropagation(actual, w);
         }
         return actual;
