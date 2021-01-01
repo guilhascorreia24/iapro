@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c = Math.sqrt(1/30.8009), limit = 10000;
+    public static double c =0.182, limit = 10000;
 
     static class State {
         public Ilayout layout;
+        private State final_m;
         public State father;
         public List<State> childs = new ArrayList<>();
         public double s, w;
@@ -53,8 +54,8 @@ class MCTS {
         public String toString() {
             if (!childs.isEmpty()) {
                 State res=WorstUCT();
-                for(State r:father.childs){
-                    System.out.println(r.uct()+" "+r.w+" "+r.s);
+                for(State r:childs){
+                   //System.out.println(r.uct()+" "+r.w+" "+r.s+"\n"+r.final_m.father.layout+"\n"+r.final_m.father.layout);
                 }
                 StringWriter writer = new StringWriter();
                 PrintWriter pw = new PrintWriter(writer);
@@ -205,7 +206,8 @@ class MCTS {
     }
 
     /**
-     * Realiza simulacoes para cada filho e faz backpropagation caso nao seja final
+     * Realiza simulacoes, faz uma jogada para ganhar, caso seja direta 
+     * (simulaçao informada) para cada filho e faz backpropagation quando encontrar um final
      * node, caso contrario faz so backpropagation
      * 
      * @param s State, estado encontrado na fase de selecao
@@ -220,25 +222,26 @@ class MCTS {
                 s = suc;
                 while (!s.final_node) {
                     List<State> sucs = expand(s);
-                    List<State> sucs3=new ArrayList<>(sucs);
+                    List<State> next=new ArrayList<>();
                     State p=null;
                     for(State t:sucs){
                         if(t.final_node){
                             p=t;
+                            break;
                         }else{
-                            List<State> sucs2=expand(t);
-                            for(State r:sucs2){
-                                if(r.layout.verifywinner(root.childs.get(0).layout)==Ilayout.WIN && sucs3.contains(t)){
-                                    sucs3.remove(t);
-                                }
-                                else if(r.layout.stateBoard()==Ilayout.DRAW){
-                                    p=t;
-                                }
+                            List<State> k=expand(t);
+                            boolean lost=false;
+                            for(State s2:k){
+                                if(suc.layout.verifywinner(s2.layout)==Ilayout.LOST){
+                                    lost=true;
+                                    break;}
+                            }
+                            if(!lost){
+                                next.add(t);
                             }
                         }
                     }
-                    if(!sucs3.isEmpty())
-                        sucs=sucs3;
+                    if(!next.isEmpty()) sucs=next;
                     if(p==null){
                         int rn = (int) (new Random().nextInt(sucs.size()));
                         p = sucs.get(rn);
@@ -246,10 +249,12 @@ class MCTS {
                     s=p;
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
+                suc.final_m=s;
                 //if(w==1) w=1-(0.01*(s.g-actual.g)); //para mostra o proximo movimento
                 actual = backpropagation(suc, w);
             }
         } else{
+            actual.final_m=actual;
             actual = backpropagation(actual, w);
         }
         return actual;
