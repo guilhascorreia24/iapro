@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.9/*Math.sqrt(1/30.8005)*/, limit = 40000;
+    public static double c =1.41, limit = 150;
 
     static class State {
         public Ilayout layout;
-        public State father;
+        public State father,f;
         public List<State> childs = new ArrayList<>();
         public double s, w,d;
         public boolean final_node = false;
@@ -66,7 +66,14 @@ class MCTS {
                     }
                 });
                 for(State r:childs){
-                   System.out.println(r.uct()+" "+r.w+" "+r.d*2+" "+r.s);
+                   System.out.println(r.uct()+" "+r.w+" "+r.d*2+" "+r.s+"\n######\n");
+                   for(State r1:r.childs){
+                    System.out.println(r1.uct()+" "+r1.w+" "+r1.d*2+" "+r1.s);
+                    if(r1.final_node){
+                        System.out.println(r1.childs.isEmpty());
+                    }
+                   }
+                   System.out.println(r.layout);
                 }
                 StringWriter writer = new StringWriter();
                 PrintWriter pw = new PrintWriter(writer);
@@ -120,11 +127,7 @@ class MCTS {
          * @return State o filho com menor UCT
          */
         public State WorstUCT() {
-            List<State> y=new ArrayList<>(childs);
-            for(State r:y){
-                r.w=(r.s-r.w-(r.d)*2);
-            }
-            return Collections.max(y, new Comparator<State>() {
+            State res= Collections.max(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
                     if (z1.uct() > z2.uct())
@@ -134,6 +137,7 @@ class MCTS {
                     return 0;
                 }
             });
+            return res;
         }
 
     }
@@ -230,7 +234,7 @@ class MCTS {
      */
     public State simulation(State s) throws CloneNotSupportedException {
         State actual2 = s;
-        double w = root.childs.get(0).layout.verifywinner(actual2.layout);
+        double w = actual2.layout.stateBoard();
         if (!actual.final_node) {
             for (State suc : s.childs) {
                 s = suc;
@@ -249,7 +253,7 @@ class MCTS {
                     }
                     s=p;
                 }
-                w = root.childs.get(0).layout.verifywinner(s.layout);
+                w = suc.layout.verifywinner(s.layout);
                 actual = backpropagation(suc, w);
             }
 
@@ -272,6 +276,9 @@ class MCTS {
             actual2.setWin(w);
             actual2.s += 1;
             actual2 = actual2.father;
+            if(w!=0.5){
+                w=(w+1)%2;
+            }
         }
         actual2.setWin(w);
         actual2.s += 1;

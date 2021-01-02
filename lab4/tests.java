@@ -570,7 +570,7 @@ public class tests {
     @Test
     public void testPrecision() throws CloneNotSupportedException {
             int i = 0, res = 0;
-            while (i < 100) {
+            while (i < 1000) {
                 MCTS s = new MCTS();
                 Board b = new Board("---------");
                 List<MCTS.State> l = s.solve(b);
@@ -590,5 +590,5 @@ public class tests {
                 i++;
             }
             System.out.println(res + "/" + i);
-        }
+     }
 }

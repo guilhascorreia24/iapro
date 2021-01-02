@@ -22,9 +22,7 @@ public class Main {
                 long endTime = System.nanoTime();
                 long duration = (endTime - startTime);
                 System.out.println((duration/1000000)*0.001  +"s");
-
             }
-            
         }
         else{
             while(!s.end_game){
