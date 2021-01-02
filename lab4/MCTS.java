@@ -7,14 +7,13 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.1801/*Math.sqrt(1/30.8005)*/, limit = 15000;
+    public static double c =0.9/*Math.sqrt(1/30.8005)*/, limit = 40000;
 
     static class State {
         public Ilayout layout;
         public State father;
-        private int childs_wins;
         public List<State> childs = new ArrayList<>();
-        public double s, w;
+        public double s, w,d;
         public boolean final_node = false;
         private int max = Integer.MAX_VALUE;
         public int g;
@@ -30,7 +29,6 @@ class MCTS {
             father = n;
             s = 0.0;
             w = 0;
-            childs_wins=0;
             if (layout.stateBoard() != -2) {
                 final_node = true;
             }
@@ -46,7 +44,10 @@ class MCTS {
          * @param score 1 (vitoria),0.5 (empate) e 0 (derrota)
          */
         private void setWin(double score) {
-            this.w += score;
+            if(score==1)
+                this.w += score;
+            else if(score==0.5)
+                this.d+=score;
         }
 
         /**
@@ -54,10 +55,18 @@ class MCTS {
          */
         public String toString() {
             if (!childs.isEmpty()) {
-                State res=WorstUCT();
+               State res = Collections.max(childs, new Comparator<State>() {
+                    @Override
+                    public int compare(State z1, State z2) {
+                        if (z1.s > z2.s)
+                            return 1;
+                        if (z1.s < z2.s)
+                            return -1;
+                        return 0;
+                    }
+                });
                 for(State r:childs){
-                   System.out.println(r.uct()+" "+r.w+" "+r.s+" "+r.childs_wins);
-                   System.out.println(r.layout);
+                   System.out.println(r.uct()+" "+r.w+" "+r.d*2+" "+r.s);
                 }
                 StringWriter writer = new StringWriter();
                 PrintWriter pw = new PrintWriter(writer);
@@ -73,13 +82,12 @@ class MCTS {
          * @return double valor do uct
          */
         public double uct() {
-            // System.out.println(w+" "+s);
-            if (s == 0)
+            if (s == 0 || final_node)
                 return max;
             if (w < 0 || s < 0 || (father != null && father.s < 1)) {
                 throw new IllegalArgumentException("wins negative");
             }
-            return ((w)/ s) + c * Math.sqrt(Math.log(father.s) / s);
+            return ((w+d)/ s) + c * Math.sqrt(Math.log(father.s) / s);
         }
 
         @Override
@@ -107,12 +115,16 @@ class MCTS {
         }
 
         /**
-         * Econtra o filho com menor valor UCT
+         * Econtra o filho com maior UCT, estando na posiçao de oponente (Identico ao bestUCT)
          * 
          * @return State o filho com menor UCT
          */
         public State WorstUCT() {
-            return Collections.min(childs, new Comparator<State>() {
+            List<State> y=new ArrayList<>(childs);
+            for(State r:y){
+                r.w=(r.s-r.w-(r.d)*2);
+            }
+            return Collections.max(y, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
                     if (z1.uct() > z2.uct())
@@ -238,21 +250,9 @@ class MCTS {
                     s=p;
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
-                if(suc.g+1==s.g){
-                    suc.childs_wins++;
-                }
                 actual = backpropagation(suc, w);
             }
-            Collections.sort(actual2.childs,new Comparator<State>() {
-                @Override
-                public int compare(State z1, State z2) {
-                    if (z1.childs_wins < z2.childs_wins)
-                        return -1;
-                    if (z1.childs_wins > z2.childs_wins)
-                        return 1;
-                    return 0;
-                }
-            });
+
         } else{
             actual = backpropagation(actual2, w);
         }
