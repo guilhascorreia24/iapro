@@ -1,0 +1,35 @@
+actua->State
+limite,res->inteiro
+
+bestmove(Board)
+    actual->inicializar no raiz 
+    limite-> define o user
+    while(n simluacoes do no raiz< limite)
+        if(actual ter filhos)
+            actual->selection(actual)
+        if(actual nao é nó final)
+            filhos no actual->expand(actual)
+        simulation(actual)
+    
+selection(State)
+    while(actual tiver filhos)
+        if(maximizar uct)
+            actual->filho com maior uct
+        if(minimizar uct)
+            actual->filho com menor uct
+    return actual
+
+expand(State)
+    return lista de movimentos possiveis
+
+simulation(State)
+    for(filhos do actual)
+        res->resultado das escolhas semi-aleatorias
+        backpropagation(filho,res)
+
+backpropagation(State,inteiro)
+    while(actual nao for o no raiz)
+        actual vitoria->soma o resultado
+        actual simulaçaoes-> incrmenta
+        actual-> pai do actual
+

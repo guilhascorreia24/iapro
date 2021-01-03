@@ -10,6 +10,7 @@ public class Main {
         System.out.print("play 1/0?");
         int t=sc.nextInt();
         if(t==0){
+            long startTime = System.nanoTime();
             Iterator<MCTS.State> it = s.solve(b).iterator();
             if (it == null)
                 System.out.println("no solution was found");
@@ -18,8 +19,10 @@ public class Main {
                     MCTS.State i = it.next();
                     System.out.println(i);
                 }
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);
+                System.out.println((duration/1000000)*0.001  +"s");
             }
-            
         }
         else{
             while(!s.end_game){

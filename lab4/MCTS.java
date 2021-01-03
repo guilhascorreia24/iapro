@@ -14,9 +14,9 @@ class MCTS {
         public State father;
         private int childs_wins;
         public List<State> childs = new ArrayList<>();
-        public double s, w;
+        public double s, w,d;
         public boolean final_node = false;
-        private int max = -Integer.MAX_VALUE;
+        private int max = Integer.MAX_VALUE;
         public int g;
 
         /**
@@ -36,9 +36,8 @@ class MCTS {
             }
             if (father == null)
                 g = 0;
-            else{
+            else
                 g = father.g + 1;
-                max=-n.max;}
         }
 
         /**
@@ -87,13 +86,12 @@ class MCTS {
          * @return double valor do uct
          */
         public double uct() {
-            // System.out.println(w+" "+s);
             if (s == 0 || final_node)
                 return max;
             if (w < 0 || s < 0 || (father != null && father.s < 1)) {
                 throw new IllegalArgumentException("wins negative");
             }
-            return ((w)/ s) + c * Math.sqrt(Math.log(father.s) / s);
+            return ((w+d)/ s) + c * Math.sqrt(Math.log(father.s) / s);
         }
 
         @Override
@@ -121,12 +119,12 @@ class MCTS {
         }
 
         /**
-         * Econtra o filho com menor valor UCT
+         * Econtra o filho com maior UCT, estando na posiçao de oponente (Identico ao bestUCT)
          * 
          * @return State o filho com menor UCT
          */
         public State WorstUCT() {
-            return Collections.min(childs, new Comparator<State>() {
+            State res= Collections.max(childs, new Comparator<State>() {
                 @Override
                 public int compare(State z1, State z2) {
                     if (z1.uct() > z2.uct())
@@ -136,6 +134,7 @@ class MCTS {
                     return 0;
                 }
             });
+            return res;
         }
 
     }
@@ -298,6 +297,9 @@ class MCTS {
             actual2.setWin(w);
             actual2.s += 1;
             actual2 = actual2.father;
+            if(w!=0.5){
+                w=(w+1)%2;
+            }
         }
         actual2.setWin(w);
         actual2.s += 1;
