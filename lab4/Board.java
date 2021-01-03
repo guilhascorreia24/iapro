@@ -24,7 +24,7 @@ interface Ilayout {
      * @return o estado da board com a jogada feita
      * @throws CloneNotSupportedException
      */
-    Ilayout insertnew(int x, int y) throws CloneNotSupportedException;
+    Ilayout insertnew(int x) throws CloneNotSupportedException;
 
     /**
      * @return o valor associado ao estado da board atual
@@ -32,7 +32,6 @@ interface Ilayout {
     double stateBoard();
 
     /**
-     * 
      * @return o simbolo do jogador
      */
     char getplayer();
@@ -41,6 +40,7 @@ interface Ilayout {
      * Pontuacao,  
      */
     double WIN=1,LOST=0,DRAW=0.5;
+    int getPosition();
 
 }
 
@@ -48,7 +48,7 @@ class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
     private char board[][];
     public char character, counter;
-    //private double WIN=1,LOST=0,DRAW=0.5;
+    public int position;
 
     /**
      * Cria a board apartir de uma string
@@ -90,18 +90,20 @@ class Board implements Ilayout, Cloneable {
             }
             pw.println();
         }
-         pw.println(character);
+         //pw.println(counter);
         return writer.toString();
     }
     
     /**
-     * @param x representa uma coordenada
-     * @param y representa uma coordenada
+     * @param x representa a posiçao na board
      * @return da nova board com a jogada feita pelo jogador  
      */
     @Override
-    public Ilayout insertnew(int x, int y) throws CloneNotSupportedException {
+    public Ilayout insertnew(int x1) throws CloneNotSupportedException {
         Board clone = (Board) clone();
+        int x=(int)(x1/dim);
+        int y=(x1%dim);
+        //System.out.println(x+" "+y);
         if(board[x][y]!='-'){
             throw new IllegalAccessError("occupied position");
         }
@@ -139,6 +141,7 @@ class Board implements Ilayout, Cloneable {
                     Board b = (Board) clone();
                     b.character = counter;
                     b.counter = character;
+                    b.position=(i*dim)+j;
                     b.board[i][j] = b.character;
                     if (!p.contains(b))
                         p.add(b);
@@ -240,6 +243,11 @@ class Board implements Ilayout, Cloneable {
     @Override
     public char getplayer() {
         return character;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
     }
 
 

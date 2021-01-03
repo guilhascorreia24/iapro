@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -5,14 +7,16 @@ import java.util.List;
 import java.util.Random;
 
 class MCTS {
-    public static double c =0.18024645786    ,limit=10000;
+    public static double c =0.4/*Math.sqrt(1/30.8005)*/, limit = 10000;
+
     static class State {
         public Ilayout layout;
         public State father;
+        private int childs_wins;
         public List<State> childs = new ArrayList<>();
         public double s, w;
         public boolean final_node = false;
-        private int max = Integer.MAX_VALUE;
+        private int max = -Integer.MAX_VALUE;
         public int g;
 
         /**
@@ -26,26 +30,54 @@ class MCTS {
             father = n;
             s = 0.0;
             w = 0;
+            childs_wins=0;
             if (layout.stateBoard() != -2) {
                 final_node = true;
             }
-            if(father==null) g=0;
-            else g=father.g+1;
+            if (father == null)
+                g = 0;
+            else{
+                g = father.g + 1;
+                max=-n.max;}
         }
 
         /**
-         * atualiza o valor das vitorias
+         * atualiza o valor das vitorias,
          * 
-         * @param score 1 (vitoria) ,0.5 empate e 0 derrota
+         * @param score 1 (vitoria),0.5 (empate) e 0 (derrota)
          */
         private void setWin(double score) {
-            this.w+=score;
+            this.w += score;
         }
 
         /**
          * Imprime o estado
          */
         public String toString() {
+            if (!childs.isEmpty()) {
+                State res=Collections.max(childs, new Comparator<State>() {
+                    @Override
+                    public int compare(State z1, State z2) {
+                        if (z1.s > z2.s)
+                            return 1;
+                        if (z1.s < z2.s)
+                            return -1;
+                        return 0;
+                    }
+                });
+                for(State r:father.childs){
+                   System.out.println(r.uct()+" "+r.w+" "+r.s+" "+r.childs_wins);
+                   System.out.println(r.layout);
+                   /*for(State r1:r.childs){
+                    System.out.println(r1.uct()+" "+r1.w+" "+r1.s+" "+r1.childs_wins);
+                    System.out.println(r1.layout);
+                 }*/
+                }
+                StringWriter writer = new StringWriter();
+                PrintWriter pw = new PrintWriter(writer);
+                pw.println(res.layout.getplayer() + " move[" + res.layout.getPosition() + "]");
+                return layout.toString()+writer.toString();
+            }
             return layout.toString();
         }
 
@@ -56,7 +88,7 @@ class MCTS {
          */
         public double uct() {
             // System.out.println(w+" "+s);
-            if (s == 0)
+            if (s == 0 || final_node)
                 return max;
             if (w < 0 || s < 0 || (father != null && father.s < 1)) {
                 throw new IllegalArgumentException("wins negative");
@@ -118,7 +150,7 @@ class MCTS {
      * @return List<State> filhos do estado n
      * @throws CloneNotSupportedException
      */
-    final public List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
+    protected List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
         List<Ilayout> children = n.layout.children();
         for (Ilayout e : children) {
@@ -130,11 +162,12 @@ class MCTS {
 
     final public List<State> solve(Ilayout s) throws CloneNotSupportedException {
         List<State> l = new ArrayList<>();
-        State k = new State(s, null);
+        actual = new State(s, null);
         //l.add(k);
         while (!end_game) {
-            k = BestNextMove(k.layout);
-            l.add(k);
+            actual = BestNextMove(actual.layout);
+           // System.out.println(actual);
+            l.add(actual);
         }
         return l;
     }
@@ -153,7 +186,6 @@ class MCTS {
             return actual;
         }
         root = actual;
-        // 50000
         while (root.s < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
@@ -176,9 +208,6 @@ class MCTS {
      * @throws CloneNotSupportedException
      */
     private State bestmove(State s) throws CloneNotSupportedException {
-        /*for(State s1:s.childs){
-            System.out.println(s1.s+" "+s1.w+" "+s1.uct()+"\n"+s1+"\n");
-        }*/
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
@@ -193,7 +222,8 @@ class MCTS {
     }
 
     /**
-     * Realiza simulacoes para cada filho e faz backpropagation caso nao seja final
+     * Realiza simulacoes, faz uma jogada para ganhar, caso seja direta 
+     * (simulaçao informada) para cada filho e faz backpropagation quando encontrar um final
      * node, caso contrario faz so backpropagation
      * 
      * @param s State, estado encontrado na fase de selecao
@@ -201,8 +231,8 @@ class MCTS {
      * @throws CloneNotSupportedException
      */
     public State simulation(State s) throws CloneNotSupportedException {
-        actual = s;
-        double w = root.childs.get(0).layout.verifywinner(actual.layout);
+        State actual2 = s;
+        double w = root.childs.get(0).layout.verifywinner(actual2.layout);
         if (!actual.final_node) {
             for (State suc : s.childs) {
                 s = suc;
@@ -212,8 +242,20 @@ class MCTS {
                     for(State t:sucs){
                         if(t.final_node){
                             p=t;
-                            //break;
+                            break;
+                        }else{
+                        for(State t1:expand(t)){
+                            if(t1.final_node){
+                                p=t1;
+                                break;
+                            }
+                            if(suc.layout.verifywinner(t1.layout)==1){
+                                p=t1;
+                                break;
+                            }
                         }
+                        if(p!=null) break;
+                    }
                     }
                     if(p==null){
                         int rn = (int) (new Random().nextInt(sucs.size()));
@@ -222,10 +264,24 @@ class MCTS {
                     s=p;
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
+                if(suc.g+1==s.g){
+                    suc.childs_wins++;
+                }
                 actual = backpropagation(suc, w);
             }
-        } else
-            actual = backpropagation(actual, w);
+            Collections.sort(actual2.childs,new Comparator<State>() {
+                @Override
+                public int compare(State z1, State z2) {
+                    if (z1.childs_wins < z2.childs_wins)
+                        return -1;
+                    if (z1.childs_wins > z2.childs_wins)
+                        return 1;
+                    return 0;
+                }
+            });
+        } else{
+            actual = backpropagation(actual2, w);
+        }
         return actual;
     }
 
