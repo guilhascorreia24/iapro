@@ -6,14 +6,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-class MCTS { 
-    public static double c = 1.41, limit = 8000;
+class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k.152104.html
+    public static double c = 1.41, limit = 600;
 
     static class State {
         public Ilayout layout;
         public State father;
         public List<State> childs = new ArrayList<>();
-        public double simulations, wins, draws; 
+        public double simulations, wins, draws;
         public boolean final_node = false;
 
         /**
@@ -104,6 +104,27 @@ class MCTS {
                     return 0;
                 }
             });
+        }
+
+        /**
+         * Econtra o filho com maior UCT, estando na posiÃ§ao de oponente (Identico ao
+         * bestUCT)
+         * 
+         * @return State o filho com menor UCT
+         */
+        public State WorstUCT() {
+             
+            State res = Collections.max(childs, new Comparator<State>() {
+                @Override
+                public int compare(State z1, State z2) {
+                    if (z1.uct() > z2.uct())
+                        return 1;
+                    if (z1.uct() < z2.uct())
+                        return -1;
+                    return 0;
+                }
+            });
+            return res;
         }
     }
 
@@ -231,7 +252,7 @@ class MCTS {
     /**
      * Devolve +1 simulacao e o resultado da simulacao ate ao estado do jogo atual
      * 
-     * @param actual2 State filho do estado que é selecionado para a simulacao
+     * @param actual2 State filho do estado que Ã© selecionado para a simulacao
      * @param w       double, resultado da simulacao (1 vitoria,0.5 empate,0
      *                derrota)
      * @return State estado do jogo atual
