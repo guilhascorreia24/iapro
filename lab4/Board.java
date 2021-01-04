@@ -40,6 +40,11 @@ interface Ilayout {
      * Pontuacao,  
      */
     double WIN=1,LOST=0,DRAW=0.5;
+
+    /**
+     * 
+     * @return retorna a posicao da jogada
+     */
     int getPosition();
 
 }
@@ -196,9 +201,9 @@ class Board implements Ilayout, Cloneable {
      * Verificação se existe algum vencedor ou empate
      * se não houve o jogo continua
      * @return 1 - winner 1 
-     * @return -1 - winner 2 
+     * @return 0 - winner 2 
      * @return -2 - continue 
-     * @return 0 - draw
+     * @return 0.5 - draw
      */
     @Override
     public double verifywinner(Ilayout b) {
