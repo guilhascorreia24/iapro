@@ -217,9 +217,9 @@ public class tests {
     public void testUCT2() {
         Board b = new Board("-O--X--XO");
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X--XO"), null));
-        s.s = 5;
-        s.w = 1;
-        s.father.s = 6;
+        s.simulations = 5;
+        s.wins = 1;
+        s.father.simulations = 6;
         assertEquals(0.4401444, s.uct(), 5);
     }
 
@@ -227,9 +227,9 @@ public class tests {
     public void testUCT3() {
         Board b = new Board("-O--X--X-");
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X---O"), null));
-        s.s = 15;
-        s.w = 10;
-        s.father.s = 20;
+        s.simulations = 15;
+        s.wins= 10;
+        s.father.simulations = 20;
         assertEquals(0.74721, s.uct(), 0.00001);
     }
 
@@ -237,9 +237,9 @@ public class tests {
     public void testUCT4() {
         Board b = new Board("-O--X----");
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X----"), null));
-        s.s = 27;
-        s.w = 12;
-        s.father.s = 33;
+        s.simulations = 27;
+        s.wins = 12;
+        s.father.simulations = 33;
         assertEquals(0.50931, s.uct(), 0.00001);
     }
 
@@ -279,20 +279,19 @@ public class tests {
         l.add(new MCTS.State(new Board("OXX-OO-XX"), s));
         l.add(new MCTS.State(new Board("OX-XOO-XX"), s));
         l.add(new MCTS.State(new Board("OX--OOXXX"), s));
-        l.get(0).s = 10;
-        l.get(0).w = 5;
-        l.get(1).s = 17;
-        l.get(1).w = 7;
-        l.get(2).s = 13;
-        l.get(2).w = 2;
-        s.s = 40;
+        l.get(0).simulations = 10;
+        l.get(0).wins = 5;
+        l.get(1).simulations = 17;
+        l.get(1).wins = 7;
+        l.get(2).simulations = 13;
+        l.get(2).wins = 2;
+        s.simulations = 40;
         s.childs = l;
 
         assertEquals(0.61054, l.get(0).uct(), 0.00001);
         assertEquals(0.49654, l.get(1).uct(), 0.00001);
         assertEquals(0.25079, l.get(2).uct(), 0.00001);
         assertEquals(l.get(0), s.BestUCT());
-        assertEquals(l.get(2), s.WorstUCT());
     }
 
     @Test
@@ -302,17 +301,16 @@ public class tests {
         List<MCTS.State> l = new ArrayList<>();
         l.add(new MCTS.State(new Board("O---X----"), s));
         l.add(new MCTS.State(new Board("-O--X----"), s));
-        l.get(0).s = 46;
-        l.get(0).w = 31;
-        l.get(1).s = 54;
-        l.get(1).w = 35;
-        s.s = 100;
+        l.get(0).simulations = 46;
+        l.get(0).wins = 31;
+        l.get(1).simulations = 54;
+        l.get(1).wins = 35;
+        s.simulations = 100;
         s.childs = l;
 
         assertEquals(0.731498, l.get(0).uct(), Math.pow(10,-5));
         assertEquals(0.70129, l.get(1).uct(), Math.pow(10,-5));
         assertEquals(l.get(0), s.BestUCT());
-        assertEquals(l.get(1), s.WorstUCT());
     }
 
     @Test
@@ -324,22 +322,21 @@ public class tests {
         l.add(new MCTS.State(new Board("OX-XOO-X-"), s));
         l.add(new MCTS.State(new Board("OX--OOXX-"), s));
         l.add(new MCTS.State(new Board("OX--OO-XX"), s));
-        l.get(0).s = 15;
-        l.get(0).w = 5;
-        l.get(1).s = 20;
-        l.get(1).w = 8;
-        l.get(2).s = 20;
-        l.get(2).w = 8;
-        l.get(3).s = 25;
-        l.get(3).w = 12;
-        s.s = 80;
+        l.get(0).simulations = 15;
+        l.get(0).wins = 5;
+        l.get(1).simulations = 20;
+        l.get(1).wins = 8;
+        l.get(2).simulations = 20;
+        l.get(2).wins = 8;
+        l.get(3).simulations = 25;
+        l.get(3).wins = 12;
+        s.simulations = 80;
         s.childs = l;
         assertEquals(0.43170, l.get(0).uct(), 0.00001);
         assertEquals(0.48519, l.get(1).uct(), 0.00001);
         assertEquals(0.48519, l.get(2).uct(), 0.00001);
         assertEquals(0.55619, l.get(3).uct(), 0.00001);
         assertEquals(l.get(3), s.BestUCT());
-        assertEquals(l.get(0), s.WorstUCT());
     }
 
 
@@ -354,25 +351,25 @@ public class tests {
         l.add(new MCTS.State(new Board("OX--X-O--"), s));
         l.add(new MCTS.State(new Board("OX--X--O-"), s));
         l.add(new MCTS.State(new Board("OX--X---O"), s));
-        l.get(0).s = 15;
-        l.get(0).w = 5;
+        l.get(0).simulations = 15;
+        l.get(0).wins = 5;
 
-        l.get(1).s = 20;
-        l.get(1).w = 8;
+        l.get(1).simulations = 20;
+        l.get(1).wins = 8;
 
-        l.get(2).s = 20;
-        l.get(2).w = 8;
+        l.get(2).simulations = 20;
+        l.get(2).wins = 8;
 
-        l.get(3).s = 25;
-        l.get(3).w = 12;
+        l.get(3).simulations = 25;
+        l.get(3).wins = 12;
 
-        l.get(4).s = 20;
-        l.get(4).w = 7;
+        l.get(4).simulations = 20;
+        l.get(4).wins = 7;
 
-        l.get(5).s = 20;
-        l.get(5).w = 3;
+        l.get(5).simulations = 20;
+        l.get(5).wins = 3;
 
-        s.s = 120;
+        s.simulations = 120;
         s.childs = l;
         assertEquals(0.43615, l.get(0).uct(), 0.00001);
         assertEquals(0.48905, l.get(1).uct(), 0.00001);
@@ -382,7 +379,6 @@ public class tests {
         assertEquals(0.23905, l.get(5).uct(), 0.00001);
         
         assertEquals(l.get(3), s.BestUCT());
-        assertEquals(l.get(5), s.WorstUCT());
     }
 
     @Test
@@ -455,7 +451,7 @@ public class tests {
         s.childs.add(new MCTS.State(new Board("----X----"), s));
         h.root = s;
         MCTS.State g = h.simulation(s);
-        assertEquals(true, s.s == 3);
+        assertEquals(true, s.simulations == 3);
         assertEquals(g, s);
     }
 
@@ -469,7 +465,7 @@ public class tests {
         s.childs.add(new MCTS.State(new Board("OX--OO-XX"), s));
         h.root = s;
         MCTS.State g = h.simulation(s);
-        assertEquals(true, s.s == 4);
+        assertEquals(true, s.simulations == 4);
         assertEquals(g, s);
     }
 
@@ -499,8 +495,8 @@ public class tests {
         h.root = s;
         // System.out.println(h.root.layout.getplayer());
         MCTS.State g = h.simulation(s);
-        assertEquals(true, s.s == 5);
-        assertEquals(1, s.childs.get(0).w, 0);
+        assertEquals(true, s.simulations == 5);
+        assertEquals(1, s.childs.get(0).wins, 0);
         assertEquals(g, s);
     }
 
@@ -511,7 +507,7 @@ public class tests {
         s.childs.add(new MCTS.State(new Board("XOOOXXXXO"), s));
         h.root = s;
         MCTS.State g = h.simulation(s.childs.get(0));
-        assertEquals(true, (s.s > 0 && s.childs.get(0).w == 0.5));
+        assertEquals(true, (s.simulations > 0 && s.childs.get(0).wins == 0.5));
         assertEquals(g, s);
     }
 
@@ -525,7 +521,7 @@ public class tests {
         h.root = s;
         MCTS.State g = h.backpropagation(s.childs.get(0), 1);
         assertEquals(s, g);
-        assertEquals(true, s.s > 0);
+        assertEquals(true, s.simulations > 0);
     }
 
     @Test
@@ -538,7 +534,7 @@ public class tests {
         s.childs.add(new MCTS.State(new Board("OX--OO-XX"), s));
         h.root = s;
         MCTS.State g = h.backpropagation(s.childs.get(2), 0);
-        assertEquals(true, s.s == 1);
+        assertEquals(true, s.simulations == 1);
         assertEquals(g, s);
     }
 
@@ -552,18 +548,18 @@ public class tests {
         s.childs.add(new MCTS.State(new Board("XX-OO--X-"), s));
         s.childs.add(new MCTS.State(new Board("XX-OO---X"), s));
         h.root = s;
-        // System.out.println(s.childs.get(0).w);
+        // System.out.println(s.childs.get(0).wins);
         MCTS.State g = h.backpropagation(s.childs.get(0), 1);
         g = h.backpropagation(s.childs.get(1), 0);
         g = h.backpropagation(s.childs.get(2), 0.5);
         g = h.backpropagation(s.childs.get(3), 0);
         g = h.backpropagation(s.childs.get(4), 0);
-        assertEquals(true, s.s == 5);
-        assertEquals(true, s.childs.get(0).s == 1 && s.childs.get(0).w == 1);
-        assertEquals(true, s.childs.get(1).s == 1 && s.childs.get(1).w == 0);
-        assertEquals(true, s.childs.get(2).s == 1 && s.childs.get(2).w == 0.5);
-        assertEquals(true, s.childs.get(3).s == 1 && s.childs.get(3).w == 0);
-        assertEquals(true, s.childs.get(4).s == 1 && s.childs.get(4).w == 0);
+        assertEquals(true, s.simulations == 5);
+        assertEquals(true, s.childs.get(0).simulations == 1 && s.childs.get(0).wins == 1);
+        assertEquals(true, s.childs.get(1).simulations == 1 && s.childs.get(1).wins == 0);
+        assertEquals(true, s.childs.get(2).simulations == 1 && s.childs.get(2).wins == 0.5);
+        assertEquals(true, s.childs.get(3).simulations == 1 && s.childs.get(3).wins == 0);
+        assertEquals(true, s.childs.get(4).simulations == 1 && s.childs.get(4).wins == 0);
         assertEquals(g, s);
     }
 
