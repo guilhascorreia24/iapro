@@ -586,10 +586,5 @@ public class tests {
                 i++;
             }
             System.out.println(res + "/" + i);
-<<<<<<< HEAD
      }
 }*/
-=======
-        }
-}
->>>>>>> 35b1e5cf758f45730c262394f2ffb4bdcf8a1bdc
