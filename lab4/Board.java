@@ -40,6 +40,11 @@ interface Ilayout {
      * Pontuacao,  
      */
     double WIN=1,LOST=0,DRAW=0.5;
+
+    /**
+     * 
+     * @return posicao da jogada na tabela
+     */
     int getPosition();
 
 }
@@ -118,14 +123,14 @@ class Board implements Ilayout, Cloneable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-        Board b = (Board) super.clone();
-        b.board=new char[dim][dim];
+        Board clone = (Board) super.clone();
+        clone.board=new char[dim][dim];
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                b.board[i][j] = board[i][j];
+                clone.board[i][j] = board[i][j];
             }
         }
-        return b;
+        return clone;
     }
 
     /**
@@ -157,26 +162,26 @@ class Board implements Ilayout, Cloneable {
      * @return false se as boards são diferentes
      */
     @Override
-    public boolean equals(Object b) {
-        Board b2 = (Board) b;
-      // System.out.println(b2+"\n"+this);
+    public boolean equals(Object o) {
+        Board board2 = (Board) o;
+      // System.out.println(board2+"\n"+this);
         int p = 0;
         boolean s=true,s1=true,s2=true,s3=true;
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                if (board[i][j] == b2.board[i][j] ) {
+                if (board[i][j] == board2.board[i][j] ) {
                     p++;
                 }
-                if (board[i][j] != b2.board[i][(dim - 1) - j]) {
+                if (board[i][j] != board2.board[i][(dim - 1) - j]) {
                     s=false;
                 }
-                if (board[i][j] != b2.board[(dim - 1) - i][j]) {
+                if (board[i][j] != board2.board[(dim - 1) - i][j]) {
                     s1=false;
                 }
-                if (board[i][j] != b2.board[j][i]) {
+                if (board[i][j] != board2.board[j][i]) {
                     s2=false;
                 }
-                if (board[i][j] != b2.board[(dim-1) - j][(dim-1) - i]) {
+                if (board[i][j] != board2.board[(dim-1) - j][(dim-1) - i]) {
                     s3= false;
                 }
             }
@@ -201,31 +206,31 @@ class Board implements Ilayout, Cloneable {
      * @return 0 - draw
      */
     @Override
-    public double verifywinner(Ilayout b) {
-        Board b2 = (Board) b;
+    public double verifywinner(Ilayout layout) {
+        Board board2 = (Board) layout;
         boolean empty_spaces = false;
         for (int i = 0; i < dim; i++) {
-            if (b2.board[i][0] == character && b2.board[i][1] == character && b2.board[i][2] == character)
+            if (board2.board[i][0] == character && board2.board[i][1] == character && board2.board[i][2] == character)
                 return WIN;
-            else if (b2.board[i][0] == counter && b2.board[i][1] == counter && b2.board[i][2] == counter)
+            else if (board2.board[i][0] == counter && board2.board[i][1] == counter && board2.board[i][2] == counter)
                 return LOST;
-            else if (b2.board[0][i] == character && b2.board[1][i] == character && b2.board[2][i] == character)
+            else if (board2.board[0][i] == character && board2.board[1][i] == character && board2.board[2][i] == character)
                 return WIN;
-            else if (b2.board[0][i] == counter && b2.board[1][i] == counter && b2.board[2][i] == counter)
+            else if (board2.board[0][i] == counter && board2.board[1][i] == counter && board2.board[2][i] == counter)
                 return LOST;
         }
-        if (b2.board[0][0] == character && b2.board[1][1] == character && b2.board[2][2] == character)
+        if (board2.board[0][0] == character && board2.board[1][1] == character && board2.board[2][2] == character)
             return WIN;
-        else if (b2.board[0][2] == character && b2.board[1][1] == character && b2.board[2][0] == character)
+        else if (board2.board[0][2] == character && board2.board[1][1] == character && board2.board[2][0] == character)
             return WIN;
-        else if (b2.board[0][0] == counter && b2.board[1][1] == counter && b2.board[2][2] == counter)
+        else if (board2.board[0][0] == counter && board2.board[1][1] == counter && board2.board[2][2] == counter)
             return LOST;
-        else if (b2.board[0][2] == counter && b2.board[1][1] == counter && b2.board[2][0] == counter)
+        else if (board2.board[0][2] == counter && board2.board[1][1] == counter && board2.board[2][0] == counter)
             return LOST;
 
         pause: for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++)
-                if (b2.board[i][j] == '-') {
+                if (board2.board[i][j] == '-') {
                     empty_spaces = true;
                     break pause;
                 }

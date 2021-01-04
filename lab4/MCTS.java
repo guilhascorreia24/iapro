@@ -6,17 +6,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k.152104.html
-    public static double c = 4, limit = 1500;
+class MCTS { 
+    public static double c = 1.41, limit = 8000;
 
     static class State {
         public Ilayout layout;
         public State father;
         public List<State> childs = new ArrayList<>();
-        public double s, w, d;
+        public double simulations, wins, draws; 
         public boolean final_node = false;
-        private int max = Integer.MAX_VALUE;
-        public int g;
 
         /**
          * Cria um estado
@@ -27,16 +25,12 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
         public State(Ilayout p, State n) {
             layout = p;
             father = n;
-            s = 0.0;
-            w = 0;
-            d = 0;
+            simulations = 0.0;
+            wins = 0;
+            draws = 0;
             if (layout.stateBoard() != -2) {
                 final_node = true;
             }
-            if (father == null)
-                g = 0;
-            else
-                g = father.g + 1;
         }
 
         /**
@@ -46,9 +40,9 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
          */
         private void setWin(double score) {
             if (score == 1)
-                this.w += score;
+                this.wins += score;
             else if (score == 0.5)
-                this.d += score;
+                this.draws += score;
         }
 
         /**
@@ -56,27 +50,16 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
          */
         public String toString() {
             if (!childs.isEmpty()) {
-                State res = Collections.min(childs, new Comparator<State>() {
+                State res = Collections.max(childs, new Comparator<State>() {
                     @Override
                     public int compare(State z1, State z2) {
-                        if (z1.s > z2.s)
+                        if (z1.simulations > z2.simulations)
                             return 1;
-                        if (z1.s < z2.s)
+                        if (z1.simulations < z2.simulations)
                             return -1;
                         return 0;
                     }
                 });
-                for (State r : father.childs) {
-                    r.w=(r.s - r.w - r.d * 2);
-                    System.out.println(r.uct() + " " + r.w + " " + (r.s - r.w - r.d * 2) + " " + r.d * 2 + " " + r.s);
-                   // System.out.println(r.layout);
-                    for (State r1 : r.childs) {
-                        //r.w=(r.s - r.w - r.d * 2);
-                        //System.out.println(r1.uct() + " " + r1.w + " " + (r1.s - r1.w - r1.d * 2) + " " + r1.d * 2 + " " + r1.s);
-                        //System.out.print(r1.layout);
-                    }
-                   // System.out.println("####");
-                }
                 StringWriter writer = new StringWriter();
                 PrintWriter pw = new PrintWriter(writer);
                 pw.println(res.layout.getplayer() + " move[" + res.layout.getPosition() + "]");
@@ -91,12 +74,12 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
          * @return double valor do uct
          */
         public double uct() {
-            if (s == 0 || final_node)
-                return max;
-            if (w < 0 || s < 0 || (father != null && father.s < 1)) {
+            if (simulations == 0 || final_node)
+                return Integer.MAX_VALUE;
+            if (wins < 0 || simulations < 0 || (father != null && father.simulations < 1)) {
                 throw new IllegalArgumentException("wins negative");
             }
-            return ((w + d) / s) + c * Math.sqrt(Math.log(father.s) / s);
+            return ((wins + draws) / simulations) + c * Math.sqrt(Math.log(father.simulations) / simulations);
         }
 
         @Override
@@ -121,30 +104,6 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
                     return 0;
                 }
             });
-        }
-
-        /**
-         * Econtra o filho com maior UCT, estando na posiçao de oponente (Identico ao
-         * bestUCT)
-         * 
-         * @return State o filho com menor UCT
-         */
-        public State WorstUCT() {
-            List<State> y = new ArrayList<>(childs);
-            
-            for(State r:y){ r.w=r.s-r.w-r.d*2; }
-             
-            State res = Collections.max(y, new Comparator<State>() {
-                @Override
-                public int compare(State z1, State z2) {
-                    if (z1.uct() > z2.uct())
-                        return 1;
-                    if (z1.uct() < z2.uct())
-                        return -1;
-                    return 0;
-                }
-            });
-            return childs.get(y.indexOf(res));
         }
     }
 
@@ -171,10 +130,8 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
     final public List<State> solve(Ilayout s) throws CloneNotSupportedException {
         List<State> l = new ArrayList<>();
         actual = new State(s, null);
-        // l.add(k);
         while (!end_game) {
             actual = BestNextMove(actual.layout);
-            // System.out.println(actual);
             l.add(actual);
         }
         return l;
@@ -194,7 +151,7 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
             return actual;
         }
         root = actual;
-        while (root.s < limit) {
+        while (root.simulations < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
             }
@@ -219,9 +176,9 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
-                if (z1.s > z2.s)
+                if (z1.simulations > z2.simulations)
                     return 1;
-                if (z1.s < z2.s)
+                if (z1.simulations < z2.simulations)
                     return -1;
                 return 0;
             }
@@ -240,33 +197,33 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
      */
     public State simulation(State s) throws CloneNotSupportedException {
         State actual2 = s;
-        //double w =actual2.layout.stateBoard();
-        double w=root.childs.get(0).layout.verifywinner(actual2.layout);
+        double result_board =actual2.layout.stateBoard();
+        //double w=root.childs.get(0).layout.verifywinner(actual2.layout);
         if (!actual.final_node) {
             for (State suc : s.childs) {
-                s = suc;
-                while (!s.final_node) {
-                    List<State> sucs = expand(s);
-                    State p = null;
+                State inicio_simulacao = suc;
+                while (!inicio_simulacao.final_node) {
+                    List<State> sucs = expand(inicio_simulacao);
+                    State filho_win = null;
                     for (State t : sucs) {
                         if (t.final_node) {
-                            p = t;
+                            filho_win = t;
                             break;
                         }
                     }
-                    if (p == null) {
+                    if (filho_win == null) {
                         int rn = (int) (new Random().nextInt(sucs.size()));
-                        p = sucs.get(rn);
+                        filho_win = sucs.get(rn);
                     }
-                    s = p;
+                    s = filho_win;
                 }
-                 w = root.childs.get(0).layout.verifywinner(s.layout);
-                //w = suc.layout.verifywinner(s.layout);
-                actual = backpropagation(suc, w);
+                 //w = root.childs.get(0).layout.verifywinner(s.layout);
+                result_board = suc.layout.verifywinner(s.layout);
+                actual = backpropagation(suc, result_board);
             }
 
         } else {
-            actual = backpropagation(actual2, w);
+            actual = backpropagation(actual2, result_board);
         }
         return actual;
     }
@@ -279,17 +236,17 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
      *                derrota)
      * @return State estado do jogo atual
      */
-    public State backpropagation(State actual2, double w) {
+    public State backpropagation(State actual2, double result_board) {
         while (actual2.father != null) {
-            actual2.setWin(w);
-            actual2.s += 1;
+            actual2.setWin(result_board);
+            actual2.simulations += 1;
             actual2 = actual2.father;
-            if (w != Ilayout.DRAW) {
-                //w = (w + 1) % 2;
+            if (result_board != Ilayout.DRAW) {
+                result_board = (result_board + 1) % 2;
             }
         }
-        actual2.setWin(w);
-        actual2.s += 1;
+        actual2.setWin(result_board);
+        actual2.simulations += 1;
         return actual2;
     }
 
@@ -301,15 +258,8 @@ class MCTS { // https://nestedsoftware.com/2019/08/07/tic-tac-toe-with-mcts-2h5k
      * @return State devolve um estado sem filhos
      */
     public State selection(State s) {
-        boolean max = true;
         while (!s.childs.isEmpty()) {
-            if (max) {
                 s = s.BestUCT();
-                max = false;
-            } else {
-                s = s.WorstUCT();
-                max = true;
-            }
         }
         return s;
     }
