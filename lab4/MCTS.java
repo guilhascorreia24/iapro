@@ -13,7 +13,7 @@ class MCTS {
         public Ilayout layout;
         public State father;
         public List<State> childs = new ArrayList<>();
-        public double simulations, wins, draws;
+        public double simulations, wins;
         public boolean final_node = false;
 
         /**
