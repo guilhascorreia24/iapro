@@ -6,13 +6,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-class MCTS {
-    public static double c =0.4/*Math.sqrt(1/30.8005)*/, limit = 650;
+public class MCTS {
+    public static double c =0.3, limit = 700;
 
     static class State {
         public Ilayout layout;
         public State father;
-        private int childs_wins;
         public List<State> childs = new ArrayList<>();
         public double s, w;
         public boolean final_node = false;
@@ -30,7 +29,6 @@ class MCTS {
             father = n;
             s = 0.0;
             w = 0;
-            childs_wins=0;
             if (layout.stateBoard() != -2) {
                 final_node = true;
             }
@@ -65,14 +63,6 @@ class MCTS {
                         return 0;
                     }
                 });
-                for(State r:father.childs){
-                   System.out.println(r.uct()+" "+r.w+" "+r.s+" "+r.childs_wins);
-                   System.out.println(r.layout);
-                   /*for(State r1:r.childs){
-                    System.out.println(r1.uct()+" "+r1.w+" "+r1.s+" "+r1.childs_wins);
-                    System.out.println(r1.layout);
-                 }*/
-                }
                 StringWriter writer = new StringWriter();
                 PrintWriter pw = new PrintWriter(writer);
                 pw.println(res.layout.getplayer() + " move[" + res.layout.getPosition() + "]");
@@ -163,10 +153,8 @@ class MCTS {
     final public List<State> solve(Ilayout s) throws CloneNotSupportedException {
         List<State> l = new ArrayList<>();
         actual = new State(s, null);
-        //l.add(k);
         while (!end_game) {
             actual = BestNextMove(actual.layout);
-           // System.out.println(actual);
             l.add(actual);
         }
         return l;
@@ -246,15 +234,9 @@ class MCTS {
                         }else{
                         for(State t1:expand(t)){
                             if(t1.final_node){
-                                p=t1;
-                                break;
-                            }
-                            if(suc.layout.verifywinner(t1.layout)==1){
-                                p=t1;
-                                break;
+                                p=t;
                             }
                         }
-                        if(p!=null) break;
                     }
                     }
                     if(p==null){
@@ -264,21 +246,8 @@ class MCTS {
                     s=p;
                 }
                 w = root.childs.get(0).layout.verifywinner(s.layout);
-                if(suc.g+1==s.g){
-                    suc.childs_wins++;
-                }
                 actual = backpropagation(suc, w);
             }
-            Collections.sort(actual2.childs,new Comparator<State>() {
-                @Override
-                public int compare(State z1, State z2) {
-                    if (z1.childs_wins < z2.childs_wins)
-                        return -1;
-                    if (z1.childs_wins > z2.childs_wins)
-                        return 1;
-                    return 0;
-                }
-            });
         } else{
             actual = backpropagation(actual2, w);
         }

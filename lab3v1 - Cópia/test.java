@@ -1,26 +1,30 @@
-/*import org.junit.Test;
+/*mport java.util.List;
+
+import org.junit.Test;
 
 public class test {
     @Test
     public void testPrecision() throws CloneNotSupportedException {
-        int i = 0, res = 0,j=0,p=0;
-        while(j<10){
-            i=0;res=0;
-            while (i < 100) {
-                BestFirst s = new BestFirst();
+            int i = 0, res = 0;
+            while (i < 1000) {
+                MCTS s = new MCTS();
                 Board b = new Board("---------");
-                while (!s.end_game) {
-                    b = (Board) s.BestNextMove(b);
-                }
-                if (b.verifywinner() != 0) {
-                    res++;
+                List<MCTS.State> l = s.solve(b);
+                if (l == null)
+                    System.out.println("no solution was found");
+                else {
+                    MCTS.State t = l.get(l.size() - 1);
+                    if (t.layout.stateBoard() != Ilayout.DRAW) {
+                        res++;
+                        //System.out.println(t);
+                        
+                         for (MCTS.State t1 : l) { System.out.println(t1); }
+                         
+                        System.out.println("--------------------");
+                    }
                 }
                 i++;
             }
-            p+=res;
             System.out.println(res + "/" + i);
-            j++;
         }
-        System.out.println((double)p/(double)(i*j));
-    }
 }*/
