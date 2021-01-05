@@ -27,9 +27,10 @@ public class Main {
         else{
             while(!s.end_game){
                 b = (Board) b.insertnew(sc.nextInt());
-                b= (Board) s.BestNextMove(b).layout;
+                MCTS.State s1=  s.BestNextMove(b);
 
-                System.out.println(b);
+                System.out.println(s1);
+                b= (Board) s1.layout;
             }
         }
         sc.close();
