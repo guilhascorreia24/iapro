@@ -100,14 +100,14 @@ public class Board implements Ilayout, Cloneable {
     }
     
     /**
-     * @param x representa a posiçao na board
+     * @param position representa a posiçao na board
      * @return da nova board com a jogada feita pelo jogador  
      */
     @Override
-    public Ilayout insertnew(int x1) throws CloneNotSupportedException {
+    public Ilayout insertnew(int position) throws CloneNotSupportedException {
         Board clone = (Board) clone();
-        int x=(int)(x1/dim);
-        int y=(x1%dim);
+        int x=(int)(position/dim);
+        int y=(position%dim);
         //System.out.println(x+" "+y);
         if(board[x][y]!='-'){
             throw new IllegalAccessError("occupied position");
@@ -158,8 +158,9 @@ public class Board implements Ilayout, Cloneable {
 
     /**
      * Comparação se 2 boards são iguais, usando simetrias
-     * @return true se as boards são iguais
-     * @return false se as boards são diferentes
+     * @param o objecto a comparar
+     * @return boolean, true se as boards são iguais, false se as boards são diferentes
+     * 
      */
     @Override
     public boolean equals(Object o) {
@@ -196,13 +197,10 @@ public class Board implements Ilayout, Cloneable {
     }
 
     /**
-     * @param b representa o estado a board atual
+     * @param layout representa o estado a board atual
      * Verificação se existe algum vencedor ou empate
      * se não houve o jogo continua
-     * @return 1 - winner 1 
-     * @return 0 - winner 2 
-     * @return -2 - continue 
-     * @return 0.5 - draw
+     * @return 1 - winner 1 ,0 - winner 2,-2 - continue ,0.5 - draw
      */
     @Override
     public double verifywinner(Ilayout layout) {

@@ -7,7 +7,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         MCTS s = new MCTS();
         Board b = new Board("---------");
-        System.out.print("play 1/0?");
+        System.out.print("esolha uma opçao: player vs bot(1)/bot vs bot(0):");
         int t=sc.nextInt();
         if(t==0){
             long startTime = System.nanoTime();
@@ -27,9 +27,9 @@ public class Main {
         else{
             while(!s.end_game){
                 b = (Board) b.insertnew(sc.nextInt());
-                b= (Board) s.BestNextMove(b).layout;
-
-                System.out.println(b);
+                MCTS.State s1= s.BestNextMove(b);
+                System.out.println(s1);
+                b= (Board) s1.getBoard();
             }
         }
         sc.close();

@@ -1,4 +1,4 @@
-import static org.junit.Assert.assertEquals;
+/*import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -210,7 +210,7 @@ public class tests {
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X--XO"), null));
         s.simulations = 5;
         s.wins = 1;
-        s.father.simulations = 6;
+        s.getFather().simulations = 6;
         assertEquals(0.4401444, s.uct(), 5);
     }
 
@@ -220,7 +220,7 @@ public class tests {
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X---O"), null));
         s.simulations = 15;
         s.wins= 10;
-        s.father.simulations = 20;
+        s.getFather().simulations = 20;
         assertEquals(0.74721, s.uct(), 0.00001);
     }
 
@@ -230,7 +230,7 @@ public class tests {
         MCTS.State s = new MCTS.State(b, new MCTS.State(new Board("----X----"), null));
         s.simulations = 27;
         s.wins = 12;
-        s.father.simulations = 33;
+        s.getFather().simulations = 33;
         assertEquals(0.50931, s.uct(), 0.00001);
     }
 
@@ -565,7 +565,7 @@ public class tests {
                     System.out.println("no solution was found");
                 else {
                     MCTS.State t = l.get(l.size() - 1);
-                    if (t.layout.stateBoard() != Ilayout.DRAW) {
+                    if (t.getBoard().stateBoard() != Ilayout.DRAW) {
                         res++;
                         //System.out.println(t);
                         
@@ -578,4 +578,4 @@ public class tests {
             }
             System.out.println(res + "/" + i);
      }
-}
+}*/

@@ -1,18 +1,17 @@
-import java.io.PrintWriter;
-import java.io.StringWriter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-public class MCTS { 
+public class MCTS {
     private static double c = 1.41;
     private double limit = 1000;
 
     public static class State {
-        public Ilayout layout;
-        public State father;
+        private Ilayout layout;
+        private State father;
         public List<State> childs = new ArrayList<>();
         public double simulations, wins;
         public boolean final_node = false;
@@ -20,17 +19,39 @@ public class MCTS {
         /**
          * Cria um estado
          * 
-         * @param l Ilayout, Representacao do estado
+         * @param p Ilayout, Representacao do estado
          * @param n State, estado pai
          */
         public State(Ilayout p, State n) {
             layout = p;
-            father = n;
+            setFather(n);
             simulations = 0.0;
             wins = 0;
             if (layout.stateBoard() != -2) {
                 final_node = true;
             }
+        }
+        /**
+         * 
+         * @return State,devolve o father
+         */
+        public State getFather() {
+            return father;
+        }
+        /**
+         * alterar o father
+         * @param father state pai 
+         */
+        public void setFather(State father) {
+            this.father = father;
+        }
+
+        /**
+         * 
+         * @return Ilayout, devolve o layout correspodente
+         */
+        public Ilayout getBoard() {
+            return this.layout;
         }
 
         /**
@@ -46,22 +67,6 @@ public class MCTS {
          * Imprime o estado
          */
         public String toString() {
-            if (!childs.isEmpty()) {
-                State res = Collections.max(childs, new Comparator<State>() {
-                    @Override
-                    public int compare(State z1, State z2) {
-                        if (z1.simulations > z2.simulations)
-                            return 1;
-                        if (z1.simulations < z2.simulations)
-                            return -1;
-                        return 0;
-                    }
-                });
-                StringWriter writer = new StringWriter();
-                PrintWriter pw = new PrintWriter(writer);
-                pw.println(res.layout.getplayer() + " move[" + res.layout.getPosition() + "]");
-                return layout.toString() + writer.toString();
-            }
             return layout.toString();
         }
 
@@ -73,12 +78,16 @@ public class MCTS {
         public double uct() {
             if (simulations == 0 || final_node)
                 return Integer.MAX_VALUE;
-            if (wins < 0 || simulations < 0 || (father != null && father.simulations < 1)) {
+            if (wins < 0 || simulations < 0 || (getFather() != null && getFather().simulations < 1)) {
                 throw new IllegalArgumentException("wins negative");
             }
-            return ((wins) / simulations) + c * Math.sqrt(Math.log(father.simulations) / simulations);
+            return ((wins) / simulations) + c * Math.sqrt(Math.log(getFather().simulations) / simulations);
         }
 
+        /**
+         * compara o layout de 2 states
+         * 
+         */
         @Override
         public boolean equals(Object b) {
             State s = (State) b;
@@ -111,8 +120,8 @@ public class MCTS {
      * Encontra os filhos de um estado
      * 
      * @param n State estado pai
-     * @return List<State> filhos do estado n
-     * @throws CloneNotSupportedException
+     * @return Lista filhos do estado n
+     * @throws CloneNotSupportedException devolve quando nao seja o clone
      */
     public List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
@@ -124,6 +133,13 @@ public class MCTS {
         return sucs;
     }
 
+    /**
+     * Realiza o jogo bot vs bot
+     * 
+     * @param s Ilayout, representacao do estado do jogo atual
+     * @return Melhor movimento a realizar
+     * @throws CloneNotSupportedException devolve quando nao seja o clone
+     */
     final public List<State> solve(Ilayout s) throws CloneNotSupportedException {
         List<State> l = new ArrayList<>();
         actual = new State(s, null);
@@ -139,7 +155,7 @@ public class MCTS {
      * 
      * @param s Ilayout, representacao do estado do jogo atual
      * @return Melhor movimento a realizar
-     * @throws CloneNotSupportedException
+     * @throws CloneNotSupportedException devolve quando nao seja o clone
      */
     final public State BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo mcts
         actual = new State(s, null);
@@ -167,9 +183,9 @@ public class MCTS {
      * 
      * @param s State, estado em que se encntra o jogo
      * @return State, estado com mais visitas
-     * @throws CloneNotSupportedException
+     * 
      */
-    private State bestmove(State s) throws CloneNotSupportedException {
+    private State bestmove(State s) {
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
@@ -190,17 +206,15 @@ public class MCTS {
      * 
      * @param s State, estado encontrado na fase de selecao
      * @return State estado do jogo em se encontra
-     * @throws CloneNotSupportedException
+     * @throws CloneNotSupportedException devolve quando nao seja o clone
      */
     public State simulation(State s) throws CloneNotSupportedException {
-        double result =s.layout.stateBoard();
-        //double w=root.childs.get(0).layout.verifywinner(actual2.layout);
+        double result = s.layout.stateBoard();
         if (!actual.final_node) {
             for (State suc : s.childs) {
                 State next = suc;
                 while (!next.final_node) {
                     List<State> sucs = expand(next);
-                    //List<State> good_sucs=new ArrayList<>(sucs);
                     State res = null;
                     for (State suc1 : sucs) {
                         if (suc1.final_node) {
@@ -214,7 +228,6 @@ public class MCTS {
                     }
                     next = res;
                 }
-                // w = root.childs.get(0).layout.verifywinner(s.layout);
                 result = suc.layout.verifywinner(next.layout);
                 actual = backpropagation(suc, result);
             }
@@ -226,25 +239,26 @@ public class MCTS {
     }
 
     /**
-     * Devolve +1 simulacao e o resultado da simulacao ate ao estado do jogo atual
+     * Devolve +1 simulacao e o resultado da simulacao ate ao estado do jogo atual, 
+     * de forma a que os nos Max guardam as vitorias do max e os empates, 
+     * e os nos do Min guardam as vitorias do min e os empates
      * 
      * @param state State filho do estado que e selecionado para a simulacao
-     * @param w       double, resultado da simulacao (1 vitoria,0.5 empate,0
-     *                derrota)
+     * @param result_board     double, resultado da simulacao (1 vitoria,0.5 empate,0 derrota)
      * @return State estado do jogo atual
      */
-    public State backpropagation(State actual2, double result_board) {
-        while (actual2.father != null) {
-            actual2.setWin(result_board);
-            actual2.simulations += 1;
-            actual2 = actual2.father;
+    public State backpropagation(State state, double result_board) {
+        while (state.getFather() != null) {
+            state.setWin(result_board);
+            state.simulations += 1;
+            state = state.getFather();
             if (result_board != Ilayout.DRAW) {
                 result_board = (result_board + 1) % 2;
             }
         }
-        actual2.setWin(result_board);
-        actual2.simulations += 1;
-        return actual2;
+        state.setWin(result_board);
+        state.simulations += 1;
+        return state;
     }
 
     /**
