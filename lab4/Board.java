@@ -6,7 +6,7 @@ import java.util.List;
 interface Ilayout {
     /**
      * @return os filhos do receptor.
-     * @throws CloneNotSupportedException
+     * @throws CloneNotSupportedExceptionnao é possivel cria um clone
      */
     List<Ilayout> children() throws CloneNotSupportedException;
 
@@ -19,12 +19,11 @@ interface Ilayout {
 
     /**
      * 
-     * @param x representa uma coordenada
-     * @param y representa uma coordenada
+     * @param position representa uma posicao
      * @return o estado da board com a jogada feita
-     * @throws CloneNotSupportedException
+     * @throws CloneNotSupportedException nao é possivel cria um clone
      */
-    Ilayout insertnew(int x) throws CloneNotSupportedException;
+    Ilayout insertnew(int position) throws CloneNotSupportedException;
 
     /**
      * @return o valor associado ao estado da board atual
@@ -157,7 +156,7 @@ public class Board implements Ilayout, Cloneable {
     }
 
     /**
-     * Comparação se 2 boards são iguais, usando simetrias
+     * Comparacao se 2 boards sao iguais, usando simetrias
      * @param o objecto a comparar
      * @return boolean, true se as boards são iguais, false se as boards são diferentes
      * 
