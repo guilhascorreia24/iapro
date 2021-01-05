@@ -13,7 +13,7 @@ public class MCTS {
         public Ilayout layout;
         public State father;
         public List<State> childs = new ArrayList<>();
-        public double s, w;
+        public double simulations, wins;
         public boolean final_node = false;
         private int max = -Integer.MAX_VALUE;
         public int g;
@@ -27,15 +27,12 @@ public class MCTS {
         public State(Ilayout l, State n) {
             layout = l;
             father = n;
-            s = 0.0;
-            w = 0;
+            simulations = 0.0;
+            wins = 0;
             if (layout.stateBoard() != -2) {
                 final_node = true;
             }
-            if (father == null)
-                g = 0;
-            else{
-                g = father.g + 1;
+            if(father!=null){
                 max=-n.max;}
         }
 
@@ -45,7 +42,7 @@ public class MCTS {
          * @param score 1 (vitoria),0.5 (empate) e 0 (derrota)
          */
         private void setWin(double score) {
-            this.w += score;
+            this.wins += score;
         }
 
         /**
@@ -56,9 +53,9 @@ public class MCTS {
                 State res=Collections.max(childs, new Comparator<State>() {
                     @Override
                     public int compare(State z1, State z2) {
-                        if (z1.s > z2.s)
+                        if (z1.simulations > z2.simulations)
                             return 1;
-                        if (z1.s < z2.s)
+                        if (z1.simulations < z2.simulations)
                             return -1;
                         return 0;
                     }
@@ -77,13 +74,13 @@ public class MCTS {
          * @return double valor do uct
          */
         public double uct() {
-            // System.out.println(w+" "+s);
-            if (s == 0 || final_node)
+            //System.out.println(wins+" "+simulations);
+            if (simulations == 0 || final_node)
                 return max;
-            if (w < 0 || s < 0 || (father != null && father.s < 1)) {
+            if (wins < 0 || simulations < 0 || (father != null && father.simulations < 1)) {
                 throw new IllegalArgumentException("wins negative");
             }
-            return ((w)/ s) + c * Math.sqrt(Math.log(father.s) / s);
+            return ((wins)/ simulations) + c * Math.sqrt(Math.log(father.simulations) / simulations);
         }
 
         @Override
@@ -174,7 +171,7 @@ public class MCTS {
             return actual;
         }
         root = actual;
-        while (root.s < limit) {
+        while (root.simulations < limit) {
             if (!actual.childs.isEmpty()) {
                 actual = selection(actual);
             }
@@ -199,9 +196,9 @@ public class MCTS {
         State res = Collections.max(s.childs, new Comparator<State>() {
             @Override
             public int compare(State z1, State z2) {
-                if (z1.s > z2.s)
+                if (z1.simulations > z2.simulations)
                     return 1;
-                if (z1.s < z2.s)
+                if (z1.simulations < z2.simulations)
                     return -1;
                 return 0;
             }
@@ -220,36 +217,36 @@ public class MCTS {
      */
     public State simulation(State s) throws CloneNotSupportedException {
         State actual2 = s;
-        double w = root.childs.get(0).layout.verifywinner(actual2.layout);
+        double res = root.childs.get(0).layout.verifywinner(actual2.layout);
         if (!actual.final_node) {
             for (State suc : s.childs) {
-                s = suc;
-                while (!s.final_node) {
-                    List<State> sucs = expand(s);
-                    State p=null;
-                    for(State t:sucs){
-                        if(t.final_node){
-                            p=t;
+                State next = suc;
+                while (!next.final_node) {
+                    List<State> sucs = expand(next);
+                    State f_node=null;
+                    for(State s1:sucs){
+                        if(s1.final_node){
+                            f_node=s1;
                             break;
                         }else{
-                        for(State t1:expand(t)){
-                            if(t1.final_node){
-                                p=t;
+                        for(State s2:expand(s1)){
+                            if(s2.final_node){
+                                f_node=s1;
                             }
                         }
                     }
                     }
-                    if(p==null){
+                    if(f_node==null){
                         int rn = (int) (new Random().nextInt(sucs.size()));
-                        p = sucs.get(rn);
+                        f_node = sucs.get(rn);
                     }
-                    s=p;
+                    next=f_node;
                 }
-                w = root.childs.get(0).layout.verifywinner(s.layout);
-                actual = backpropagation(suc, w);
+                res = root.childs.get(0).layout.verifywinner(next.layout);
+                actual = backpropagation(suc, res);
             }
         } else{
-            actual = backpropagation(actual2, w);
+            actual = backpropagation(actual2, res);
         }
         return actual;
     }
@@ -265,11 +262,11 @@ public class MCTS {
     public State backpropagation(State actual2, double w) {
         while (actual2.father != null) {
             actual2.setWin(w);
-            actual2.s += 1;
+            actual2.simulations += 1;
             actual2 = actual2.father;
         }
         actual2.setWin(w);
-        actual2.s += 1;
+        actual2.simulations += 1;
         return actual2;
     }
 
