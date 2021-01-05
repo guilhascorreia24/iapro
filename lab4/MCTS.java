@@ -6,10 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-class MCTS { 
-    public static double c = 1.41, limit = 1000;
+public class MCTS { 
+    private static double c = 1.41;
+    private double limit = 1000;
 
-    static class State {
+    public static class State {
         public Ilayout layout;
         public State father;
         public List<State> childs = new ArrayList<>();
@@ -113,7 +114,7 @@ class MCTS {
      * @return List<State> filhos do estado n
      * @throws CloneNotSupportedException
      */
-    protected List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
+    public List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
         List<Ilayout> children = n.layout.children();
         for (Ilayout e : children) {

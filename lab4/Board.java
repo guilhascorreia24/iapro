@@ -43,21 +43,17 @@ interface Ilayout {
 
     /**
      * 
-<<<<<<< HEAD
      * @return posicao da jogada na tabela
-=======
-     * @return retorna a posicao da jogada
->>>>>>> e98581314ad7b3748b576160ff3c9595b110a20d
      */
     int getPosition();
 
 }
 
-class Board implements Ilayout, Cloneable {
+public class Board implements Ilayout, Cloneable {
     private static final int dim = 3;
     private char board[][];
-    public char character, counter;
-    public int position;
+    private char character, counter;
+    private int position;
 
     /**
      * Cria a board apartir de uma string
@@ -142,7 +138,7 @@ class Board implements Ilayout, Cloneable {
      * @return uma lista com os filhos da board 
      */
     @Override
-    public List<Ilayout> children() throws CloneNotSupportedException { // criar os filhos
+    public List<Ilayout> children() throws CloneNotSupportedException { 
         List<Ilayout> p = new ArrayList<Ilayout>();
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
@@ -193,7 +189,6 @@ class Board implements Ilayout, Cloneable {
         if (p == dim * dim) { 
             return true;
         }
-       //System.out.println(s+" "+s1+" "+s2+" "+s3+" "+p);
         if(!s && !s1 && !s2 && !s3){
             return false;
         }

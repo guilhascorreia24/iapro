@@ -1,4 +1,4 @@
-/*import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -195,15 +195,6 @@ public class tests {
         l.add(new Board("---OXX-O-"));
         l.add(new Board("---OXX--O"));
         assertEquals(l, result);
-    }
-
-    @Test
-    public void testChildren11() throws CloneNotSupportedException {
-        Board b = new Board("OOX-X--X-");
-        b.character = 'X';
-        b.counter = 'O';
-        // List<Ilayout> result = b.children();
-        // System.out.println(result);
     }
 
     @Test
@@ -587,4 +578,4 @@ public class tests {
             }
             System.out.println(res + "/" + i);
      }
-}*/
+}
