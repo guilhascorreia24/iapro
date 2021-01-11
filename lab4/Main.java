@@ -1,8 +1,7 @@
-
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class Main {
+<<<<<<< HEAD
     public  static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         MCTS s = new MCTS();
@@ -27,9 +26,24 @@ public class Main {
                 MCTS.State s1= s.BestNextMove(b);
                 System.out.println(s1);
                 b= (Board) s1.getBoard();
-            }
-        }
-        sc.close();
-    }
+=======
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        Board b = new Board();
 
+        while (!b.isGameOver()) {
+            if (b.getTurn() != Board.State.X){
+                int x=sc.nextInt();
+                b.move(x);
+                //System.out.println("O move:"+x);
+            }
+            else {
+                int o=IA2020_21P01G05Agent.move(b);
+                b.move(IA2020_21P01G05Agent.move(b));
+                //System.out.println("X move:"+o);
+>>>>>>> 33bf2ad75b2fe87e07cd4897701538fc11f5f166
+            }
+            System.out.println(b+"\n");
+        }
+    }
 }
