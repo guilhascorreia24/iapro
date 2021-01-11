@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-public class MCTS {
+public class IA2020_21P01G05Agent {
     private static double c = 1.41;
     private static double limit = 1000;
 

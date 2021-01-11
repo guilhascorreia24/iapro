@@ -1,4 +1,4 @@
-import static org.junit.Assert.assertEquals;
+/*import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 public class tests {
-/*    @Test
+       @Test
     public void testConstructor() {
         Board b = new Board("---------");
         StringWriter writer = new StringWriter();
@@ -553,7 +553,7 @@ public class tests {
         assertEquals(true, s.childs.get(4).simulations == 1 && s.childs.get(4).wins == 0);
         assertEquals(g, s);
     }
-*/
+
     @Test
     public void testPrecision() throws CloneNotSupportedException {
         Board b=new Board();
@@ -572,4 +572,4 @@ public class tests {
         }
         System.out.println(res + "/" + i);
     }
-}
+}*/
