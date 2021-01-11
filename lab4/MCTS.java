@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -10,27 +11,29 @@ public class MCTS {
     private double limit = 1000;
 
     public static class State {
-        private Ilayout layout;
+        private Board layout;
         private State father;
         public List<State> childs = new ArrayList<>();
         public double simulations, wins;
         public boolean final_node = false;
+        public int positionPlayed=-1;
 
         /**
          * Cria um estado
          * 
-         * @param p Ilayout, Representacao do estado
+         * @param p Board, Representacao do estado
          * @param n State, estado pai
          */
-        public State(Ilayout p, State n) {
+        public State(Board p, State n) {
             layout = p;
             setFather(n);
             simulations = 0.0;
             wins = 0;
-            if (layout.stateBoard() != -2) {
+            if (layout.isGameOver()) {
                 final_node = true;
             }
         }
+
         /**
          * 
          * @return State,devolve o father
@@ -38,9 +41,11 @@ public class MCTS {
         public State getFather() {
             return father;
         }
+
         /**
          * alterar o father
-         * @param father state pai 
+         * 
+         * @param father state pai
          */
         public void setFather(State father) {
             this.father = father;
@@ -48,9 +53,9 @@ public class MCTS {
 
         /**
          * 
-         * @return Ilayout, devolve o layout correspodente
+         * @return Board, devolve o layout correspodente
          */
-        public Ilayout getBoard() {
+        public Board getBoard() {
             return this.layout;
         }
 
@@ -125,9 +130,12 @@ public class MCTS {
      */
     public List<State> expand(State n) throws CloneNotSupportedException { // listar os filhos que interessam
         List<State> sucs = new ArrayList<>();
-        List<Ilayout> children = n.layout.children();
-        for (Ilayout e : children) {
-            State nn = new State(e, n);
+        HashSet<Integer> children = n.layout.getAvailableMoves();
+        for (Integer e : children) {
+            Board board=n.layout.getDeepCopy();
+            board.move(e);
+            State nn = new State(board, n);
+            nn.positionPlayed=e;
             sucs.add(nn);
         }
         return sucs;
@@ -136,15 +144,15 @@ public class MCTS {
     /**
      * Realiza o jogo bot vs bot
      * 
-     * @param s Ilayout, representacao do estado do jogo atual
+     * @param s Board, representacao do estado do jogo atual
      * @return Melhor movimento a realizar
      * @throws CloneNotSupportedException devolve quando nao seja o clone
      */
-    final public List<State> solve(Ilayout s) throws CloneNotSupportedException {
+    final public List<State> solve(Board s) throws CloneNotSupportedException {
         List<State> l = new ArrayList<>();
         actual = new State(s, null);
         while (!end_game) {
-            actual = BestNextMove(actual.layout);
+            BestNextMove(actual.layout);
             l.add(actual);
         }
         return l;
@@ -153,15 +161,15 @@ public class MCTS {
     /**
      * Utiliza o algoritmo MCTS para encntra o melhor movimento a realizar
      * 
-     * @param s Ilayout, representacao do estado do jogo atual
+     * @param s Board, representacao do estado do jogo atual
      * @return Melhor movimento a realizar
      * @throws CloneNotSupportedException devolve quando nao seja o clone
      */
-    final public State BestNextMove(Ilayout s) throws CloneNotSupportedException { // algoritmo mcts
+    final public int move(Board s) throws CloneNotSupportedException { // algoritmo mcts
         actual = new State(s, null);
         if (actual.final_node) {
             end_game = true;
-            return actual;
+            return actual.positionPlayed;
         }
         root = actual;
         while (root.simulations < limit) {
@@ -175,7 +183,11 @@ public class MCTS {
         actual = bestmove(root);
         if (actual.final_node)
             end_game = true;
-        return actual;
+        return actual.positionPlayed;
+    }
+
+    public int positionLastPlay(){
+        return actual.positionPlayed;
     }
 
     /**
@@ -209,11 +221,20 @@ public class MCTS {
      * @throws CloneNotSupportedException devolve quando nao seja o clone
      */
     public State simulation(State s) throws CloneNotSupportedException {
-        double result = s.layout.stateBoard();
-        if (!actual.final_node) {
+        double result = 0;
+        if(s.layout.isGameOver()){
+            if(s.layout.getWinner()!=s.layout.getTurn()) 
+                result=1;
+            else if(s.layout.getWinner()==Board.State.Blank) 
+                result=0.5;
+            else if(s.layout.getWinner()==s.layout.getTurn())
+                result=0;
+           
+        }
+        if (!s.layout.isGameOver()) {
             for (State suc : s.childs) {
                 State next = suc;
-                while (!next.final_node) {
+                while (!next.layout.isGameOver()) {
                     List<State> sucs = expand(next);
                     State res = null;
                     for (State suc1 : sucs) {
@@ -228,7 +249,10 @@ public class MCTS {
                     }
                     next = res;
                 }
-                result = suc.layout.verifywinner(next.layout);
+                //System.out.println(next+" "+next.layout.isGameOver()+"\n");
+                if(next.layout.getWinner()!=suc.layout.getTurn()) result=1;
+                else if(next.layout.getWinner()==Board.State.Blank) result=0.5;
+                else if(next.layout.getWinner()==suc.layout.getTurn())result=0;
                 actual = backpropagation(suc, result);
             }
 
@@ -252,7 +276,7 @@ public class MCTS {
             state.setWin(result_board);
             state.simulations += 1;
             state = state.getFather();
-            if (result_board != Ilayout.DRAW) {
+            if (result_board != 0.5) {
                 result_board = (result_board + 1) % 2;
             }
         }

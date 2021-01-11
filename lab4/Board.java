@@ -1,256 +1,261 @@
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 
-interface Ilayout {
-    /**
-     * @return os filhos do receptor.
-     * @throws CloneNotSupportedException
-     */
-    List<Ilayout> children() throws CloneNotSupportedException;
 
-    /**
-     * 
-     * @param b representa o estado da board
-     * @return o valor associado ao estado da board atual
-     */
-    double verifywinner(Ilayout b);
+import java.util.HashSet;
 
-    /**
-     * 
-     * @param x representa uma coordenada
-     * @param y representa uma coordenada
-     * @return o estado da board com a jogada feita
-     * @throws CloneNotSupportedException
-     */
-    Ilayout insertnew(int x) throws CloneNotSupportedException;
+/**
+ * Represents the Tic Tac Toe board.
+ */
+public class Board {
+
+    static final int BOARD_WIDTH = 3;
+
+    public enum State {Blank, X, O}
+    private State[][] board;
+    private State playersTurn;
+    private State winner;
+    private HashSet<Integer> movesAvailable;
+
+    private int moveCount;
+    private boolean gameOver;
 
     /**
-     * @return o valor associado ao estado da board atual
+     * Construct the Tic Tac Toe board.
      */
-    double stateBoard();
+    Board() {
+        board = new State[BOARD_WIDTH][BOARD_WIDTH];
+        movesAvailable = new HashSet<>();
+        reset();
+    }
 
     /**
-     * @return o simbolo do jogador
+     * Set the cells to be blank and load the available moves (all the moves are
+     * available at the start of the game).
      */
-    char getplayer();
-
-    /**
-     * Pontuacao,  
-     */
-    double WIN=1,LOST=0,DRAW=0.5;
-
-    /**
-     * 
-     * @return posicao da jogada na tabela
-     */
-    int getPosition();
-
-}
-
-public class Board implements Ilayout, Cloneable {
-    private static final int dim = 3;
-    private char board[][];
-    private char character, counter;
-    private int position;
-
-    /**
-     * Cria a board apartir de uma string
-     * @param str representa uma String
-     * @inv str tem que ter tamanho 9
-     * @throws IllegalStateException se @inv for violada
-     */
-    public Board(String str) throws IllegalStateException {
-        if (str.length() != dim * dim)
-            throw new IllegalStateException("Invalid arg in Board constructor");
-        board = new char[dim][dim];
-        int x=0,o=0;
-        int si = 0;
-        for (int i = 0; i < dim; i++){
-            for (int j = 0; j < dim; j++){
-                board[i][j] = str.charAt(si++);
-                if(board[i][j]=='X') x++;
-                else if(board[i][j]=='O') o++;
+    private void initialize () {
+        for (int row = 0; row < BOARD_WIDTH; row++) {
+            for (int col = 0; col < BOARD_WIDTH; col++) {
+                board[row][col] = State.Blank;
             }
         }
-        if(x>o){
-            character='X';
-            counter='O';
-        }else{
-            character = 'O';
-            counter = 'X';
+
+        movesAvailable.clear();
+
+        for (int i = 0; i < BOARD_WIDTH*BOARD_WIDTH; i++) {
+            movesAvailable.add(i);
         }
     }
 
     /**
-     * @return representação da board
+     * Restart the game with a new blank board.
      */
-    public String toString() {
-        StringWriter writer = new StringWriter();
-        PrintWriter pw = new PrintWriter(writer);
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                pw.print(board[i][j]);
-            }
-            pw.println();
-        }
-         //pw.println(counter);
-        return writer.toString();
-    }
-    
-    /**
-     * @param position representa a posiçao na board
-     * @return da nova board com a jogada feita pelo jogador  
-     */
-    @Override
-    public Ilayout insertnew(int position) throws CloneNotSupportedException {
-        Board clone = (Board) clone();
-        int x=(int)(position/dim);
-        int y=(position%dim);
-        //System.out.println(x+" "+y);
-        if(board[x][y]!='-'){
-            throw new IllegalAccessError("occupied position");
-        }
-        clone.character = counter;
-        clone.counter = character;
-        clone.board[x][y] = clone.character;
-        return clone;
+    void reset () {
+        moveCount = 0;
+        gameOver = false;
+        playersTurn = State.X;
+        winner = State.Blank;
+        initialize();
     }
 
     /**
-     * @return um clone da board atual
+     * Places an X or an O on the specified index depending on whose turn it is.
+     * @param index     the position on the board (example: index 4 is location (0, 1))
+     * @return          true if the move has not already been played
      */
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        Board clone = (Board) super.clone();
-        clone.board=new char[dim][dim];
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                clone.board[i][j] = board[i][j];
-            }
-        }
-        return clone;
+    public boolean move (int index) {
+        return move(index% BOARD_WIDTH, index/ BOARD_WIDTH);
     }
 
     /**
-     * Cria boards filhas partir da original
-     * @return uma lista com os filhos da board 
+     * Places an X or an O on the specified location depending on who turn it is.
+     * @param x         the x coordinate of the location
+     * @param y         the y coordinate of the location
+     * @return          true if the move has not already been played
      */
-    @Override
-    public List<Ilayout> children() throws CloneNotSupportedException { 
-        List<Ilayout> p = new ArrayList<Ilayout>();
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                if (board[i][j] == '-') {
-                    Board b = (Board) clone();
-                    b.character = counter;
-                    b.counter = character;
-                    b.position=(i*dim)+j;
-                    b.board[i][j] = b.character;
-                    if (!p.contains(b))
-                        p.add(b);
-                }
-            }
-        }
-        return p;
-    }
+    private boolean move (int x, int y) {
 
-    /**
-     * Comparação se 2 boards são iguais, usando simetrias
-     * @param o objecto a comparar
-     * @return boolean, true se as boards são iguais, false se as boards são diferentes
-     * 
-     */
-    @Override
-    public boolean equals(Object o) {
-        Board board2 = (Board) o;
-      // System.out.println(board2+"\n"+this);
-        int p = 0;
-        boolean s=true,s1=true,s2=true,s3=true;
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                if (board[i][j] == board2.board[i][j] ) {
-                    p++;
-                }
-                if (board[i][j] != board2.board[i][(dim - 1) - j]) {
-                    s=false;
-                }
-                if (board[i][j] != board2.board[(dim - 1) - i][j]) {
-                    s1=false;
-                }
-                if (board[i][j] != board2.board[j][i]) {
-                    s2=false;
-                }
-                if (board[i][j] != board2.board[(dim-1) - j][(dim-1) - i]) {
-                    s3= false;
-                }
-            }
+        if (gameOver) {
+            throw new IllegalStateException("TicTacToe is over. No moves can be played.");
         }
-        if (p == dim * dim) { 
-            return true;
-        }
-        if(!s && !s1 && !s2 && !s3){
+
+        if (board[y][x] == State.Blank) {
+            board[y][x] = playersTurn;
+        } else {
             return false;
         }
+
+        moveCount++;
+        movesAvailable.remove(y * BOARD_WIDTH + x);
+
+        // The game is a draw.
+        if (moveCount == BOARD_WIDTH * BOARD_WIDTH) {
+            winner = State.Blank;
+            gameOver = true;
+        }
+
+        // Check for a winner.
+        checkRow(y);
+        checkColumn(x);
+        checkDiagonalFromTopLeft(x, y);
+        checkDiagonalFromTopRight(x, y);
+
+        playersTurn = (playersTurn == State.X) ? State.O : State.X;
         return true;
     }
 
     /**
-     * @param layout representa o estado a board atual
-     * Verificação se existe algum vencedor ou empate
-     * se não houve o jogo continua
-     * @return 1 - winner 1 ,0 - winner 2,-2 - continue ,0.5 - draw
+     * Check to see if the game is over (if there is a winner or a draw).
+     * @return          true if the game is over
      */
-    @Override
-    public double verifywinner(Ilayout layout) {
-        Board board2 = (Board) layout;
-        boolean empty_spaces = false;
-        for (int i = 0; i < dim; i++) {
-            if (board2.board[i][0] == character && board2.board[i][1] == character && board2.board[i][2] == character)
-                return WIN;
-            else if (board2.board[i][0] == counter && board2.board[i][1] == counter && board2.board[i][2] == counter)
-                return LOST;
-            else if (board2.board[0][i] == character && board2.board[1][i] == character && board2.board[2][i] == character)
-                return WIN;
-            else if (board2.board[0][i] == counter && board2.board[1][i] == counter && board2.board[2][i] == counter)
-                return LOST;
-        }
-        if (board2.board[0][0] == character && board2.board[1][1] == character && board2.board[2][2] == character)
-            return WIN;
-        else if (board2.board[0][2] == character && board2.board[1][1] == character && board2.board[2][0] == character)
-            return WIN;
-        else if (board2.board[0][0] == counter && board2.board[1][1] == counter && board2.board[2][2] == counter)
-            return LOST;
-        else if (board2.board[0][2] == counter && board2.board[1][1] == counter && board2.board[2][0] == counter)
-            return LOST;
+    public boolean isGameOver () {
+        return gameOver;
+    }
 
-        pause: for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++)
-                if (board2.board[i][j] == '-') {
-                    empty_spaces = true;
-                    break pause;
+    /**
+     * Get a copy of the array that represents the board.
+     * @return          the board array
+     */
+    State[][] toArray () {
+        return board.clone();
+    }
+
+    /**
+     * Check to see who's turn it is.
+     * @return          the player who's turn it is
+     */
+    public State getTurn () {
+        return playersTurn;
+    }
+
+    /**
+     * Check to see who won.
+     * @return          the player who won (or Blank if the game is a draw)
+     */
+    public State getWinner () {
+        if (!gameOver) {
+            throw new IllegalStateException("TicTacToe is not over yet.");
+        }
+        return winner;
+    }
+
+    /**
+     * Get the indexes of all the positions on the board that are empty.
+     * @return          the empty cells
+     */
+    public HashSet<Integer> getAvailableMoves () {
+        return movesAvailable;
+    }
+
+    /**
+     * Checks the specified row to see if there is a winner.
+     * @param row       the row to check
+     */
+    private void checkRow (int row) {
+        for (int i = 1; i < BOARD_WIDTH; i++) {
+            if (board[row][i] != board[row][i-1]) {
+                break;
+            }
+            if (i == BOARD_WIDTH -1) {
+                winner = playersTurn;
+                gameOver = true;
+            }
+        }
+    }
+
+    /**
+     * Checks the specified column to see if there is a winner.
+     * @param column    the column to check
+     */
+    private void checkColumn (int column) {
+        for (int i = 1; i < BOARD_WIDTH; i++) {
+            if (board[i][column] != board[i-1][column]) {
+                break;
+            }
+            if (i == BOARD_WIDTH -1) {
+                winner = playersTurn;
+                gameOver = true;
+            }
+        }
+    }
+
+    /**
+     * Check the left diagonal to see if there is a winner.
+     * @param x         the x coordinate of the most recently played move
+     * @param y         the y coordinate of the most recently played move
+     */
+    private void checkDiagonalFromTopLeft (int x, int y) {
+        if (x == y) {
+            for (int i = 1; i < BOARD_WIDTH; i++) {
+                if (board[i][i] != board[i-1][i-1]) {
+                    break;
                 }
+                if (i == BOARD_WIDTH -1) {
+                    winner = playersTurn;
+                    gameOver = true;
+                }
+            }
         }
-        if (empty_spaces)
-            return -2;
-        return DRAW;
+    }
+
+    /**
+     * Check the right diagonal to see if there is a winner.
+     * @param x     the x coordinate of the most recently played move
+     * @param y     the y coordinate of the most recently played move
+     */
+    private void checkDiagonalFromTopRight (int x, int y) {
+        if (BOARD_WIDTH -1-x == y) {
+            for (int i = 1; i < BOARD_WIDTH; i++) {
+                if (board[BOARD_WIDTH -1-i][i] != board[BOARD_WIDTH -i][i-1]) {
+                    break;
+                }
+                if (i == BOARD_WIDTH -1) {
+                    winner = playersTurn;
+                    gameOver = true;
+                }
+            }
+        }
+    }
+
+    /**
+     * Get a deep copy of the Tic Tac Toe board.
+     * @return      an identical copy of the board
+     */
+    public Board getDeepCopy () {
+        Board board             = new Board();
+
+        for (int i = 0; i < board.board.length; i++) {
+            board.board[i] = this.board[i].clone();
+        }
+
+        board.playersTurn       = this.playersTurn;
+        board.winner            = this.winner;
+        board.movesAvailable    = new HashSet<>();
+        board.movesAvailable.addAll(this.movesAvailable);
+        board.moveCount         = this.moveCount;
+        board.gameOver          = this.gameOver;
+        return board;
     }
 
     @Override
-    public double stateBoard() {
-        return verifywinner(this);
-    }
+    public String toString () {
+        StringBuilder sb = new StringBuilder();
 
-    @Override
-    public char getplayer() {
-        return character;
-    }
+        for (int y = 0; y < BOARD_WIDTH; y++) {
+            for (int x = 0; x < BOARD_WIDTH; x++) {
 
-    @Override
-    public int getPosition() {
-        return position;
-    }
+                if (board[y][x] == State.Blank) {
+                    sb.append("-");
+                } else {
+                    sb.append(board[y][x].name());
+                }
+                sb.append(" ");
 
+            }
+            if (y != BOARD_WIDTH -1) {
+                sb.append("\n");
+            }
+        }
+
+        return new String(sb);
+    }
 
 }

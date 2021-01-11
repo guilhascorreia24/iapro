@@ -1,38 +1,21 @@
-
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class Main {
-    public  void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
-        MCTS s = new MCTS();
-        Board b = new Board("---------");
-        System.out.print("esolha uma opçao: player vs bot(1)/bot vs bot(0):");
-        int t=sc.nextInt();
-        if(t==0){
-            long startTime = System.nanoTime();
-            Iterator<MCTS.State> it = s.solve(b).iterator();
-            if (it == null)
-                System.out.println("no solution was found");
-            else {
-                while (it.hasNext()) {
-                    MCTS.State i = it.next();
-                    System.out.println(i);
-                }
-                long endTime = System.nanoTime();
-                long duration = (endTime - startTime);
-                System.out.println((duration/1000000)*0.001  +"s");
-            }
-        }
-        else{
-            while(!s.end_game){
-                b = (Board) b.insertnew(sc.nextInt());
-                MCTS.State s1= s.BestNextMove(b);
-                System.out.println(s1);
-                b= (Board) s1.getBoard();
-            }
-        }
-        sc.close();
-    }
+        Board b = new Board();
+        MCTS mcts = new MCTS();
 
+        while (!b.isGameOver()) {
+            if (b.getTurn() == Board.State.X){
+                b.move(sc.nextInt());
+            }
+            else {
+                int o=mcts.move(b);
+                b.move(mcts.move(b));
+                System.out.println(o);
+            }
+            //System.out.println(b);
+        }
+    }
 }
